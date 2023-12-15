@@ -6,10 +6,7 @@ public struct MySwiftPackage {
     public init() {}
 
     public func sayHello() {
-        print("Hello from Itx Package!")
-        let alert = UIAlertController(title: "This is a nice alert bro", message: "Alert !!!!", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Hello from ItxPackage brooo", message: "What a nice package you got here", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-        
-        
     }
 }
