@@ -30,6 +30,7 @@ public struct MySwiftPackage {
                 
                 SendIssueBox.snp.makeConstraints { make in
                     make.center.equalTo(topViewController.view)
+                    make.width.height.equalTo(50)
                 }
             }
         }
