@@ -31,19 +31,17 @@ public struct MySwiftPackage {
             let descriptionTextField = UITextField()
                 // ... (Previous code)
 
-            // Create Cancel button
-            let cancelButton = UIButton()
-                .with(\.backgroundColor, value: .gray)
-                .with(\.translatesAutoresizingMaskIntoConstraints, value: false)
-                .with(\.contentEdgeInsets, value: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
-                .with(\.layer.cornerRadius, value: 8)
+            // Create Send button
+            let cancelButton = UIButton
+                .primary(text: "Cancel")
+                .with(\.backgroundColor, value: .red)
+                .with(\.tintColor, value: .white)
 
             // Create Send button
-            let sendButton = UIButton()
+            let sendButton = UIButton
+                .primary(text: "Send")
                 .with(\.backgroundColor, value: .green)
-                .with(\.translatesAutoresizingMaskIntoConstraints, value: false)
-                .with(\.contentEdgeInsets, value: UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
-                .with(\.layer.cornerRadius, value: 8)
+                .with(\.tintColor, value: .white)
 
             // Retrieve the top-most view controller
             if let topViewController = UIApplication.shared.keyWindow?.rootViewController {
