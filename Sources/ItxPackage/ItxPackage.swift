@@ -33,6 +33,15 @@ public class ImageViewController : UIViewController {
     }
 }
 
+
+public class DummyController : UIViewController {
+
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+    }
+}
+
 public struct MySwiftPackage {
     
     public init() {
@@ -70,20 +79,16 @@ public class ScreenshotObserver {
 
                 // Create and push the ImageViewController
                 let imageController = IssueBoxView(image: screenshot)
-                if let navigationController = topViewController.navigationController {
-                    // Set the presentation style to .overCurrentContext to make it appear as a modal
-                    imageController.modalPresentationStyle = .overCurrentContext
-
-                    // Set the transition style to .crossDissolve or any other desired transition
-                    imageController.modalTransitionStyle = .crossDissolve
-
-                    // Customize the size of the presented view controller
-                    imageController.preferredContentSize = CGSize(width: 300, height: 200)
-                    navigationController.present(imageController, animated: true)
-                } else {
-                    // If there's no navigation controller, present the ImageViewController
-                    topViewController.present(imageController, animated: true, completion: nil)
-                }
+                
+                
+                let controller = DummyController()
+                
+                controller.modalPresentationStyle = .overCurrentContext
+                controller.modalTransitionStyle = .crossDissolve
+                controller.preferredContentSize = CGSize(width: 300, height: 200)
+                
+            
+                topViewController.present(controller, animated: true)
             }
         }
     }
