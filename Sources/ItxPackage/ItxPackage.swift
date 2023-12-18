@@ -46,62 +46,48 @@ public struct MySwiftPackage {
     }
 }
 
-
 public class ScreenshotObserver {
-    
-    
-    @objc static func didTapCancelButton()
-    {
-        
+
+    static var imageView = UIImageView()
+
+    @objc static func didTapCancelButton() {
+        // Handle cancel button tap if needed
     }
-    
-    
+
     @objc static func detectScreenshot() {
-        
-        
-        lazy var imageView = UIImageView()
-        
-        
         // Retrieve the top-most view controller
         if let topViewController = UIApplication.shared.keyWindow?.rootViewController {
-            
-            
+
             if let screenshot = captureScreen(view: topViewController.view) {
                 // Do something with the screenshot, e.g., save it, display it, etc.
                 // For now, let's print the image data size
                 if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
                     print("Captured screenshot with size: \(jpegData.count) bytes")
                 }
-                
+
+                // Assign the screenshot to the imageView
                 imageView.image = screenshot
-                
+
+                // Create and push the ImageViewController
                 let imageController = ImageViewController(image: screenshot)
-                topViewController.navigationController?.pushViewController(imageController, animated: true)
-                
+                if let navigationController = topViewController.navigationController {
+                    navigationController.pushViewController(imageController, animated: true)
+                } else {
+                    // If there's no navigation controller, present the ImageViewController
+                    topViewController.present(imageController, animated: true, completion: nil)
+                }
             }
-            
-            
-            
-//            let issueBox = IssueBoxView()
-//            topViewController.view.addSubview(issueBox)
-//            
-//            issueBox.snp.makeConstraints { make in
-//                make.centerX.equalToSuperview()
-//                make.centerY.equalToSuperview()
-//                make.width.equalTo(300)
-//                make.height.equalTo(250)
-//                
-//            }
         }
     }
-    
+
     static func captureScreen(view: UIView) -> UIImage? {
         // Capture the screen as an image
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
         view.layer.render(in: UIGraphicsGetCurrentContext()!)
         let screenshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        
+
         return screenshot
     }
 }
+
