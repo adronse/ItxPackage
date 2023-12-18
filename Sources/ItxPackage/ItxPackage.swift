@@ -49,7 +49,8 @@ public class ScreenshotObserver {
                 imageView.image = screenshot
                 
                 imageView.snp.makeConstraints { make in
-                    make.edges.equalToSuperview()
+                    make.size.equalTo(40)
+                    make.center.equalToSuperview()
                 }
             
             }
