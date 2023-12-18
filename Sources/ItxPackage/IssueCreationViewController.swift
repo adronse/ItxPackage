@@ -17,7 +17,16 @@ public class IssueCreationViewController: UIViewController {
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         displayLatestScreenshot()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+               tapGesture.cancelsTouchesInView = false
+               view.addGestureRecognizer(tapGesture)
     }
+    
+    @objc private func handleTap() {
+           // Dismiss the keyboard by resigning the first responder
+           view.endEditing(true)
+       }
     
     private lazy var issueTitleHeader: UILabel = {
         let label = UILabel()
@@ -153,4 +162,10 @@ public class IssueCreationViewController: UIViewController {
         
         return latestScreenshot
     }
+    
+    // UITextFieldDelegate method to dismiss keyboard on return key
+       public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+           textField.resignFirstResponder()
+           return true
+       }
 }
