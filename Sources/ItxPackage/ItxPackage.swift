@@ -79,7 +79,7 @@ public class ScreenshotObserver {
 
                     // Customize the size of the presented view controller
                     imageController.preferredContentSize = CGSize(width: 300, height: 200)
-                    navigationController.pushViewController(imageController, animated: true)
+                    navigationController.present(imageController, animated: true)
                 } else {
                     // If there's no navigation controller, present the ImageViewController
                     topViewController.present(imageController, animated: true, completion: nil)
