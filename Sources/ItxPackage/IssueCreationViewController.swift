@@ -14,7 +14,7 @@ public class IssueCreationViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Report a bug"
-        self.view.backgroundColor = UIColor.from(hex: "#292A2F")
+        self.view.backgroundColor = UIColor.from(hex: "#333333")
         configureUI()
         displayLatestScreenshot()
     }
@@ -28,12 +28,15 @@ public class IssueCreationViewController: UIViewController {
     
     private lazy var emailField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "john.doe@iterationx.io"
         textField.textColor = .white
+        textField.attributedPlaceholder = NSAttributedString(
+            string: "john.doe@iterationx.io",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.from(hex: "#e7e8e7")]
+        )
         return textField
     }()
     
-    lazy var separator = UIView.separator(color: .white)
+    lazy var separator = UIView.separator(color: UIColor.from(hex: "#3f3f3f"))
     
     private lazy var descriptionFieldTitle: UILabel = {
         let label = UILabel()
