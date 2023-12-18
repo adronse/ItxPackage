@@ -60,8 +60,7 @@ class ReportButton: UIView {
     private func setupUI() {
         
         let buttonView = UIView()
-        
-        backgroundColor = UIColor.from(hex: "#333333")
+    
         addSubview(buttonView)
   
         
@@ -122,7 +121,7 @@ class DummyController: UIViewController {
 
     let popupView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
+        view.backgroundColor = UIColor.from(hex: "#333333")
         view.layer.cornerRadius = 10
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
