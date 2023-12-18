@@ -33,6 +33,7 @@ class FullScreenImageViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .black
+        self.modalPresentationStyle = .fullScreen
         
         setupImageView()
         setupPanGestureRecognizer()
