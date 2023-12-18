@@ -154,6 +154,7 @@ class DummyController: UIViewController {
         popupView.addSubview(popupTitle)
         popupView.addSubview(separator)
         popupView.addSubview(reportBugButton)
+    
         
         popupTitle.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -167,7 +168,7 @@ class DummyController: UIViewController {
         
         reportBugButton.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(separator.snp.bottom).offset(50)
+            make.top.equalTo(separator.snp.bottom)
         }
     }
 
