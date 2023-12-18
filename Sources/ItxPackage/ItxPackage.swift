@@ -5,6 +5,34 @@ import SnapKit
 
 
 
+
+public class ImageViewController : UIViewController {
+    
+    private let imageView: UIImageView
+    
+    init(image: UIImage) {
+        self.imageView = UIImageView(image: image)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .yellow
+        
+        
+        view.addSubview(imageView)
+        
+        imageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(40)
+        }
+    }
+}
+
 public struct MySwiftPackage {
     
     public init() {
@@ -45,14 +73,11 @@ public class ScreenshotObserver {
                     print("Captured screenshot with size: \(jpegData.count) bytes")
                 }
                 
-                topViewController.view.addSubview(imageView)
                 imageView.image = screenshot
                 
-                imageView.snp.makeConstraints { make in
-                    make.size.equalTo(40)
-                    make.center.equalToSuperview()
-                }
-            
+                let imageController = ImageViewController(image: screenshot)
+                topViewController.navigationController?.pushViewController(imageController, animated: true)
+                
             }
             
             
