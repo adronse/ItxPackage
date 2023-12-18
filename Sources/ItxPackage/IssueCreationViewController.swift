@@ -134,7 +134,7 @@ public class IssueCreationViewController: UIViewController {
         }
         
         sendButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(5)
+            make.bottom.equalToSuperview().inset(20)
             make.leading.trailing.equalToSuperview().offset(10)
             make.height.equalTo(30)
         }
