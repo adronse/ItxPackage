@@ -11,19 +11,12 @@ import Photos
 
 public class IssueCreationViewController: UIViewController {
     
-    private var panGestureRecognizer: UIPanGestureRecognizer!
-    private var animator: UIViewPropertyAnimator!
-    
-    
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Report a bug"
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         displayLatestScreenshot()
-        
-        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        view.addGestureRecognizer(panGestureRecognizer)
     }
     
     private lazy var emailFieldTitle: UILabel = {
@@ -42,7 +35,6 @@ public class IssueCreationViewController: UIViewController {
     
     private lazy var screenshotImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
@@ -67,6 +59,7 @@ public class IssueCreationViewController: UIViewController {
             make.top.equalTo(emailField.snp.bottom).offset(10)
             make.leading.trailing.equalToSuperview().inset(5)
             make.bottom.equalToSuperview().inset(10)
+            make.width.height.equalTo(50)
         }
     }
     
@@ -96,34 +89,5 @@ public class IssueCreationViewController: UIViewController {
         }
         
         return latestScreenshot
-    }
-    
-    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
-        let translation = gesture.translation(in: view)
-        
-        switch gesture.state {
-        case .began:
-            animator = UIViewPropertyAnimator(duration: 0.5, curve: .easeInOut, animations: {
-                self.view.frame.origin.y = 0
-            })
-            animator.pauseAnimation()
-        case .changed:
-            let offsetY = max(0, translation.y)
-            let fraction = offsetY / view.bounds.height
-            animator.fractionComplete = fraction
-        case .ended, .cancelled:
-            let velocity = gesture.velocity(in: view).y
-            if velocity > 0 || animator.fractionComplete > 0.5 {
-                animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
-            } else {
-                animator.stopAnimation(true)
-                animator.addAnimations {
-                    self.view.frame.origin.y = -self.view.bounds.height
-                }
-                animator.startAnimation()
-            }
-        default:
-            break
-        }
     }
 }
