@@ -92,8 +92,8 @@ public struct MySwiftPackage {
                 sendIssueBox.snp.makeConstraints { make in
                     make.centerX.equalToSuperview()
                     make.centerY.equalToSuperview()
-                    make.width.equalTo(300)
-                    make.height.equalTo(200)
+                    make.width.equalTo(500)
+                    make.height.equalTo(400)
                 }
 
                 titleLabel.snp.makeConstraints { make in
