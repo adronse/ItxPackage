@@ -150,8 +150,8 @@ class DummyController: UIViewController {
         
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalTo(300)
-            make.height.equalTo(150)
+            make.width.equalTo(450)
+            make.height.equalTo(300)
         }
         
         // Customize the appearance of the popup view
@@ -171,6 +171,7 @@ class DummyController: UIViewController {
         
         separator.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1)
             make.top.equalTo(popupTitle.snp.bottom).offset(50)
         }
         
