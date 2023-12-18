@@ -196,7 +196,9 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         var latestScreenshot: UIImage?
         
-        PHImageManager.default().requestImage(for: latestAsset, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFit, options: requestOptions) { (image, _) in
+        let screenSize = UIScreen.main.bounds.size
+        
+        PHImageManager.default().requestImage(for: latestAsset, targetSize: screenSize, contentMode: .aspectFit, options: requestOptions) { (image, _) in
             latestScreenshot = image
         }
         
