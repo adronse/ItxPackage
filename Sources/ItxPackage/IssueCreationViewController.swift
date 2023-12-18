@@ -33,7 +33,7 @@ public class IssueCreationViewController: UIViewController {
         return textField
     }()
     
-    lazy var separator = UIView.separator(color: .gray)
+    lazy var separator = UIView.separator(color: .white)
     
     private lazy var descriptionFieldTitle: UILabel = {
         let label = UILabel()
@@ -80,18 +80,19 @@ public class IssueCreationViewController: UIViewController {
         
         emailFieldTitle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(60)
-            make.leading.trailing.equalToSuperview().inset(5)
+            make.leading.trailing.equalToSuperview().inset(2)
             make.height.equalTo(40)
         }
         
         emailField.snp.makeConstraints { make in
-            make.top.equalTo(emailFieldTitle.snp.bottom).offset(5)
+            make.top.equalTo(emailFieldTitle.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
         
         separator.snp.makeConstraints { make in
-            make.top.equalTo(emailField.snp.bottom).offset(5)
+            make.top.equalTo(emailField.snp.bottom).offset(2)
+            make.height.equalTo(1)
             make.leading.trailing.equalToSuperview().inset(5)
         }
         
@@ -102,13 +103,13 @@ public class IssueCreationViewController: UIViewController {
         }
         
         descriptionFieldInput.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(5)
+            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
         
         descriptionFieldDesc.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(5)
+            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
@@ -122,13 +123,6 @@ public class IssueCreationViewController: UIViewController {
         screenshotImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
-//        screenshotImageView.snp.makeConstraints { make in
-//            make.top.equalTo(emailField.snp.bottom).offset(10)
-//            make.leading.trailing.equalToSuperview().inset(5)
-//            make.bottom.equalToSuperview().inset(10)
-//            make.width.height.equalTo(50)
-//        }
     }
     
     private func displayLatestScreenshot() {
