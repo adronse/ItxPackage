@@ -33,15 +33,49 @@ public class IssueCreationViewController: UIViewController {
         return textField
     }()
     
+    lazy var separator = UIView.separator(color: UIColor.from(hex: "#B5B8BE"))
+    
+    private lazy var descriptionFieldTitle: UILabel = {
+        let label = UILabel()
+        label.text = "Description"
+        label.textColor = UIColor.from(hex: "#454547")
+        return label
+    }()
+    
+    private lazy var descriptionFieldInput: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "john.doe@iterationx.io"
+        textField.textColor = .white
+        return textField
+    }()
+    
+    private lazy var descriptionFieldDesc: UILabel = {
+        let label = UILabel()
+        label.text = "Please be as detailed as possible. What did you expect and what happened instead?"
+        label.textColor = UIColor.from(hex: "#454547")
+        label.numberOfLines = 0
+        return label
+    }()
+    
     private lazy var screenshotImageView: UIImageView = {
         let imageView = UIImageView()
         return imageView
+    }()
+    
+    private lazy var imageBox: UIView = {
+        let box = UIView()
+        return box
     }()
     
     private func configureUI() {
         view.addSubview(emailFieldTitle)
         view.addSubview(emailField)
         view.addSubview(screenshotImageView)
+        view.addSubview(imageBox)
+        view.addSubview(separator)
+        view.addSubview(descriptionFieldTitle)
+        view.addSubview(descriptionFieldInput)
+        view.addSubview(descriptionFieldDesc)
         
         emailFieldTitle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(60)
@@ -55,12 +89,37 @@ public class IssueCreationViewController: UIViewController {
             make.height.equalTo(40)
         }
         
-        screenshotImageView.snp.makeConstraints { make in
-            make.top.equalTo(emailField.snp.bottom).offset(10)
+        separator.snp.makeConstraints { make in
+            make.top.equalTo(emailField.snp.bottom).offset(5)
             make.leading.trailing.equalToSuperview().inset(5)
-            make.bottom.equalToSuperview().inset(10)
-            make.width.height.equalTo(50)
         }
+        
+        descriptionFieldTitle.snp.makeConstraints { make in
+            make.top.equalTo(separator.snp.bottom).offset(5)
+            make.leading.trailing.equalToSuperview().inset(5)
+            make.height.equalTo(40)
+        }
+        
+        descriptionFieldInput.snp.makeConstraints { make in
+            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(5)
+            make.leading.trailing.equalToSuperview().inset(5)
+            make.height.equalTo(40)
+        }
+        
+        descriptionFieldDesc.snp.makeConstraints { make in
+            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(5)
+            make.leading.trailing.equalToSuperview().inset(5)
+            make.height.equalTo(40)
+        }
+        
+        
+        
+//        screenshotImageView.snp.makeConstraints { make in
+//            make.top.equalTo(emailField.snp.bottom).offset(10)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//            make.bottom.equalToSuperview().inset(10)
+//            make.width.height.equalTo(50)
+//        }
     }
     
     private func displayLatestScreenshot() {
