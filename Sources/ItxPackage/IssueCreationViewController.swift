@@ -13,9 +13,13 @@ import Photos
 class FullScreenImageViewController: UIViewController {
     
     private let imageView: UIImageView
+    private let drawingView: UIView
+    private var path: UIBezierPath?
+    private var startPoint: CGPoint?
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
+        self.drawingView = UIView()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -27,9 +31,16 @@ class FullScreenImageViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .black
+        
+        // Setup image view
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
+        
+        // Setup drawing view
+        drawingView.backgroundColor = .clear
+        drawingView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(drawingView)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.addGestureRecognizer(tapGesture)
@@ -37,12 +48,67 @@ class FullScreenImageViewController: UIViewController {
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        drawingView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Setup pan gesture for drawing
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        drawingView.addGestureRecognizer(panGesture)
     }
     
     @objc private func handleTap() {
         dismiss(animated: true, completion: nil)
     }
+    
+    @objc private func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
+        let location = gestureRecognizer.location(in: drawingView)
+        
+        switch gestureRecognizer.state {
+        case .began:
+            startDrawing(at: location)
+        case .changed:
+            continueDrawing(to: location)
+        case .ended:
+            stopDrawing()
+        default:
+            break
+        }
+    }
+    
+    private func startDrawing(at point: CGPoint) {
+        path = UIBezierPath()
+        path?.lineWidth = 5.0
+        path?.lineCapStyle = .round
+        path?.move(to: point)
+        startPoint = point
+    }
+    
+    private func continueDrawing(to point: CGPoint) {
+        path?.addLine(to: point)
+        drawPath()
+    }
+    
+    private func stopDrawing() {
+        startPoint = nil
+    }
+    
+    private func drawPath() {
+        guard let path = path else { return }
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.strokeColor = UIColor.white.cgColor
+        shapeLayer.lineWidth = path.lineWidth
+        shapeLayer.lineCap = .round
+        
+        drawingView.layer.addSublayer(shapeLayer)
+        drawingView.setNeedsDisplay()
+    }
 }
+
+
 
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
