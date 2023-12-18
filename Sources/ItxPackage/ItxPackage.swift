@@ -66,7 +66,7 @@ public struct MySwiftPackage {
             let suggestImprovementDescription = UILabel()
                 .with(\.text, value: "New ideas or desired enhancements for this app")
                 .with(\.textColor, value: UIColor.gray)
-                .with(\.numberOfLines, value: 2) // Allow multiline text
+                .with(\.numberOfLines, value: 0) // Allow multiline text
     
             let cancelButton = UIButton(type: .system)
             
@@ -145,7 +145,7 @@ public struct MySwiftPackage {
                 
                 suggestImprovementDescription.snp.makeConstraints { make in
                     make.top.equalTo(suggestImprovementTitle.snp.bottom).offset(5)
-                    make.leading.trailing.equalTo(suggestImprovementTitle).inset(10)
+                    make.leading.trailing.equalTo(suggestImprovementButton).inset(10)
                 }
                 
                 sendIssueBox.addSubview(cancelButton)
