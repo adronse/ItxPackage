@@ -14,7 +14,7 @@ public class IssueCreationViewController: UIViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Report a bug"
-        self.view.backgroundColor = UIColor.from(hex: "#333333")
+        self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         displayLatestScreenshot()
     }
@@ -28,15 +28,12 @@ public class IssueCreationViewController: UIViewController {
     
     private lazy var emailField: UITextField = {
         let textField = UITextField()
+        textField.placeholder = "john.doe@iterationx.io"
         textField.textColor = .white
-        textField.attributedPlaceholder = NSAttributedString(
-            string: "john.doe@iterationx.io",
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor.from(hex: "#e7e8e7")]
-        )
         return textField
     }()
     
-    lazy var separator = UIView.separator(color: UIColor.from(hex: "#3f3f3f"))
+    lazy var separator = UIView.separator(color: .white)
     
     private lazy var descriptionFieldTitle: UILabel = {
         let label = UILabel()
@@ -70,6 +67,14 @@ public class IssueCreationViewController: UIViewController {
         return box
     }()
     
+    
+    private lazy var sendButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Send issue", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     private func configureUI() {
         view.addSubview(emailFieldTitle)
         view.addSubview(emailField)
@@ -80,6 +85,7 @@ public class IssueCreationViewController: UIViewController {
         view.addSubview(descriptionFieldTitle)
         view.addSubview(descriptionFieldInput)
         view.addSubview(descriptionFieldDesc)
+        view.addSubview(sendButton)
         
         emailFieldTitle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(60)
@@ -125,6 +131,12 @@ public class IssueCreationViewController: UIViewController {
         
         screenshotImageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+        }
+        
+        sendButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(5)
+            make.leading.trailing.equalToSuperview().offset(10)
+            make.height.equalTo(30)
         }
     }
     
