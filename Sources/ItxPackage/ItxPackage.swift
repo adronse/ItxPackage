@@ -30,7 +30,7 @@ public struct MySwiftPackage {
         @objc static func detectScreenshot() {
             // Create SendIssueBox view
             lazy var sendIssueBox = UIView()
-                .with(\.backgroundColor, value: UIColor.from(hex: "#292a2f"))
+                .with(\.backgroundColor, value: UIColor.from(hex: "#292A2F"))
                 .with(\.translatesAutoresizingMaskIntoConstraints, value: false)
             
             lazy var titleLabel = UILabel()
@@ -51,13 +51,15 @@ public struct MySwiftPackage {
                 sendIssueBox.snp.makeConstraints { make in
                     make.center.equalToSuperview()
                 }
-                
+
                 titleLabel.snp.makeConstraints { make in
-                    make.top.equalTo(sendIssueBox.snp.topMargin).inset(50)
+                    make.centerX.equalTo(sendIssueBox)
+                    make.top.equalTo(sendIssueBox.snp.topMargin).offset(50)
                 }
-                
+
                 separator.snp.makeConstraints { make in
-                    make.top.equalTo(titleLabel.snp.bottomMargin).inset(50)
+                    make.centerX.equalTo(sendIssueBox)
+                    make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
                 }
             }
         }
