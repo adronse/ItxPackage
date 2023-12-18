@@ -65,10 +65,12 @@ class ReportButton: UIView {
         
         let titleLabel = UILabel()
         titleLabel.text = title
+        titleLabel.numberOfLines = 0
         buttonView.addSubview(titleLabel)
         
         let descLabel = UILabel()
         descLabel.text = reportButtonDescription
+        descLabel.numberOfLines = 0
         buttonView.addSubview(descLabel)
         
         buttonView.snp.makeConstraints { make in
@@ -167,7 +169,7 @@ class DummyController: UIViewController {
         }
         
         reportBugButton.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+            make.leading.trailing.equalTo(popupView)
             make.top.equalTo(separator.snp.bottom)
         }
     }
