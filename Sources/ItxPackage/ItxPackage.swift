@@ -41,16 +41,19 @@ public struct MySwiftPackage {
             
             
             let reportBugButton = UIButton(type: .system)
-            reportBugButton.setTitle("Report a bug", for: .normal)
-            reportBugButton.setTitleColor(UIColor.white, for: .normal)
+//            reportBugButton.addTarget(self, action: #selector(reportBugButtonTapped), for: .touchUpInside)
+
+            let reportBugTitleLabel = UILabel()
+                .with(\.text, value: "Report a bug")
+                .with(\.textColor, value: UIColor.white)
 
             let reportBugDescriptionLabel = UILabel()
                 .with(\.text, value: "Something in the app is broken or doesn't work as expected")
                 .with(\.textColor, value: UIColor.gray)
                 .with(\.numberOfLines, value: 0) // Allow multiline text
 
-            // Create separator for the first row
             let separator1 = UIView.separator(color: UIColor.gray)
+
             
 
             // Retrieve the top-most view controller
@@ -79,25 +82,30 @@ public struct MySwiftPackage {
                     make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
                 }
                 
-                // Add buttons and separator to the sendIssueBox
                 sendIssueBox.addSubview(reportBugButton)
+                sendIssueBox.addSubview(reportBugTitleLabel)
                 sendIssueBox.addSubview(reportBugDescriptionLabel)
                 sendIssueBox.addSubview(separator1)
 
-                // Position the buttons and separator for the first row
                 reportBugButton.snp.makeConstraints { make in
-                    make.top.equalTo(separator.snp.bottom).offset(20) // Adjust the offset as needed
-                    make.leading.equalTo(sendIssueBox.snp.leadingMargin).offset(10) // Adjust the offset as needed
+                    make.top.equalTo(separator.snp.bottom)
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(separator1.snp.bottom)
+                }
+
+                reportBugTitleLabel.snp.makeConstraints { make in
+                    make.top.equalTo(reportBugButton).offset(10)
+                    make.leading.equalTo(reportBugButton).offset(10)
                 }
 
                 reportBugDescriptionLabel.snp.makeConstraints { make in
-                    make.top.equalTo(reportBugButton.snp.bottom).offset(5) // Adjust the offset as needed
-                    make.leading.trailing.equalTo(sendIssueBox).inset(10)
+                    make.top.equalTo(reportBugTitleLabel.snp.bottom).offset(5)
+                    make.leading.trailing.equalTo(reportBugButton).inset(10)
                 }
 
                 separator1.snp.makeConstraints { make in
-                    make.top.equalTo(reportBugDescriptionLabel.snp.bottom).offset(20) // Adjust the offset as needed
-                    make.leading.trailing.equalTo(sendIssueBox)
+                    make.top.equalTo(reportBugDescriptionLabel.snp.bottom).offset(20)
+                    make.leading.trailing.equalTo(reportBugButton)
                     make.height.equalTo(1)
                 }
             }
