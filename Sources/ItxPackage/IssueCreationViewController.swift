@@ -41,7 +41,7 @@ public class IssueCreationViewController : UIViewController
         view.addSubview(emailField)
         
         emailField.snp.makeConstraints { make in
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(30)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
