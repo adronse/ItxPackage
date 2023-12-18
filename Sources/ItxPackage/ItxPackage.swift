@@ -111,8 +111,8 @@ class DummyController: UIViewController {
         cancelButton.setTitleColor(UIColor.white, for: .normal)
         
         
-        self.view.addSubview(titleLabel)
-        self.view.addSubview(separator)
+        popupView.addSubview(titleLabel)
+        popupView.addSubview(separator)
         
         
         titleLabel.snp.makeConstraints { make in
@@ -126,10 +126,10 @@ class DummyController: UIViewController {
         }
         
         
-        self.view.addSubview(reportBugButton)
+        popupView.addSubview(reportBugButton)
         reportBugButton.addSubview(reportBugTitleLabel)
         reportBugButton.addSubview(reportBugDescriptionLabel)
-        self.view.addSubview(separator1)
+        popupView.addSubview(separator1)
         
         reportBugButton.snp.makeConstraints { make in
             make.top.equalTo(separator.snp.bottom)
@@ -153,7 +153,7 @@ class DummyController: UIViewController {
             make.height.equalTo(1)
         }
         
-        self.view.addSubview(suggestImprovementButton)
+        popupView.addSubview(suggestImprovementButton)
         suggestImprovementButton.addSubview(suggestImprovementTitle)
         suggestImprovementButton.addSubview(suggestImprovementDescription)
         
@@ -172,7 +172,7 @@ class DummyController: UIViewController {
             make.leading.trailing.equalTo(suggestImprovementButton).inset(10)
         }
         
-        self.view.addSubview(cancelButton)
+        popupView.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.top.equalTo(suggestImprovementDescription.snp.bottom)
             make.leading.trailing.equalToSuperview()
