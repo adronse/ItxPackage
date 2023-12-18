@@ -34,11 +34,48 @@ public class ImageViewController : UIViewController {
 }
 
 
-public class DummyController : UIViewController {
+class DummyController: UIViewController {
 
-    override public func viewDidLoad() {
+    // Your UI elements go here
+
+    override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .yellow
+
+        // Set modal presentation style
+        modalPresentationStyle = .overCurrentContext
+        modalTransitionStyle = .crossDissolve
+
+        // Configure appearance
+        view.backgroundColor = UIColor.white
+        view.layer.cornerRadius = 10
+
+        // Add UI elements to the view hierarchy and configure constraints
+        // For simplicity, I'm adding a UILabel and a Close button as an example
+        let titleLabel = UILabel()
+        titleLabel.text = "Custom Alert"
+        titleLabel.textAlignment = .center
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(titleLabel)
+
+        let closeButton = UIButton(type: .system)
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(closeButton)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 20),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+
+            closeButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 20),
+            closeButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+    }
+
+    @objc func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+        // Handle other actions if needed
     }
 }
 
