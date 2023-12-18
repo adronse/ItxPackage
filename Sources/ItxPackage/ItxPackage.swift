@@ -88,7 +88,7 @@ public struct MySwiftPackage {
                     make.centerX.equalToSuperview()
                     make.centerY.equalToSuperview()
                     make.width.equalTo(300)
-                    make.height.equalTo(300)
+                    make.height.equalTo(250)
                 }
 
                 titleLabel.snp.makeConstraints { make in
