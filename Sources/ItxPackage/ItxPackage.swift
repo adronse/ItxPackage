@@ -76,6 +76,7 @@ class ReportButton: UIView {
             .with(\.font, value: .systemFont(ofSize: 12))
         
     
+        buttonView.addSubview(titleLabel)
         buttonView.addSubview(descLabel)
         
         buttonView.snp.makeConstraints { make in
