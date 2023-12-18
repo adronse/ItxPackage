@@ -85,7 +85,7 @@ public class ScreenshotObserver {
                 
                 controller.modalPresentationStyle = .overCurrentContext
                 controller.modalTransitionStyle = .crossDissolve
-                controller.preferredContentSize = CGSize(width: 300, height: 200)
+                controller.preferredContentSize = CGSize(width: 50, height: 50)
                 
             
                 topViewController.present(controller, animated: true)
