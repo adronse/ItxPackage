@@ -23,7 +23,11 @@ public class IssueBoxView: UIView {
     @objc func didTapReportBugButton()
     {
         let controller = IssueCreationViewController()
-        self.window?.rootViewController?.present(controller, animated: true)
+        
+        
+        let navigationController = UINavigationController()
+        navigationController.pushViewController(controller, animated: true)
+        self.window?.rootViewController?.present(navigationController, animated: true)
         
     }
     

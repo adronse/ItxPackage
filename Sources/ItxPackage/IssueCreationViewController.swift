@@ -12,6 +12,8 @@ public class IssueCreationViewController : UIViewController
 {
     public override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = "Report a bug"
+        self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
     }
     
@@ -23,6 +25,7 @@ public class IssueCreationViewController : UIViewController
     
     private func configureUI()
     {
+
         view.addSubview(IssueCreationTitle)
         
         
