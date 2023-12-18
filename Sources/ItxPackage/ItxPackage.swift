@@ -57,54 +57,127 @@ class DummyController: UIViewController {
         // Add the popup view to the view hierarchy
         view.addSubview(popupView)
 
-        // Set up constraints to center the popup view
-        NSLayoutConstraint.activate([
-            popupView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            popupView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            popupView.widthAnchor.constraint(equalToConstant: 300), // Adjust the width as needed
-            popupView.heightAnchor.constraint(equalToConstant: 150) // Adjust the height as needed
-        ])
-
+        
+        popupView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.equalTo(300)
+            make.height.equalTo(150)
+        }
         // Customize the appearance of the popup view
         configurePopupView()
     }
 
     func configurePopupView() {
-        // Customize the content of the popup view
-        let titleLabel = UILabel()
-        titleLabel.text = "Popup Title"
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        titleLabel.textAlignment = .center
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let messageLabel = UILabel()
-        messageLabel.text = "Popup Message"
-        messageLabel.textAlignment = .center
-        messageLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        let closeButton = UIButton(type: .system)
-        closeButton.setTitle("Close", for: .normal)
-        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-
-        // Add subviews to the popup view
-        popupView.addSubview(titleLabel)
-        popupView.addSubview(messageLabel)
-        popupView.addSubview(closeButton)
-
-        // Set up constraints for the subviews
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: popupView.topAnchor, constant: 20),
-            titleLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -20),
-
-            messageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
-            messageLabel.leadingAnchor.constraint(equalTo: popupView.leadingAnchor, constant: 20),
-            messageLabel.trailingAnchor.constraint(equalTo: popupView.trailingAnchor, constant: -20),
-
-            closeButton.topAnchor.constraint(equalTo: messageLabel.bottomAnchor, constant: 20),
-            closeButton.centerXAnchor.constraint(equalTo: popupView.centerXAnchor)
-        ])
+        self.view.backgroundColor = UIColor.from(hex: "#323232")
+        
+        lazy var titleLabel = UILabel()
+            .with(\.text, value: "Need help ?")
+            .with(\.textColor, value: .white)
+        
+        lazy var separator = UIView.separator(color: UIColor.from(hex: "#B5B8BE"))
+        
+        
+        let reportBugButton = UIButton(type: .system)
+//            reportBugButton.addTarget(self, action: #selector(didTapReportBugButton), for: .touchUpInside)
+        
+        let reportBugTitleLabel = UILabel()
+            .with(\.text, value: "Report a bug")
+            .with(\.textColor, value: UIColor.white)
+        
+        let reportBugDescriptionLabel = UILabel()
+            .with(\.text, value: "Something in the app is broken or doesn't work as expected")
+            .with(\.textColor, value: UIColor.gray)
+            .with(\.numberOfLines, value: 0) // Allow multiline text
+        
+        let separator1 = UIView.separator(color: UIColor.gray)
+        
+        // Create buttons for the second row ("Suggest an improvement")
+        let suggestImprovementButton = UIButton(type: .system)
+        // suggestImprovementButton.addTarget(self, action: #selector(suggestImprovementButtonTapped), for: .touchUpInside)
+        
+        let suggestImprovementTitle = UILabel()
+            .with(\.text, value: "Suggest an improvement")
+            .with(\.textColor, value: UIColor.white)
+        
+        let suggestImprovementDescription = UILabel()
+            .with(\.text, value: "New ideas or desired enhancements for this app")
+            .with(\.textColor, value: UIColor.gray)
+            .with(\.numberOfLines, value: 0) // Allow multiline text
+        
+        let cancelButton = UIButton(type: .system)
+        
+        
+        cancelButton.setTitle("Cancel", for: .normal)
+        cancelButton.setTitleColor(UIColor.white, for: .normal)
+        
+        
+        self.view.addSubview(titleLabel)
+        self.view.addSubview(separator)
+        
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(self.view.snp.leadingMargin).offset(10)
+            make.top.equalTo(self.view.snp.topMargin).offset(10)
+        }
+        
+        separator.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
+        }
+        
+        
+        self.view.addSubview(reportBugButton)
+        reportBugButton.addSubview(reportBugTitleLabel)
+        reportBugButton.addSubview(reportBugDescriptionLabel)
+        self.view.addSubview(separator1)
+        
+        reportBugButton.snp.makeConstraints { make in
+            make.top.equalTo(separator.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(separator1.snp.bottom)
+        }
+        
+        reportBugTitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(reportBugButton).offset(10)
+            make.leading.equalTo(reportBugButton).offset(10)
+        }
+        
+        reportBugDescriptionLabel.snp.makeConstraints { make in
+            make.top.equalTo(reportBugTitleLabel.snp.bottom).offset(5)
+            make.leading.trailing.equalTo(reportBugButton).inset(10)
+        }
+        
+        separator1.snp.makeConstraints { make in
+            make.top.equalTo(reportBugDescriptionLabel.snp.bottom).offset(20)
+            make.leading.trailing.equalTo(reportBugButton)
+            make.height.equalTo(1)
+        }
+        
+        self.view.addSubview(suggestImprovementButton)
+        suggestImprovementButton.addSubview(suggestImprovementTitle)
+        suggestImprovementButton.addSubview(suggestImprovementDescription)
+        
+        suggestImprovementButton.snp.makeConstraints { make in
+            make.top.equalTo(separator1.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+        }
+        
+        suggestImprovementTitle.snp.makeConstraints { make in
+            make.top.equalTo(suggestImprovementButton).offset(10)
+            make.leading.equalTo(suggestImprovementButton).offset(10)
+        }
+        
+        suggestImprovementDescription.snp.makeConstraints { make in
+            make.top.equalTo(suggestImprovementTitle.snp.bottom).offset(5)
+            make.leading.trailing.equalTo(suggestImprovementButton).inset(10)
+        }
+        
+        self.view.addSubview(cancelButton)
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(suggestImprovementDescription.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(20)
+        }
     }
 
     @objc func closeButtonTapped() {
