@@ -10,9 +10,15 @@ import UIKit
 import Photos
 
 
+import UIKit
+
 class FullScreenImageViewController: UIViewController {
     
     private let imageView: UIImageView
+    private var lastPoint: CGPoint?
+    private var drawColor = UIColor.red.cgColor
+    private var lineWidth: CGFloat = 5.0
+    private var drawingImageView: UIImageView!
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -27,22 +33,96 @@ class FullScreenImageViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .black
+        
+        setupImageView()
+        setupPanGestureRecognizer()
+        setupDoneButton()
+    }
+    
+    private func setupImageView() {
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        view.addGestureRecognizer(tapGesture)
+        drawingImageView = UIImageView(frame: imageView.bounds)
+        drawingImageView.contentMode = .scaleAspectFit
+        drawingImageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(drawingImageView)
         
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
+        drawingImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
-    @objc private func handleTap() {
+    private func setupPanGestureRecognizer() {
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        drawingImageView.addGestureRecognizer(panGesture)
+    }
+    
+    private func setupDoneButton() {
+        let doneButton = UIButton(type: .system)
+        doneButton.setTitle("Done", for: .normal)
+        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.addTarget(self, action: #selector(handleDoneButton), for: .touchUpInside)
+        
+        view.addSubview(doneButton)
+        
+        doneButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            doneButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            doneButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16)
+        ])
+    }
+    
+    @objc private func handleDoneButton() {
+        // Handle the done button action
+        // You may want to save the drawn image or perform any other actions here
         dismiss(animated: true, completion: nil)
     }
+    
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let currentPoint = gesture.location(in: drawingImageView)
+        
+        switch gesture.state {
+        case .began:
+            lastPoint = currentPoint
+        case .changed:
+            if let lastPoint = lastPoint {
+                drawLine(from: lastPoint, to: currentPoint)
+                self.lastPoint = currentPoint
+            }
+        case .ended, .cancelled:
+            lastPoint = nil
+        default:
+            break
+        }
+    }
+    
+    private func drawLine(from startPoint: CGPoint, to endPoint: CGPoint) {
+        UIGraphicsBeginImageContext(drawingImageView.frame.size)
+        defer { UIGraphicsEndImageContext() }
+        
+        guard let context = UIGraphicsGetCurrentContext() else { return }
+        drawingImageView.image?.draw(in: CGRect(x: 0, y: 0, width: drawingImageView.frame.width, height: drawingImageView.frame.height))
+        
+        context.move(to: startPoint)
+        context.addLine(to: endPoint)
+        
+        context.setBlendMode(.normal)
+        context.setLineCap(.round)
+        context.setLineWidth(lineWidth)
+        context.setStrokeColor(drawColor)
+        
+        context.strokePath()
+        
+        drawingImageView.image = UIGraphicsGetImageFromCurrentImageContext()
+    }
 }
+
 
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
