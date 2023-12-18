@@ -23,26 +23,31 @@ public class IssueCreationViewController : UIViewController
         .with(\.textColor, value: UIColor.from(hex: "#11590D"))
     
     
-    private lazy var emailField = InputContainerView.make(
-        title: "Email",
-        input: UITextField()
-            .with(\.placeholder, value: "john.doe@iterationx.io")
-            .with(\.autocorrectionType, value: UITextAutocorrectionType.no)
-            .with(\.autocapitalizationType, value: UITextAutocapitalizationType.none)
-            .with(\.keyboardType, value: UIKeyboardType.emailAddress)
-            .with(\.textContentType, value: UITextContentType.emailAddress)
-            .with(\.backgroundColor, value: .clear)
-        
-    )
+    
+    private lazy var emailFieldTitle = UILabel()
+        .with(\.text, value: "Email")
+        .with(\.textColor, value: UIColor.from(hex: "#454547"))
+    
+    private lazy var emailField = UITextField()
+        .with(\.placeholder, value: "john.doe@iterationx.io")
+        .with(\.textColor, value: .white)
+
     
     
     private func configureUI()
     {
 
+        view.addSubview(emailFieldTitle)
         view.addSubview(emailField)
         
-        emailField.snp.makeConstraints { make in
+        emailFieldTitle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(60)
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(40)
+        }
+        
+        emailFieldTitle.snp.makeConstraints { make in
+            make.top.equalTo(emailFieldTitle.snp.bottom).offset(5)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
