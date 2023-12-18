@@ -22,7 +22,7 @@ public class IssueCreationViewController: UIViewController {
     private lazy var emailFieldTitle: UILabel = {
         let label = UILabel()
         label.text = "Email"
-        label.textColor = UIColor.from(hex: "#454547")
+        label.textColor = .white
         return label
     }()
     
@@ -38,24 +38,17 @@ public class IssueCreationViewController: UIViewController {
     private lazy var descriptionFieldTitle: UILabel = {
         let label = UILabel()
         label.text = "Description"
-        label.textColor = UIColor.from(hex: "#454547")
+        label.textColor = .white
         return label
     }()
     
     private lazy var descriptionFieldInput: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "john.doe@iterationx.io"
+        textField.placeholder = "Please be as detailed as possible. What did you expect and what happened instead?"
         textField.textColor = .white
         return textField
     }()
-    
-    private lazy var descriptionFieldDesc: UILabel = {
-        let label = UILabel()
-        label.text = "Please be as detailed as possible. What did you expect and what happened instead?"
-        label.textColor = UIColor.from(hex: "#454547")
-        label.numberOfLines = 0
-        return label
-    }()
+
     
     private lazy var screenshotImageView: UIImageView = {
         let imageView = UIImageView()
@@ -84,7 +77,6 @@ public class IssueCreationViewController: UIViewController {
         view.addSubview(separator)
         view.addSubview(descriptionFieldTitle)
         view.addSubview(descriptionFieldInput)
-        view.addSubview(descriptionFieldDesc)
         view.addSubview(sendButton)
         
         emailFieldTitle.snp.makeConstraints { make in
@@ -116,16 +108,10 @@ public class IssueCreationViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
-        
-        descriptionFieldDesc.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(2)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(40)
-        }
-        
+
         imageBox.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldDesc.snp.bottom).offset(30)
-            make.leading.equalTo(descriptionFieldDesc)
+            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(30)
+            make.leading.equalTo(descriptionFieldInput)
             make.size.equalTo(40)
         }
         
