@@ -71,7 +71,14 @@ public class ScreenshotObserver {
                 // Create and push the ImageViewController
                 let imageController = IssueBoxView(image: screenshot)
                 if let navigationController = topViewController.navigationController {
-                    navigationController.modalPresentationStyle = .formSheet
+                    // Set the presentation style to .overCurrentContext to make it appear as a modal
+                    imageController.modalPresentationStyle = .overCurrentContext
+
+                    // Set the transition style to .crossDissolve or any other desired transition
+                    imageController.modalTransitionStyle = .crossDissolve
+
+                    // Customize the size of the presented view controller
+                    imageController.preferredContentSize = CGSize(width: 300, height: 200)
                     navigationController.pushViewController(imageController, animated: true)
                 } else {
                     // If there's no navigation controller, present the ImageViewController
