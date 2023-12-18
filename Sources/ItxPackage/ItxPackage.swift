@@ -53,9 +53,20 @@ public struct MySwiftPackage {
                 .with(\.numberOfLines, value: 0) // Allow multiline text
 
             let separator1 = UIView.separator(color: UIColor.gray)
+            
+        
+            let suggestImprovementTitle = UILabel()
+                .with(\.text, value: "Suggest an improvement")
+                .with(\.textColor, value: UIColor.white)
+
+            let suggestImprovementDescription = UILabel()
+                .with(\.text, value: "New ideas or desired enhancements for this app")
+                .with(\.textColor, value: UIColor.gray)
+                .with(\.numberOfLines, value: 0) // Allow multiline text
+            
+            let separator2 = UIView.separator(color: UIColor.gray)
 
             
-
             // Retrieve the top-most view controller
             if let topViewController = UIApplication.shared.keyWindow?.rootViewController {
                 // Add SendIssueBox to the top view controller's view
@@ -74,7 +85,7 @@ public struct MySwiftPackage {
 
                 titleLabel.snp.makeConstraints { make in
                     make.leading.equalTo(sendIssueBox.snp.leadingMargin).offset(10)
-                    make.top.equalTo(sendIssueBox.snp.topMargin).offset(50)
+                    make.top.equalTo(sendIssueBox.snp.topMargin).offset(10)
                 }
 
                 separator.snp.makeConstraints { make in
@@ -106,6 +117,23 @@ public struct MySwiftPackage {
                 separator1.snp.makeConstraints { make in
                     make.top.equalTo(reportBugDescriptionLabel.snp.bottom).offset(20)
                     make.leading.trailing.equalTo(reportBugButton)
+                    make.height.equalTo(1)
+                }
+                
+                suggestImprovementTitle.snp.makeConstraints { make in
+                    make.top.equalTo(separator1.snp.bottom)
+                    make.leading.trailing.equalToSuperview()
+                    make.bottom.equalTo(separator1.snp.bottom)
+                }
+
+                suggestImprovementDescription.snp.makeConstraints { make in
+                    make.top.equalTo(reportBugButton).offset(10)
+                    make.leading.equalTo(reportBugButton).offset(10)
+                }
+                
+                separator2.snp.makeConstraints { make in
+                    make.top.equalTo(suggestImprovementDescription.snp.bottom).offset(20)
+                    make.leading.trailing.equalTo(suggestImprovementDescription)
                     make.height.equalTo(1)
                 }
             }
