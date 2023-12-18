@@ -65,32 +65,23 @@ public class ScreenshotObserver {
 
     @objc static func detectScreenshot() {
         // Retrieve the top-most view controller
-        if let topViewController = UIApplication.shared.keyWindow?.rootViewController {
+        if let keyWindow = UIApplication.shared.keyWindow {
+                if let screenshot = captureScreen(view: keyWindow) {
+                    // Do something with the screenshot, e.g., save it, display it, etc.
+                    // For now, let's print the image data size
+                    if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
+                        print("Captured screenshot with size: \(jpegData.count) bytes")
+                    }
 
-            if let screenshot = captureScreen(view: topViewController.view) {
-                // Do something with the screenshot, e.g., save it, display it, etc.
-                // For now, let's print the image data size
-                if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
-                    print("Captured screenshot with size: \(jpegData.count) bytes")
+                    // Create and present the DummyController
+                    let controller = DummyController()
+                    controller.modalPresentationStyle = .overCurrentContext
+                    controller.modalTransitionStyle = .crossDissolve
+                    controller.preferredContentSize = CGSize(width: 50, height: 50)
+
+                    keyWindow.rootViewController?.present(controller, animated: true)
                 }
-
-                // Assign the screenshot to the imageView
-                imageView.image = screenshot
-
-                // Create and push the ImageViewController
-                let imageController = IssueBoxView(image: screenshot)
-                
-                
-                let controller = DummyController()
-                
-                controller.modalPresentationStyle = .overCurrentContext
-                controller.modalTransitionStyle = .crossDissolve
-                controller.preferredContentSize = CGSize(width: 50, height: 50)
-                
-            
-                topViewController.present(controller, animated: true)
             }
-        }
     }
 
     static func captureScreen(view: UIView) -> UIImage? {
