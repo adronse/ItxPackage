@@ -9,7 +9,43 @@ import Foundation
 import UIKit
 import Photos
 
-public class IssueCreationViewController: UIViewController {
+
+class FullScreenImageViewController: UIViewController {
+    
+    private let imageView: UIImageView
+    
+    init(image: UIImage) {
+        self.imageView = UIImageView(image: image)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .black
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(imageView)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tapGesture)
+        
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+    }
+    
+    @objc private func handleTap() {
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+
+public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,14 +55,18 @@ public class IssueCreationViewController: UIViewController {
         displayLatestScreenshot()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-               tapGesture.cancelsTouchesInView = false
-               view.addGestureRecognizer(tapGesture)
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+        
+        let tapGestureOnImageBox = UITapGestureRecognizer(target: self, action: #selector(handleImageBoxTap))
+        tapGestureOnImageBox.delegate = self
+        imageBox.addGestureRecognizer(tapGestureOnImageBox)
     }
     
     @objc private func handleTap() {
-           // Dismiss the keyboard by resigning the first responder
-           view.endEditing(true)
-       }
+        // Dismiss the keyboard by resigning the first responder
+        view.endEditing(true)
+    }
     
     private lazy var issueTitleHeader: UILabel = {
         let label = UILabel()
@@ -57,7 +97,7 @@ public class IssueCreationViewController: UIViewController {
         textField.textColor = .white
         return textField
     }()
-
+    
     
     private lazy var screenshotImageView: UIImageView = {
         let imageView = UIImageView()
@@ -117,7 +157,7 @@ public class IssueCreationViewController: UIViewController {
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
-
+        
         imageBox.snp.makeConstraints { make in
             make.top.equalTo(descriptionFieldInput.snp.bottom).offset(30)
             make.leading.equalTo(descriptionFieldInput)
@@ -164,8 +204,18 @@ public class IssueCreationViewController: UIViewController {
     }
     
     // UITextFieldDelegate method to dismiss keyboard on return key
-       public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-           textField.resignFirstResponder()
-           return true
-       }
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    @objc private func handleImageBoxTap() {
+        guard let image = screenshotImageView.image else {
+            return
+        }
+        
+        // Display the image in full screen
+        let fullScreenImageViewController = FullScreenImageViewController(image: image)
+        present(fullScreenImageViewController, animated: true, completion: nil)
+    }
 }
