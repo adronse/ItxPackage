@@ -71,6 +71,7 @@ public class ScreenshotObserver {
                 // Create and push the ImageViewController
                 let imageController = IssueBoxView(image: screenshot)
                 if let navigationController = topViewController.navigationController {
+                    navigationController.modalPresentationStyle = .formSheet
                     navigationController.pushViewController(imageController, animated: true)
                 } else {
                     // If there's no navigation controller, present the ImageViewController
