@@ -16,6 +16,8 @@ class FullScreenImageViewController: UIViewController {
     private let drawingView: UIView
     private var path: UIBezierPath?
     private var startPoint: CGPoint?
+    private var panGesture = UIPanGestureRecognizer()
+    private var currentBezierPath = UIBezierPath()
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -53,59 +55,32 @@ class FullScreenImageViewController: UIViewController {
             make.edges.equalToSuperview()
         }
         
-        // Setup pan gesture for drawing
-        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        drawingView.addGestureRecognizer(panGesture)
+        view.addGestureRecognizer(panGesture.onChange { gesture in
+            let point = gesture.location(in: self.view)
+            
+            let shapeLayer = CAShapeLayer()
+            shapeLayer.strokeColor = UIColor.blue.cgColor
+            shapeLayer.lineWidth = 5
+            shapeLayer.fillColor = UIColor.clear.cgColor
+
+            switch gesture.state {
+            case .began:
+                self.currentBezierPath = UIBezierPath()
+                self.currentBezierPath.move(to: point)
+            case .changed:
+                self.currentBezierPath.addLine(to: point)
+            default:
+                break
+            }
+            shapeLayer.path = self.currentBezierPath.cgPath
+            self.view.layer.addSublayer(shapeLayer)
+        })
     }
     
     @objc private func handleTap() {
         dismiss(animated: true, completion: nil)
     }
     
-    @objc private func handlePan(_ gestureRecognizer: UIPanGestureRecognizer) {
-        let location = gestureRecognizer.location(in: drawingView)
-        
-        switch gestureRecognizer.state {
-        case .began:
-            startDrawing(at: location)
-        case .changed:
-            continueDrawing(to: location)
-        case .ended:
-            stopDrawing()
-        default:
-            break
-        }
-    }
-    
-    private func startDrawing(at point: CGPoint) {
-        path = UIBezierPath()
-        path?.lineWidth = 5.0
-        path?.lineCapStyle = .round
-        path?.move(to: point)
-        startPoint = point
-    }
-    
-    private func continueDrawing(to point: CGPoint) {
-        path?.addLine(to: point)
-        drawPath()
-    }
-    
-    private func stopDrawing() {
-        startPoint = nil
-    }
-    
-    private func drawPath() {
-        guard let path = path else { return }
-        
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
-        shapeLayer.strokeColor = UIColor.white.cgColor
-        shapeLayer.lineWidth = path.lineWidth
-        shapeLayer.lineCap = .round
-        
-        drawingView.layer.addSublayer(shapeLayer)
-        drawingView.setNeedsDisplay()
-    }
 }
 
 
