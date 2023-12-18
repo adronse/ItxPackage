@@ -73,6 +73,7 @@ class ReportButton: UIView {
         lazy var descLabel = UILabel()
             .with(\.text, value: reportButtonDescription)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.numberOfLines, value: 0)
             .with(\.font, value: .systemFont(ofSize: 12))
         
     
