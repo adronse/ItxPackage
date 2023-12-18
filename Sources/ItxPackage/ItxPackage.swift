@@ -34,6 +34,8 @@ public class ImageViewController : UIViewController {
 }
 
 
+import UIKit
+
 class DummyController: UIViewController {
 
     // Your UI elements go here
@@ -42,7 +44,7 @@ class DummyController: UIViewController {
         super.viewDidLoad()
 
         // Set modal presentation style
-        modalPresentationStyle = .overCurrentContext
+        modalPresentationStyle = .overFullScreen
         modalTransitionStyle = .crossDissolve
 
         // Configure appearance
@@ -79,6 +81,7 @@ class DummyController: UIViewController {
     }
 }
 
+
 public struct MySwiftPackage {
     
     public init() {
@@ -112,9 +115,6 @@ public class ScreenshotObserver {
 
                 // Create and present the DummyController
                 let controller = DummyController()
-                controller.modalPresentationStyle = .overCurrentContext
-                controller.modalTransitionStyle = .crossDissolve
-                controller.preferredContentSize = CGSize(width: 50, height: 50)
 
                 topViewController.present(controller, animated: true)
             }
