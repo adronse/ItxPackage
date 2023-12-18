@@ -150,7 +150,7 @@ class DummyController: UIViewController {
         
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalTo(450)
+            make.width.equalTo(330)
             make.height.equalTo(300)
         }
         
