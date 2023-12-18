@@ -61,16 +61,21 @@ class ReportButton: UIView {
         
         let buttonView = UIView()
         
+        backgroundColor = UIColor.from(hex: "#333333")
         addSubview(buttonView)
+  
         
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.numberOfLines = 0
-        buttonView.addSubview(titleLabel)
+        lazy var titleLabel = UILabel()
+            .with(\.text, value: title)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.font, value: .systemFont(ofSize: 16))
         
-        let descLabel = UILabel()
-        descLabel.text = reportButtonDescription
-        descLabel.numberOfLines = 0
+        lazy var descLabel = UILabel()
+            .with(\.text, value: reportButtonDescription)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.font, value: .systemFont(ofSize: 12))
+        
+    
         buttonView.addSubview(descLabel)
         
         buttonView.snp.makeConstraints { make in
