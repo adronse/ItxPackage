@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct MySwiftUIView: View {
+public struct MySwiftPackage: View {
     @available(iOS 13.0.0, *)
     public var body: some View {
         Text("Hello, World!")
