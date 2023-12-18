@@ -30,14 +30,14 @@ public struct MySwiftPackage {
         @objc static func detectScreenshot() {
             // Create SendIssueBox view
             lazy var sendIssueBox = UIView()
-                .with(\.backgroundColor, value: UIColor.from(hex: "#292A2F"))
+                .with(\.backgroundColor, value: .darkGray)
                 .with(\.translatesAutoresizingMaskIntoConstraints, value: false)
             
             lazy var titleLabel = UILabel()
                 .with(\.text, value: "Need help ?")
-                .with(\.textColor, value: UIColor.from(hex: "#404040"))
+                .with(\.textColor, value: .white)
             
-            lazy var separator = UIView.separator(color: UIColor.from(hex: "#41403f"))
+            lazy var separator = UIView.separator(color: .darkGray)
 
             // Retrieve the top-most view controller
             if let topViewController = UIApplication.shared.keyWindow?.rootViewController {
