@@ -33,7 +33,7 @@ public class IssueCreationViewController: UIViewController {
         return textField
     }()
     
-    lazy var separator = UIView.separator(color: UIColor.from(hex: "#B5B8BE"))
+    lazy var separator = UIView.separator(color: .gray)
     
     private lazy var descriptionFieldTitle: UILabel = {
         let label = UILabel()
@@ -72,6 +72,7 @@ public class IssueCreationViewController: UIViewController {
         view.addSubview(emailField)
         view.addSubview(screenshotImageView)
         view.addSubview(imageBox)
+        imageBox.addSubview(screenshotImageView)
         view.addSubview(separator)
         view.addSubview(descriptionFieldTitle)
         view.addSubview(descriptionFieldInput)
@@ -112,7 +113,15 @@ public class IssueCreationViewController: UIViewController {
             make.height.equalTo(40)
         }
         
+        imageBox.snp.makeConstraints { make in
+            make.top.equalTo(descriptionFieldDesc.snp.bottom).offset(30)
+            make.leading.equalTo(descriptionFieldDesc)
+            make.size.equalTo(40)
+        }
         
+        screenshotImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
 //        screenshotImageView.snp.makeConstraints { make in
 //            make.top.equalTo(emailField.snp.bottom).offset(10)
