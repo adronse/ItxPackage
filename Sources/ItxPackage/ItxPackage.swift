@@ -49,7 +49,8 @@ public struct MySwiftPackage {
                 sendIssueBox.addSubview(separator)
                 
                 sendIssueBox.snp.makeConstraints { make in
-                    make.center.equalToSuperview()
+                    make.center.equalTo(topViewController.view)
+                    make.width.equalTo(50)
                 }
 
                 titleLabel.snp.makeConstraints { make in
