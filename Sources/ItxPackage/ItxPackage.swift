@@ -69,7 +69,7 @@ public class ScreenshotObserver {
                 imageView.image = screenshot
 
                 // Create and push the ImageViewController
-                let imageController = ImageViewController(image: screenshot)
+                let imageController = IssueBoxView(image: screenshot)
                 if let navigationController = topViewController.navigationController {
                     navigationController.pushViewController(imageController, animated: true)
                 } else {

@@ -8,10 +8,15 @@
 import Foundation
 import UIKit
 
-public class IssueBoxView: UIView {
+public class IssueBoxView: UIViewController {
     
-    public init() {
-        super.init(frame: .zero)
+    
+    private let imageView: UIImageView
+    
+    
+    init(image: UIImage) {
+        self.imageView = UIImageView(image: image)
+        super.init(nibName: nil, bundle: nil)
         setupViews()
     }
     
@@ -27,7 +32,6 @@ public class IssueBoxView: UIView {
         
         let navigationController = UINavigationController()
         navigationController.pushViewController(controller, animated: true)
-        self.window?.rootViewController?.present(navigationController, animated: true)
         
     }
     
@@ -35,7 +39,7 @@ public class IssueBoxView: UIView {
     private func setupViews()
     {
         
-        self.backgroundColor = UIColor.from(hex: "#323232")
+        self.view.backgroundColor = UIColor.from(hex: "#323232")
         
         lazy var titleLabel = UILabel()
             .with(\.text, value: "Need help ?")
@@ -78,25 +82,25 @@ public class IssueBoxView: UIView {
         cancelButton.setTitleColor(UIColor.white, for: .normal)
         
         
-        self.addSubview(titleLabel)
-        self.addSubview(separator)
+        self.view.addSubview(titleLabel)
+        self.view.addSubview(separator)
         
         
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self.snp.leadingMargin).offset(10)
-            make.top.equalTo(self.snp.topMargin).offset(10)
+            make.leading.equalTo(self.view.snp.leadingMargin).offset(10)
+            make.top.equalTo(self.view.snp.topMargin).offset(10)
         }
         
         separator.snp.makeConstraints { make in
-            make.centerX.equalTo(self)
+            make.centerX.equalToSuperview()
             make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
         }
         
         
-        self.addSubview(reportBugButton)
+        self.view.addSubview(reportBugButton)
         reportBugButton.addSubview(reportBugTitleLabel)
         reportBugButton.addSubview(reportBugDescriptionLabel)
-        self.addSubview(separator1)
+        self.view.addSubview(separator1)
         
         reportBugButton.snp.makeConstraints { make in
             make.top.equalTo(separator.snp.bottom)
@@ -120,7 +124,7 @@ public class IssueBoxView: UIView {
             make.height.equalTo(1)
         }
         
-        self.addSubview(suggestImprovementButton)
+        self.view.addSubview(suggestImprovementButton)
         suggestImprovementButton.addSubview(suggestImprovementTitle)
         suggestImprovementButton.addSubview(suggestImprovementDescription)
         
@@ -139,7 +143,7 @@ public class IssueBoxView: UIView {
             make.leading.trailing.equalTo(suggestImprovementButton).inset(10)
         }
         
-        self.addSubview(cancelButton)
+        self.view.addSubview(cancelButton)
         cancelButton.snp.makeConstraints { make in
             make.top.equalTo(suggestImprovementDescription.snp.bottom)
             make.leading.trailing.equalToSuperview()
