@@ -134,9 +134,13 @@ class DummyController: UIViewController {
         .with(\.font, value: .systemFont(ofSize: 12))
     
     
-    lazy var separator = UIView.separator(color: UIColor.from(hex: "#333333"))
+    lazy var separator1 = UIView.separator(color: .white)
+    
+    lazy var separator2 = UIView.separator(color: .white)
     
     lazy var reportBugButton = ReportButton(title: "Report a bug", reportButtonDescription: "Something in the app is broken or doesn't work as expected")
+    
+    lazy var proposeEnhancementButton = ReportButton(title: "Suggest an improvement", reportButtonDescription: "New ideas or desired enhancements for this app")
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,8 +164,10 @@ class DummyController: UIViewController {
 
     func configurePopupView() {
         popupView.addSubview(popupTitle)
-        popupView.addSubview(separator)
+        popupView.addSubview(separator1)
         popupView.addSubview(reportBugButton)
+        popupView.addSubview(proposeEnhancementButton)
+        popupView.addSubview(separator2)
     
         
         popupTitle.snp.makeConstraints { make in
@@ -169,7 +175,7 @@ class DummyController: UIViewController {
             make.leading.equalTo(popupView.snp.leading).offset(5)
         }
         
-        separator.snp.makeConstraints { make in
+        separator1.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(1)
             make.top.equalTo(popupTitle.snp.bottom).offset(50)
@@ -177,7 +183,18 @@ class DummyController: UIViewController {
         
         reportBugButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(popupView)
-            make.top.equalTo(separator.snp.bottom)
+            make.top.equalTo(separator1.snp.bottom).offset(2)
+        }
+        
+        separator2.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1)
+            make.top.equalTo(reportBugButton.snp.bottom).offset(50)
+        }
+        
+        proposeEnhancementButton.snp.makeConstraints { make in
+            make.top.equalTo(separator2.snp.bottom).offset(2)
+            make.leading.trailing.equalTo(popupView)
         }
     }
 
