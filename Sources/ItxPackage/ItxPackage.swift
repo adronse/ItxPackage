@@ -134,6 +134,24 @@ public struct MySwiftPackage {
                     make.height.equalTo(1)
                 }
                 
+                sendIssueBox.addSubview(suggestImprovementButton)
+                suggestImprovementButton.addSubview(suggestImprovementTitle)
+                suggestImprovementButton.addSubview(suggestImprovementDescription)
+                
+                suggestImprovementButton.snp.makeConstraints { make in
+                    make.top.equalTo(separator1.snp.bottom)
+                    make.leading.trailing.equalToSuperview()
+                }
+                
+                suggestImprovementTitle.snp.makeConstraints { make in
+                    make.top.equalTo(suggestImprovementButton).offset(10)
+                    make.leading.equalTo(suggestImprovementButton).offset(10)
+                }
+                
+                suggestImprovementDescription.snp.makeConstraints { make in
+                    make.top.equalTo(suggestImprovementTitle.snp.bottom).offset(5)
+                    make.leading.trailing.equalTo(suggestImprovementTitle).inset(10)
+                }
                 
             }
         }
