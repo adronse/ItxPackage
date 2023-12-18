@@ -54,7 +54,10 @@ public struct MySwiftPackage {
 
             let separator1 = UIView.separator(color: UIColor.gray)
             
-        
+            // Create buttons for the second row ("Suggest an improvement")
+            let suggestImprovementButton = UIButton(type: .system)
+            // suggestImprovementButton.addTarget(self, action: #selector(suggestImprovementButtonTapped), for: .touchUpInside)
+            
             let suggestImprovementTitle = UILabel()
                 .with(\.text, value: "Suggest an improvement")
                 .with(\.textColor, value: UIColor.white)
@@ -62,22 +65,13 @@ public struct MySwiftPackage {
             let suggestImprovementDescription = UILabel()
                 .with(\.text, value: "New ideas or desired enhancements for this app")
                 .with(\.textColor, value: UIColor.gray)
-                .with(\.numberOfLines, value: 0) // Allow multiline text
+                .with(\.numberOfLines, value: 2) // Allow multiline text
+    
+            let cancelButton = UIButton(type: .system)
             
-            // Create buttons for the second row ("Suggest an improvement")
-            let suggestImprovementButton = UIButton(type: .system)
-            // suggestImprovementButton.addTarget(self, action: #selector(suggestImprovementButtonTapped), for: .touchUpInside)
-
-            let suggestImprovementTitleLabel = UILabel()
-                .with(\.text, value: "Suggest an improvement")
-                .with(\.textColor, value: UIColor.white)
-
-            let suggestImprovementDescriptionLabel = UILabel()
-                .with(\.text, value: "New ideas or desired enhancements for this app")
-                .with(\.textColor, value: UIColor.gray)
-                .with(\.numberOfLines, value: 0) // Allow multiline text
-
-            let separator2 = UIView.separator(color: UIColor.gray)
+            
+            cancelButton.setTitle("Cancel", for: .normal)
+            cancelButton.setTitleColor(UIColor.white, for: .normal)
 
             
             // Retrieve the top-most view controller
@@ -151,6 +145,13 @@ public struct MySwiftPackage {
                 suggestImprovementDescription.snp.makeConstraints { make in
                     make.top.equalTo(suggestImprovementTitle.snp.bottom).offset(5)
                     make.leading.trailing.equalTo(suggestImprovementTitle).inset(10)
+                }
+                
+                sendIssueBox.addSubview(cancelButton)
+                cancelButton.snp.makeConstraints { make in
+                    make.top.equalTo(suggestImprovementDescription.snp.bottom)
+                    make.leading.trailing.equalToSuperview()
+                    make.height.equalTo(20)
                 }
                 
             }
