@@ -88,6 +88,12 @@ public struct MySwiftPackage {
                 
                 sendIssueBox.addSubview(titleLabel)
                 sendIssueBox.addSubview(separator)
+                sendIssueBox.addSubview(reportBugTitleLabel)
+                sendIssueBox.addSubview(reportBugDescriptionLabel)
+                sendIssueBox.addSubview(separator1)
+                sendIssueBox.addSubview(separator2)
+                sendIssueBox.addSubview(suggestImprovementTitle)
+                sendIssueBox.addSubview(suggestImprovementDescription)
                 
                 sendIssueBox.snp.makeConstraints { make in
                     make.centerX.equalToSuperview()
@@ -106,11 +112,6 @@ public struct MySwiftPackage {
                     make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
                 }
                 
-                sendIssueBox.addSubview(reportBugButton)
-                sendIssueBox.addSubview(reportBugTitleLabel)
-                sendIssueBox.addSubview(reportBugDescriptionLabel)
-                sendIssueBox.addSubview(separator1)
-
                 reportBugButton.snp.makeConstraints { make in
                     make.top.equalTo(separator.snp.bottom)
                     make.leading.trailing.equalToSuperview()
@@ -132,23 +133,6 @@ public struct MySwiftPackage {
                     make.leading.trailing.equalTo(reportBugButton)
                     make.height.equalTo(1)
                 }
-                
-                reportBugButton.snp.makeConstraints { make in
-                    make.top.equalTo(separator1.snp.bottom)
-                    make.leading.trailing.equalToSuperview()
-                    make.bottom.equalTo(separator1.snp.bottom)
-                }
-
-                reportBugTitleLabel.snp.makeConstraints { make in
-                    make.top.equalTo(reportBugButton).offset(10)
-                    make.leading.equalTo(reportBugButton).offset(10)
-                }
-                
-                // Add buttons and separator to the sendIssueBox
-                sendIssueBox.addSubview(suggestImprovementButton)
-                sendIssueBox.addSubview(suggestImprovementTitleLabel)
-                sendIssueBox.addSubview(suggestImprovementDescriptionLabel)
-                sendIssueBox.addSubview(separator2)
 
                 // Position the buttons and separator for the second row
                 suggestImprovementButton.snp.makeConstraints { make in
