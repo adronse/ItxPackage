@@ -182,7 +182,7 @@ class DummyController: UIViewController {
         }
         
         reportBugButton.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(popupView)
+            make.leading.trailing.equalTo(popupView).offset(5)
             make.top.equalTo(separator1.snp.bottom).offset(2)
         }
         
@@ -194,7 +194,7 @@ class DummyController: UIViewController {
         
         proposeEnhancementButton.snp.makeConstraints { make in
             make.top.equalTo(separator2.snp.bottom).offset(2)
-            make.leading.trailing.equalTo(popupView)
+            make.leading.trailing.equalTo(popupView).offset(5)
         }
     }
 
