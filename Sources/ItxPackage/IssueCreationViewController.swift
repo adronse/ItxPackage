@@ -19,16 +19,16 @@ public class IssueCreationViewController: UIViewController {
         displayLatestScreenshot()
     }
     
-    private lazy var emailFieldTitle: UILabel = {
+    private lazy var issueTitleHeader: UILabel = {
         let label = UILabel()
-        label.text = "Email"
+        label.text = "Issue"
         label.textColor = .white
         return label
     }()
     
-    private lazy var emailField: UITextField = {
+    private lazy var issueTitleInput: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "john.doe@iterationx.io"
+        textField.placeholder = "Issue title"
         textField.textColor = .white
         return textField
     }()
@@ -69,8 +69,8 @@ public class IssueCreationViewController: UIViewController {
     }()
     
     private func configureUI() {
-        view.addSubview(emailFieldTitle)
-        view.addSubview(emailField)
+        view.addSubview(issueTitleHeader)
+        view.addSubview(issueTitleInput)
         view.addSubview(screenshotImageView)
         view.addSubview(imageBox)
         imageBox.addSubview(screenshotImageView)
@@ -79,20 +79,20 @@ public class IssueCreationViewController: UIViewController {
         view.addSubview(descriptionFieldInput)
         view.addSubview(sendButton)
         
-        emailFieldTitle.snp.makeConstraints { make in
+        issueTitleHeader.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(60)
             make.leading.trailing.equalToSuperview().inset(2)
             make.height.equalTo(40)
         }
         
-        emailField.snp.makeConstraints { make in
-            make.top.equalTo(emailFieldTitle.snp.bottom).offset(2)
+        issueTitleInput.snp.makeConstraints { make in
+            make.top.equalTo(issueTitleHeader.snp.bottom).offset(2)
             make.leading.trailing.equalToSuperview().inset(5)
             make.height.equalTo(40)
         }
         
         separator.snp.makeConstraints { make in
-            make.top.equalTo(emailField.snp.bottom).offset(2)
+            make.top.equalTo(issueTitleInput.snp.bottom).offset(2)
             make.height.equalTo(1)
             make.leading.trailing.equalToSuperview().inset(5)
         }
