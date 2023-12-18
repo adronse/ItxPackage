@@ -88,12 +88,6 @@ public struct MySwiftPackage {
                 
                 sendIssueBox.addSubview(titleLabel)
                 sendIssueBox.addSubview(separator)
-                sendIssueBox.addSubview(reportBugTitleLabel)
-                sendIssueBox.addSubview(reportBugDescriptionLabel)
-                sendIssueBox.addSubview(separator1)
-                sendIssueBox.addSubview(separator2)
-                sendIssueBox.addSubview(suggestImprovementTitle)
-                sendIssueBox.addSubview(suggestImprovementDescription)
                 
                 sendIssueBox.snp.makeConstraints { make in
                     make.centerX.equalToSuperview()
@@ -111,6 +105,12 @@ public struct MySwiftPackage {
                     make.centerX.equalTo(sendIssueBox)
                     make.top.equalTo(titleLabel.snp.bottomMargin).offset(10) // Adjust the offset as needed
                 }
+                
+                
+                sendIssueBox.addSubview(reportBugButton)
+                reportBugButton.addSubview(reportBugTitleLabel)
+                reportBugButton.addSubview(reportBugDescriptionLabel)
+                sendIssueBox.addSubview(separator1)
                 
                 reportBugButton.snp.makeConstraints { make in
                     make.top.equalTo(separator.snp.bottom)
@@ -133,29 +133,8 @@ public struct MySwiftPackage {
                     make.leading.trailing.equalTo(reportBugButton)
                     make.height.equalTo(1)
                 }
-
-                // Position the buttons and separator for the second row
-                suggestImprovementButton.snp.makeConstraints { make in
-                    make.top.equalTo(separator1.snp.bottom)
-                    make.leading.trailing.equalToSuperview()
-                    make.bottom.equalTo(separator2.snp.bottom)
-                }
-
-                suggestImprovementTitleLabel.snp.makeConstraints { make in
-                    make.top.equalTo(suggestImprovementButton).offset(10)
-                    make.leading.equalTo(suggestImprovementButton).offset(10)
-                }
-
-                suggestImprovementDescriptionLabel.snp.makeConstraints { make in
-                    make.top.equalTo(suggestImprovementTitleLabel.snp.bottom).offset(5)
-                    make.leading.trailing.equalTo(suggestImprovementButton).inset(10)
-                }
-
-                separator2.snp.makeConstraints { make in
-                    make.top.equalTo(suggestImprovementDescriptionLabel.snp.bottom).offset(20)
-                    make.leading.trailing.equalTo(suggestImprovementButton)
-                    make.height.equalTo(1)
-                }
+                
+                
             }
         }
     }
