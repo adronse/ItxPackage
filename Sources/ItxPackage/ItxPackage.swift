@@ -92,7 +92,9 @@ class ReportButton: UIView {
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.bottom.lessThanOrEqualTo(buttonView.snp.bottom).offset(-5)
         }
+
         
     }
     
