@@ -64,25 +64,26 @@ public class ScreenshotObserver {
     }
 
     @objc static func detectScreenshot() {
-        // Retrieve the top-most view controller
-        if let keyWindow = UIApplication.shared.keyWindow {
-                if let screenshot = captureScreen(view: keyWindow) {
-                    // Do something with the screenshot, e.g., save it, display it, etc.
-                    // For now, let's print the image data size
-                    if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
-                        print("Captured screenshot with size: \(jpegData.count) bytes")
-                    }
-
-                    // Create and present the DummyController
-                    let controller = DummyController()
-                    controller.modalPresentationStyle = .overCurrentContext
-                    controller.modalTransitionStyle = .crossDissolve
-                    controller.preferredContentSize = CGSize(width: 50, height: 50)
-
-                    keyWindow.rootViewController?.present(controller, animated: true)
+        // Retrieve the top-most visible view controller
+        if let topViewController = UIApplication.shared.keyWindow?.rootViewController?.itx_visibleViewController {
+            if let screenshot = captureScreen(view: topViewController.view) {
+                // Do something with the screenshot, e.g., save it, display it, etc.
+                // For now, let's print the image data size
+                if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
+                    print("Captured screenshot with size: \(jpegData.count) bytes")
                 }
+
+                // Create and present the DummyController
+                let controller = DummyController()
+                controller.modalPresentationStyle = .overCurrentContext
+                controller.modalTransitionStyle = .crossDissolve
+                controller.preferredContentSize = CGSize(width: 50, height: 50)
+
+                topViewController.present(controller, animated: true)
             }
+        }
     }
+
 
     static func captureScreen(view: UIView) -> UIImage? {
         // Capture the screen as an image
@@ -94,4 +95,21 @@ public class ScreenshotObserver {
         return screenshot
     }
 }
+
+
+extension UIViewController {
+    var itx_visibleViewController: UIViewController? {
+        if let navigationController = self as? UINavigationController {
+            return navigationController.visibleViewController
+        }
+        if let tabBarController = self as? UITabBarController {
+            return tabBarController.selectedViewController
+        }
+        if let presentedViewController = presentedViewController {
+            return presentedViewController.itx_visibleViewController
+        }
+        return self
+    }
+}
+
 
