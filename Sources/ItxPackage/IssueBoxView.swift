@@ -19,6 +19,15 @@ public class IssueBoxView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
+    @objc func didTapReportBugButton()
+    {
+        let controller = IssueCreationViewController()
+        self.window?.rootViewController?.present(controller, animated: true)
+        
+    }
+    
+    
     private func setupViews()
     {
         
@@ -32,7 +41,7 @@ public class IssueBoxView: UIView {
         
         
         let reportBugButton = UIButton(type: .system)
-        //            reportBugButton.addTarget(self, action: #selector(reportBugButtonTapped), for: .touchUpInside)
+            reportBugButton.addTarget(self, action: #selector(didTapReportBugButton), for: .touchUpInside)
         
         let reportBugTitleLabel = UILabel()
             .with(\.text, value: "Report a bug")
