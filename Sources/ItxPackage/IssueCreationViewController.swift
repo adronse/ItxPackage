@@ -31,6 +31,7 @@ public class IssueCreationViewController : UIViewController
             .with(\.autocapitalizationType, value: UITextAutocapitalizationType.none)
             .with(\.keyboardType, value: UIKeyboardType.emailAddress)
             .with(\.textContentType, value: UITextContentType.emailAddress)
+            .with(\.backgroundColor, value: .clear)
         
     )
     
@@ -41,7 +42,7 @@ public class IssueCreationViewController : UIViewController
         view.addSubview(emailField)
         
         emailField.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(30)
+            make.top.equalToSuperview().offset(60)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
