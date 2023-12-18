@@ -59,7 +59,7 @@ class FullScreenImageViewController: UIViewController {
             let point = gesture.location(in: self.view)
             
             let shapeLayer = CAShapeLayer()
-            shapeLayer.strokeColor = UIColor.blue.cgColor
+            shapeLayer.strokeColor = UIColor.red.cgColor
             shapeLayer.lineWidth = 5
             shapeLayer.fillColor = UIColor.clear.cgColor
 
