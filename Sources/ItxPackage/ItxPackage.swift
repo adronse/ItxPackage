@@ -31,7 +31,6 @@ public struct MySwiftPackage {
             // Create SendIssueBox view
             lazy var sendIssueBox = UIView()
                 .with(\.backgroundColor, value: .darkGray)
-                .with(\.translatesAutoresizingMaskIntoConstraints, value: false)
             
             lazy var titleLabel = UILabel()
                 .with(\.text, value: "Need help ?")
@@ -49,8 +48,10 @@ public struct MySwiftPackage {
                 sendIssueBox.addSubview(separator)
                 
                 sendIssueBox.snp.makeConstraints { make in
-                    make.center.equalTo(topViewController.view)
-                    make.width.equalTo(50)
+                    make.centerX.equalToSuperview()
+                    make.centerY.equalToSuperview()
+                    make.width.equalTo(300)
+                    make.height.equalTo(200)
                 }
 
                 titleLabel.snp.makeConstraints { make in
