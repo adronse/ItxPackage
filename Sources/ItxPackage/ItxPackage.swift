@@ -53,7 +53,7 @@ public struct MySwiftPackage {
                 }
 
                 titleLabel.snp.makeConstraints { make in
-                    make.centerX.equalTo(sendIssueBox)
+                    make.leading.equalTo(sendIssueBox.snp.leadingMargin).offset(10)
                     make.top.equalTo(sendIssueBox.snp.topMargin).offset(50)
                 }
 
