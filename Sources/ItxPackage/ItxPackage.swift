@@ -200,7 +200,7 @@ class DummyController: UIViewController {
         view.backgroundColor = .clear
         modalPresentationStyle = .fullScreen
         
-        view.addSubview(tableView)
+        popupView.addSubview(tableView)
         
         
         tableView.snp.makeConstraints { make in
