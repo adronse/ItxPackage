@@ -64,7 +64,6 @@ class ReportButton: UIView
     
         addSubview(buttonView)
   
-        
         let image: UIImageView = {
             let icon = UIImageView()
             if #available(iOS 13.0, *) {
@@ -170,6 +169,7 @@ class DummyController: UIViewController {
 
         // Set the background color (optional)
         view.backgroundColor = .clear
+        modalPresentationStyle = .fullScreen
 
         // Add the popup view to the view hierarchy
         view.addSubview(popupView)
