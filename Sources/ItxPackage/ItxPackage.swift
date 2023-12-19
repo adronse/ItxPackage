@@ -148,7 +148,7 @@ class DummyController: UIViewController {
     lazy var popupTitle = UILabel()
         .with(\.text, value: "Need help?")
         .with(\.textColor, value: UIColor.from(hex: "#dedfe0"))
-        .with(\.font, value: .systemFont(ofSize: 12))
+        .with(\.font, value: .systemFont(ofSize: 18))
     
     
     lazy var separator1 = UIView.separator(color: .white)
@@ -188,8 +188,8 @@ class DummyController: UIViewController {
     
         
         popupTitle.snp.makeConstraints { make in
-            make.top.equalToSuperview()
-            make.leading.equalTo(popupView.snp.leading).offset(5)
+            make.top.equalToSuperview().offset(5)
+            make.leading.equalTo(popupView.snp.leading).offset(10)
         }
         
         separator1.snp.makeConstraints { make in
