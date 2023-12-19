@@ -6,7 +6,6 @@ import SnapKit
 
 class PopupViewController: UIViewController {
     
-    
     private let imageView: UIImageView
     
     private let reportButtonData = [
