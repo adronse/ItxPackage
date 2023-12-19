@@ -199,6 +199,7 @@ class DummyController: UIViewController {
         tableView.isScrollEnabled = false
         tableView.backgroundColor = .clear
         
+        
         view.backgroundColor = .clear
         modalPresentationStyle = .fullScreen
         
@@ -279,11 +280,8 @@ class ReportButtonCell: UITableViewCell {
 
 
 
+
 extension DummyController: UITableViewDataSource, UITableViewDelegate {
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return reportButtonData.count
@@ -299,11 +297,17 @@ extension DummyController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        // Handle cell selection if needed
+        print("Selected row at index: \(indexPath.row)")
         
-        // Handle cell selection, e.g., show a new view controller based on the selected report button
+        // For example, if the user clicks on the first cell, present a new view controller
+        if indexPath.row == 0 {
+            let controller = IssueCreationViewController()
+            present(controller, animated: true, completion: nil)
+        }
     }
 }
+
 
 
 public struct MySwiftPackage {
