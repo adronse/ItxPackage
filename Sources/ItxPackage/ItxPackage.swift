@@ -104,7 +104,7 @@ class ReportButton: UIView
         }
         
         descLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel).offset(5)
+            make.leading.trailing.equalToSuperview().offset(5)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
         }
     }
@@ -208,7 +208,7 @@ class DummyController: UIViewController {
         
         reportBugButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(popupView).offset(5)
-            make.top.equalTo(separator1.snp.bottom).offset(2)
+            make.top.equalTo(separator1.snp.bottom).offset(5)
         }
         
         separator2.snp.makeConstraints { make in
