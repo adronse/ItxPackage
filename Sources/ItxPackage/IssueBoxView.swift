@@ -27,7 +27,7 @@ public class IssueBoxView: UIViewController {
     
     @objc func didTapReportBugButton()
     {
-        let controller = IssueCreationViewController()
+        let controller = IssueCreationViewController(image: imageView)
         
         
         let navigationController = UINavigationController()

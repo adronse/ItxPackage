@@ -88,12 +88,23 @@ class FullScreenImageViewController: UIViewController {
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    
+    private let imageView: UIImageView
+    
+    init(image: UIImageView) {
+        self.imageView = image
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Report a bug"
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
-        displayLatestScreenshot()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         tapGesture.cancelsTouchesInView = false
@@ -140,11 +151,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     
-    private lazy var screenshotImageView: UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
-    
     private lazy var imageBox: UIView = {
         let box = UIView()
         return box
@@ -161,9 +167,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private func configureUI() {
         view.addSubview(issueTitleHeader)
         view.addSubview(issueTitleInput)
-        view.addSubview(screenshotImageView)
         view.addSubview(imageBox)
-        imageBox.addSubview(screenshotImageView)
+        imageBox.addSubview(imageView)
         view.addSubview(separator)
         view.addSubview(descriptionFieldTitle)
         view.addSubview(descriptionFieldInput)
@@ -205,7 +210,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.size.equalTo(40)
         }
         
-        screenshotImageView.snp.makeConstraints { make in
+        imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
@@ -216,35 +221,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
     }
     
-    private func displayLatestScreenshot() {
-        // Fetch the latest screenshot from the photo library
-        if let latestScreenshot = fetchLatestScreenshot() {
-            screenshotImageView.image = latestScreenshot
-        }
-    }
-    
-    private func fetchLatestScreenshot() -> UIImage? {
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        let fetchResult = PHAsset.fetchAssets(with: .image, options: fetchOptions)
-        
-        guard let latestAsset = fetchResult.firstObject else {
-            return nil
-        }
-        
-        let requestOptions = PHImageRequestOptions()
-        requestOptions.isSynchronous = true
-        
-        var latestScreenshot: UIImage?
-        
-        let screenSize = UIScreen.main.bounds.size
-        
-        PHImageManager.default().requestImage(for: latestAsset, targetSize: screenSize, contentMode: .aspectFit, options: requestOptions) { (image, _) in
-            latestScreenshot = image
-        }
-        
-        return latestScreenshot
-    }
+
     
     // UITextFieldDelegate method to dismiss keyboard on return key
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -253,7 +230,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }
     
     @objc private func handleImageBoxTap() {
-        guard let image = screenshotImageView.image else {
+        guard let image = imageView.image else {
             return
         }
         
