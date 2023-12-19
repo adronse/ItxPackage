@@ -31,6 +31,7 @@ public class ImageViewController : UIViewController {
     }
 }
 
+
 class ReportButton: UIView
 {
     
@@ -161,8 +162,16 @@ class DummyController: UIViewController {
     lazy var cancelButton: UIButton = {
         let button = UIButton()
         button.setTitle("Cancel", for: .normal)
+        button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         return button
     }()
+
+    
+    
+    @objc func closeButtonTapped() {
+        dismiss(animated: true, completion: nil)
+    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -234,12 +243,7 @@ class DummyController: UIViewController {
             make.bottom.equalTo(popupView.snp.bottom).inset(10)
         }
     }
-
-    @objc func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
-    }
 }
-
 
 
 public struct MySwiftPackage {
