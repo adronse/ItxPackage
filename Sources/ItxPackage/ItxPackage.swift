@@ -32,8 +32,7 @@ public class ImageViewController : UIViewController {
 }
 
 
-class ReportButton: UIView
-{
+public class ReportButton: UIView {
     
     private let title: String
     private let reportButtonDescription: String
@@ -48,12 +47,12 @@ class ReportButton: UIView
         setupUI()
         setupGesture()
     }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupGesture()
-    {
+    private func setupGesture() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
         addGestureRecognizer(tapGesture)
         isUserInteractionEnabled = true
@@ -62,9 +61,9 @@ class ReportButton: UIView
     private func setupUI() {
         
         let buttonView = UIView()
-    
+        
         addSubview(buttonView)
-  
+        
         let image: UIImageView = {
             let icon = UIImageView()
             if #available(iOS 13.0, *) {
@@ -84,7 +83,6 @@ class ReportButton: UIView
             .with(\.numberOfLines, value: 0)
             .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
         
-    
         buttonView.addSubview(titleLabel)
         buttonView.addSubview(descLabel)
         buttonView.addSubview(image)
@@ -96,7 +94,6 @@ class ReportButton: UIView
         image.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(5)
             make.top.equalTo(buttonView.snp.top).offset(5)
-            
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -110,9 +107,8 @@ class ReportButton: UIView
         }
     }
     
-    @objc private func didTap()
-    {
-        
+    @objc private func didTap() {
+        // Handle tap gesture
     }
 }
 
@@ -165,8 +161,6 @@ class DummyController: UIViewController {
         button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         return button
     }()
-
-    
     
     @objc func closeButtonTapped() {
         dismiss(animated: true, completion: nil)
@@ -176,11 +170,9 @@ class DummyController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Set the background color (optional)
         view.backgroundColor = .clear
         modalPresentationStyle = .fullScreen
-
-        // Add the popup view to the view hierarchy
+        
         view.addSubview(popupView)
 
         
@@ -261,11 +253,6 @@ public struct MySwiftPackage {
 
 public class ScreenshotObserver {
 
-
-    @objc static func didTapCancelButton() {
-        // Handle cancel button tap if needed
-    }
-
     @objc static func detectScreenshot() {
         // Retrieve the top-most visible view controller
         if let topViewController = UIApplication.shared.keyWindow?.rootViewController?.itx_visibleViewController {
@@ -278,6 +265,8 @@ public class ScreenshotObserver {
 
                 // Create and present the DummyController
                 let controller = DummyController(imageView: UIImageView(image: screenshot))
+                
+                controller.modalPresentationStyle = .fullScreen
 
                 topViewController.present(controller, animated: true)
             }
