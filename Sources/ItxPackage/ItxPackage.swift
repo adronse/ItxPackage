@@ -236,6 +236,7 @@ class ReportButtonCell: UITableViewCell {
             if #available(iOS 13.0, *) {
                 icon.image = UIImage(systemName: iconName)
             }
+            icon.contentMode = .scaleAspectFit // Set content mode to scale aspect fit
             return icon
         }()
         
@@ -257,7 +258,8 @@ class ReportButtonCell: UITableViewCell {
         image.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(5)
             make.top.equalToSuperview().offset(5)
-            make.bottom.lessThanOrEqualToSuperview().offset(-5) // Added to prevent vertical compression resistance ambiguity
+            make.bottom.lessThanOrEqualToSuperview().offset(-5)
+            make.width.equalTo(image.snp.height) // Set a fixed aspect ratio
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -270,10 +272,11 @@ class ReportButtonCell: UITableViewCell {
             make.leading.equalTo(image.snp.trailing).offset(5)
             make.trailing.equalToSuperview().inset(5)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
-            make.bottom.lessThanOrEqualToSuperview().offset(-5) // Added to prevent vertical compression resistance ambiguity
+            make.bottom.lessThanOrEqualToSuperview().offset(-5)
         }
     }
 }
+
 
 
 extension DummyController: UITableViewDataSource, UITableViewDelegate {
