@@ -265,12 +265,14 @@ class ReportButtonCell: UITableViewCell {
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(image.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().inset(5)
             make.top.equalToSuperview().offset(5)
+            make.bottom.equalTo(descLabel.snp.top).inset(5)
         }
-        
         
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(image.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().inset(5)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
         }
     }
