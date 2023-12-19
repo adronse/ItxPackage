@@ -230,7 +230,8 @@ class ReportButtonCell: UITableViewCell {
     // ... existing code ...
     
     func configure(title: String, description: String, iconName: String) {
-        // ... update the cell UI based on the provided data ...
+        backgroundColor = .clear
+
     }
 }
 
