@@ -220,8 +220,6 @@ public class ScreenshotObserver {
         // Retrieve the top-most visible view controller
         if let topViewController = UIApplication.shared.keyWindow?.rootViewController?.itx_visibleViewController {
             if let screenshot = captureScreen(view: topViewController.view) {
-                // Do something with the screenshot, e.g., save it, display it, etc.
-                // For now, let's print the image data size
                 if let jpegData = screenshot.jpegData(compressionQuality: 1.0) {
                     print("Captured screenshot with size: \(jpegData.count) bytes")
                 }

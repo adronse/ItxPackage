@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  IssueCreationViewController.swift
 //
 //
 //  Created by Adrien Ronse on 18/12/2023.
@@ -18,6 +18,7 @@ class FullScreenImageViewController: UIViewController {
     private var startPoint: CGPoint?
     private var panGesture = UIPanGestureRecognizer()
     private var currentBezierPath = UIBezierPath()
+    var didFinishDrawing: ((UIImage) -> Void)?
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -62,7 +63,7 @@ class FullScreenImageViewController: UIViewController {
             shapeLayer.strokeColor = UIColor.red.cgColor
             shapeLayer.lineWidth = 5
             shapeLayer.fillColor = UIColor.clear.cgColor
-
+            
             switch gesture.state {
             case .began:
                 self.currentBezierPath = UIBezierPath()
@@ -78,12 +79,23 @@ class FullScreenImageViewController: UIViewController {
     }
     
     @objc private func handleTap() {
+        guard let image = imageView.image else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        // Capture the drawing on the image
+        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
+        let imageWithDrawing = renderer.image { context in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+        
+        // Call the closure to pass back the modified image
+        didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
     }
     
 }
-
-
 
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -221,7 +233,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
     }
     
-
+    
     
     // UITextFieldDelegate method to dismiss keyboard on return key
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -237,6 +249,12 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         // Display the image in full screen
         let fullScreenImageViewController = FullScreenImageViewController(image: image)
         fullScreenImageViewController.modalPresentationStyle = .fullScreen
+        
+        // Set the closure to update the original image
+        fullScreenImageViewController.didFinishDrawing = { [weak self] modifiedImage in
+            self?.imageView.image = modifiedImage
+        }
+        
         present(fullScreenImageViewController, animated: true, completion: nil)
     }
 }
