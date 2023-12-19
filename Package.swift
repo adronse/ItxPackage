@@ -13,15 +13,15 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.6.0"),
-        .package(url: "https://github.com/apollographql/apollo-ios.git", .upToNextMajor(from: "0.43.0"))
+        .package(
+                url: "https://github.com/apollographql/apollo-ios.git",
+                .upToNextMajor(from: "1.0.0")
+            ),
     ],
     targets: [
             .target(
                 name: "ItxPackage",
                 dependencies: ["SnapKit", "apollo-ios"]),
-            .target(name: "ApolloCombine", dependencies: [
-                .product(name: "Apollo", package: "Apollo")
-            ]),
             .testTarget(
                 name: "ItxPackageTests",
                 dependencies: ["ItxPackage"]),
