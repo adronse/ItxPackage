@@ -196,6 +196,8 @@ class DummyController: UIViewController {
         tableView.register(ReportButtonCell.self, forCellReuseIdentifier: "ReportButtonCell")
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.isScrollEnabled = false
+        tableView.backgroundColor = .clear
         
         view.backgroundColor = .clear
         modalPresentationStyle = .fullScreen
@@ -203,15 +205,15 @@ class DummyController: UIViewController {
         popupView.addSubview(tableView)
         
         
-        tableView.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.edges.equalToSuperview()
-        }
-        
-        
         popupTitle.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(5)
             make.leading.equalTo(popupView.snp.leading).offset(10)
+        }
+        
+        
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(popupTitle.snp.bottom).offset(30)
+            make.edges.equalToSuperview()
         }
         
         
