@@ -212,8 +212,8 @@ class DummyController: UIViewController {
         
         
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(popupTitle.snp.bottom).offset(30)
-            make.edges.equalToSuperview()
+            make.top.equalTo(popupTitle.snp.bottom).offset(50)
+            make.leading.trailing.equalToSuperview()
         }
         
         
