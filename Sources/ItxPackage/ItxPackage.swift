@@ -102,14 +102,13 @@ class ReportButton: UIView
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(image.snp.trailing)
+            make.leading.equalTo(image.snp.trailing).offset(5)
             make.top.equalTo(buttonView.snp.top).offset(5)
         }
         
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel).offset(5)
-            make.top.equalTo(titleLabel.snp.bottom)
-            make.bottom.lessThanOrEqualTo(buttonView.snp.bottom).offset(-5) // Ensure bottom space
+            make.top.equalTo(titleLabel.snp.bottom).offset(5)
         }
     }
     
