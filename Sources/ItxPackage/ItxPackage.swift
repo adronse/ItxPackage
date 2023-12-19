@@ -32,85 +32,85 @@ public class ImageViewController : UIViewController {
 }
 
 
-//public class ReportButton: UIView {
-//
-//    private let title: String
-//    private let reportButtonDescription: String
-//    private let systemNameIcon: String
-//
-//    // Designated initializer
-//    init(title: String, reportButtonDescription: String, systemNameIcon: String) {
-//        self.title = title
-//        self.reportButtonDescription = reportButtonDescription
-//        self.systemNameIcon = systemNameIcon
-//        super.init(frame: .zero) // You can set the frame here or customize it as needed
-//        setupUI()
-//        setupGesture()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    private func setupGesture() {
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
-//        addGestureRecognizer(tapGesture)
-//        isUserInteractionEnabled = true
-//    }
-//
-//    private func setupUI() {
-//
-//        let buttonView = UIView()
-//
-//        addSubview(buttonView)
-//
-//        let image: UIImageView = {
-//            let icon = UIImageView()
-//            if #available(iOS 13.0, *) {
-//                icon.image = UIImage(systemName: systemNameIcon)
-//            }
-//            return icon
-//        }()
-//
-//        lazy var titleLabel = UILabel()
-//            .with(\.text, value: title)
-//            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
-//            .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
-//
-//        lazy var descLabel = UILabel()
-//            .with(\.text, value: reportButtonDescription)
-//            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
-//            .with(\.numberOfLines, value: 0)
-//            .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
-//
-//        buttonView.addSubview(titleLabel)
-//        buttonView.addSubview(descLabel)
-//        buttonView.addSubview(image)
-//
-//        buttonView.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//        }
-//
-//        image.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().offset(5)
-//            make.top.equalTo(buttonView.snp.top).offset(5)
-//        }
-//
-//        titleLabel.snp.makeConstraints { make in
-//            make.leading.equalTo(image.snp.trailing).offset(5)
-//            make.top.equalTo(buttonView.snp.top).offset(5)
-//        }
-//
-//        descLabel.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview().offset(5)
-//            make.top.equalTo(titleLabel.snp.bottom).offset(5)
-//        }
-//    }
-//
-//    @objc private func didTap() {
-//        // Handle tap gesture
-//    }
-//}
+public class ReportButton: UIView {
+
+    private let title: String
+    private let reportButtonDescription: String
+    private let systemNameIcon: String
+
+    // Designated initializer
+    init(title: String, reportButtonDescription: String, systemNameIcon: String) {
+        self.title = title
+        self.reportButtonDescription = reportButtonDescription
+        self.systemNameIcon = systemNameIcon
+        super.init(frame: .zero) // You can set the frame here or customize it as needed
+        setupUI()
+        setupGesture()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupGesture() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTap))
+        addGestureRecognizer(tapGesture)
+        isUserInteractionEnabled = true
+    }
+
+    private func setupUI() {
+
+        let buttonView = UIView()
+
+        addSubview(buttonView)
+
+        let image: UIImageView = {
+            let icon = UIImageView()
+            if #available(iOS 13.0, *) {
+                icon.image = UIImage(systemName: systemNameIcon)
+            }
+            return icon
+        }()
+
+        lazy var titleLabel = UILabel()
+            .with(\.text, value: title)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
+
+        lazy var descLabel = UILabel()
+            .with(\.text, value: reportButtonDescription)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.numberOfLines, value: 0)
+            .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
+
+        buttonView.addSubview(titleLabel)
+        buttonView.addSubview(descLabel)
+        buttonView.addSubview(image)
+
+        buttonView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+        }
+
+        image.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(5)
+            make.top.equalTo(buttonView.snp.top).offset(5)
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(image.snp.trailing).offset(5)
+            make.top.equalTo(buttonView.snp.top).offset(5)
+        }
+
+        descLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().offset(5)
+            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+        }
+    }
+
+    @objc private func didTap() {
+        // Handle tap gesture
+    }
+}
 
 
 class DummyController: UIViewController {
@@ -228,11 +228,45 @@ class DummyController: UIViewController {
 
 class ReportButtonCell: UITableViewCell {
     
-    // ... existing code ...
+    
     
     func configure(title: String, description: String, iconName: String) {
         backgroundColor = .clear
+        
+        let image: UIImageView = {
+            let icon = UIImageView()
+            if #available(iOS 13.0, *) {
+                icon.image = UIImage(systemName: iconName)
+            }
+            return icon
+        }()
+        
+        lazy var titleLabel = UILabel()
+            .with(\.text, value: title)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
 
+        lazy var descLabel = UILabel()
+            .with(\.text, value: description)
+            .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
+            .with(\.numberOfLines, value: 0)
+            .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
+        
+        
+        
+        addSubview(image)
+        addSubview(titleLabel)
+        addSubview(descLabel)
+        
+        image.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(5)
+            make.top.equalToSuperview().offset(5)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalTo(image.snp.trailing).offset(5)
+            make.top.equalToSuperview().offset(5)
+        }
     }
 }
 
