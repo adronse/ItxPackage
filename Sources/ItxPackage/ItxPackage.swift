@@ -83,7 +83,7 @@ class ReportButton: UIView
         lazy var descLabel = UILabel()
             .with(\.text, value: reportButtonDescription)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
-            .with(\.numberOfLines, value: 0)
+            .with(\.numberOfLines, value: 2)
             .with(\.font, value: .systemFont(ofSize: 12))
         
     
@@ -98,6 +98,8 @@ class ReportButton: UIView
         
         image.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(5)
+            make.top.equalTo(buttonView.snp.top).offset(5)
+            
         }
         
         titleLabel.snp.makeConstraints { make in
