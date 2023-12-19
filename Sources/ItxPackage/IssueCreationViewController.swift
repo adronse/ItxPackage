@@ -79,18 +79,16 @@ class FullScreenImageViewController: UIViewController {
     }
     
     @objc private func handleTap() {
-        guard let image = imageView.image else {
+        guard imageView.image != nil else {
             dismiss(animated: true, completion: nil)
             return
         }
         
-        // Capture the drawing on the image
         let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
         let imageWithDrawing = renderer.image { context in
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
         
-        // Call the closure to pass back the modified image
         didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
     }
@@ -102,9 +100,11 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     private let imageView: UIImageView
+    private let controllerTitle: String
     
-    init(image: UIImageView) {
+    init(image: UIImageView, viewControllerTitle: String) {
         self.imageView = image
+        self.controllerTitle = viewControllerTitle
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -114,7 +114,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Report a bug"
+        self.title = self.controllerTitle
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         
