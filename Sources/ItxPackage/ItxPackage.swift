@@ -194,12 +194,12 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
         // For example, if the user clicks on the first cell, present a new view controller
         if indexPath.row == 0 {
             let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report bug")
-            present(controller, animated: true, completion: nil)
+            self.navigationController?.pushViewController(controller, animated: true)
         }
         
         if indexPath.row == 1 {
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Suggest an improvement")
-            present(controller, animated: true, completion: nil)
+            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report bug")
+            self.navigationController?.pushViewController(controller, animated: true)
         }
     }
 }
