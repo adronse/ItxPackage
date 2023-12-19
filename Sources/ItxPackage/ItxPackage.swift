@@ -31,21 +31,22 @@ public class ImageViewController : UIViewController {
     }
 }
 
-
-class ReportButton: UIView {
+class ReportButton: UIView
+{
     
     private let title: String
     private let reportButtonDescription: String
+    private let systemNameIcon: String
     
     // Designated initializer
-    init(title: String, reportButtonDescription: String) {
+    init(title: String, reportButtonDescription: String, systemNameIcon: String) {
         self.title = title
         self.reportButtonDescription = reportButtonDescription
+        self.systemNameIcon = systemNameIcon
         super.init(frame: .zero) // You can set the frame here or customize it as needed
         setupUI()
         setupGesture()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -64,10 +65,20 @@ class ReportButton: UIView {
         addSubview(buttonView)
   
         
+        let image: UIImageView = {
+            let icon = UIImageView()
+            if #available(iOS 13.0, *) {
+                icon.image = UIImage(systemName: systemNameIcon)
+            }
+            return icon
+        }()
+        
+        
         lazy var titleLabel = UILabel()
             .with(\.text, value: title)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
             .with(\.font, value: .systemFont(ofSize: 16))
+    
         
         lazy var descLabel = UILabel()
             .with(\.text, value: reportButtonDescription)
@@ -78,14 +89,19 @@ class ReportButton: UIView {
     
         buttonView.addSubview(titleLabel)
         buttonView.addSubview(descLabel)
+        buttonView.addSubview(image)
         
         buttonView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
         
+        image.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(5)
+        }
+        
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
+            make.leading.equalTo(image.snp.trailing)
             make.top.equalTo(buttonView.snp.top).offset(5)
         }
         
@@ -94,9 +110,6 @@ class ReportButton: UIView {
             make.top.equalTo(titleLabel.snp.bottom)
             make.bottom.lessThanOrEqualTo(buttonView.snp.bottom).offset(-5) // Ensure bottom space
         }
-
-
-        
     }
     
     @objc private func didTap()
@@ -141,9 +154,9 @@ class DummyController: UIViewController {
     
     lazy var separator2 = UIView.separator(color: .white)
     
-    lazy var reportBugButton = ReportButton(title: "Report a bug", reportButtonDescription: "Something in the app is broken or doesn't work as expected")
+    lazy var reportBugButton = ReportButton(title: "Report a bug", reportButtonDescription: "Something in the app is broken or doesn't work as expected", systemNameIcon: "ladybug")
     
-    lazy var proposeEnhancementButton = ReportButton(title: "Suggest an improvement", reportButtonDescription: "New ideas or desired enhancements for this app")
+    lazy var proposeEnhancementButton = ReportButton(title: "Suggest an improvement", reportButtonDescription: "New ideas or desired enhancements for this app", systemNameIcon: "megaphone")
 
     override func viewDidLoad() {
         super.viewDidLoad()
