@@ -73,18 +73,16 @@ class ReportButton: UIView
             return icon
         }()
         
-        
         lazy var titleLabel = UILabel()
             .with(\.text, value: title)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
-            .with(\.font, value: .systemFont(ofSize: 16))
-    
+            .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
         
         lazy var descLabel = UILabel()
             .with(\.text, value: reportButtonDescription)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
             .with(\.numberOfLines, value: 0)
-            .with(\.font, value: .systemFont(ofSize: 12))
+            .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
         
     
         buttonView.addSubview(titleLabel)
@@ -157,6 +155,15 @@ class DummyController: UIViewController {
     lazy var reportBugButton = ReportButton(title: "Report a bug", reportButtonDescription: "Something in the app is broken or doesn't work as expected", systemNameIcon: "ladybug")
     
     lazy var proposeEnhancementButton = ReportButton(title: "Suggest an improvement", reportButtonDescription: "New ideas or desired enhancements for this app", systemNameIcon: "megaphone")
+    
+    lazy var separator3 = UIView.separator(color: .white)
+    
+    
+    lazy var cancelButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Cancel", for: .normal)
+        return button
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -184,6 +191,8 @@ class DummyController: UIViewController {
         popupView.addSubview(reportBugButton)
         popupView.addSubview(proposeEnhancementButton)
         popupView.addSubview(separator2)
+        popupView.addSubview(separator3)
+        popupView.addSubview(cancelButton)
     
         
         popupTitle.snp.makeConstraints { make in
@@ -205,12 +214,24 @@ class DummyController: UIViewController {
         separator2.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(1)
-            make.top.equalTo(reportBugButton.snp.bottom).offset(50)
+            make.top.equalTo(reportBugButton.snp.bottom).offset(5)
         }
         
         proposeEnhancementButton.snp.makeConstraints { make in
             make.top.equalTo(separator2.snp.bottom).offset(2)
             make.leading.trailing.equalTo(popupView).offset(5)
+        }
+        
+        separator3.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(1)
+            make.top.equalTo(proposeEnhancementButton.snp.bottom).offset(50)
+        }
+        
+        cancelButton.snp.makeConstraints { make in
+            make.top.equalTo(separator3.snp.bottom).offset(2)
+            make.centerX.equalTo(popupView.snp.centerX)
+            make.bottom.equalTo(popupView.snp.bottom).inset(10)
         }
     }
 
