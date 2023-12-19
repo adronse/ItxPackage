@@ -214,6 +214,7 @@ class DummyController: UIViewController {
         tableView.snp.makeConstraints { make in
             make.top.equalTo(popupTitle.snp.bottom).offset(50)
             make.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(cancelButton.snp.top).inset(5)
         }
         
         
