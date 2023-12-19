@@ -228,8 +228,6 @@ class DummyController: UIViewController {
 
 class ReportButtonCell: UITableViewCell {
     
-    
-    
     func configure(title: String, description: String, iconName: String) {
         backgroundColor = .clear
         
@@ -245,14 +243,12 @@ class ReportButtonCell: UITableViewCell {
             .with(\.text, value: title)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
             .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
-
+        
         lazy var descLabel = UILabel()
             .with(\.text, value: description)
             .with(\.textColor, value: UIColor.from(hex: "#bbbcbd"))
             .with(\.numberOfLines, value: 0)
             .with(\.font, value: .systemFont(ofSize: 12, weight: .light))
-        
-        
         
         addSubview(image)
         addSubview(titleLabel)
@@ -261,22 +257,24 @@ class ReportButtonCell: UITableViewCell {
         image.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(5)
             make.top.equalToSuperview().offset(5)
+            make.bottom.lessThanOrEqualToSuperview().offset(-5) // Added to prevent vertical compression resistance ambiguity
         }
         
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(image.snp.trailing).offset(5)
             make.trailing.equalToSuperview().inset(5)
             make.top.equalToSuperview().offset(5)
-            make.bottom.equalTo(descLabel.snp.top).inset(5)
         }
         
         descLabel.snp.makeConstraints { make in
             make.leading.equalTo(image.snp.trailing).offset(5)
             make.trailing.equalToSuperview().inset(5)
             make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.bottom.lessThanOrEqualToSuperview().offset(-5) // Added to prevent vertical compression resistance ambiguity
         }
     }
 }
+
 
 extension DummyController: UITableViewDataSource, UITableViewDelegate {
     
