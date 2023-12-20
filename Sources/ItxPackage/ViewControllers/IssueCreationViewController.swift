@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import Photos
+import Apollo
 
 
 class FullScreenImageViewController: UIViewController {
@@ -132,6 +132,14 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.endEditing(true)
     }
     
+    @objc private func didTapSendButton()
+    {
+        let apolloClient = ApolloClient(url: URL(string: "https://api.itx.coffee/graphql/")!)
+        
+        
+    
+    }
+    
     private lazy var issueTitleHeader: UILabel = {
         let label = UILabel()
         label.text = "Issue"
@@ -173,6 +181,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         let button = UIButton()
         button.setTitle("Send issue", for: .normal)
         button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(didTapSendButton), for: .touchUpInside)
         return button
     }()
     

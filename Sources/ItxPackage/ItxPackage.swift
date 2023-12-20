@@ -5,6 +5,10 @@ import SnapKit
 import CoreMotion
 
 
+public enum IterationXEvent {
+    case screenshot
+    case shake
+}
 
 public struct MySwiftPackage {
     public static var apiKey: String?
@@ -31,15 +35,21 @@ public struct MySwiftPackage {
                 EventObserver.detectScreenshot()
             }
         }
+        
+        if event == .shake {
+            let _ = NotificationCenter.default.addObserver(
+                forName: UIDevice.deviceDidShakeNotification,
+                object: nil,
+                queue: .main
+            ) { _ in
+                EventObserver.detectScreenshot()
+            }
+        }
     }
     
     private static func isGUID(_ apiKey: String) -> Bool {
         return apiKey.count == 36
     }
-}
-
-public enum IterationXEvent {
-    case screenshot
 }
 
 public class EventObserver {
@@ -61,6 +71,7 @@ public class EventObserver {
             topViewController.present(controller, animated: true)
         }
     }
+
     
     static func captureScreen(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
