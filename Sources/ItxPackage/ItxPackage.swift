@@ -15,12 +15,9 @@ public struct MySwiftPackage {
             fatalError("Invalid API key. Please provide a valid GUID.")
         }
         
-        // Your package initialization and configuration logic here based on the event type
-        
         MySwiftPackage.apiKey = apiKey
         MySwiftPackage.currentEvent = event
         
-        // Call the method to set up event detection based on the provided event type
         MySwiftPackage.dispatchEvent(event: event)
     }
     
@@ -31,7 +28,7 @@ public struct MySwiftPackage {
                 object: nil,
                 queue: .main
             ) { _ in
-                ScreenshotObserver.detectScreenshot()
+                EventObserver.detectScreenshot()
             }
         }
     }
@@ -45,9 +42,8 @@ public enum IterationXEvent {
     case screenshot
 }
 
-public class ScreenshotObserver {
-    
-    static weak var delegate: ScreenshotObserverDelegate?
+public class EventObserver {
+    static weak var delegate: EventObserverDelegate?
     
     @objc static func detectScreenshot() {
         if let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }),
@@ -77,11 +73,10 @@ public class ScreenshotObserver {
 }
 
 
-protocol ScreenshotObserverDelegate: AnyObject {
+protocol EventObserverDelegate: AnyObject {
     func didDetectScreenshot(image: UIImage)
 }
 
-// Extension to find the top-most visible view controller
 extension UIViewController {
     var itx_visibleViewController: UIViewController? {
         if let navigationController = self as? UINavigationController {
