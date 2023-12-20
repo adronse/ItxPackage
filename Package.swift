@@ -16,17 +16,12 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.6.0"),
-        .package(
-            url: "https://github.com/apollographql/apollo-ios.git",
-            .upToNextMajor(from: "1.7.1")
-        ),
     ],
     targets: [
         .target(
             name: "ItxPackage",
             dependencies: [
                 "SnapKit",
-                .product(name: "Apollo", package: "apollo-ios"),
             ]
         ),
         .testTarget(

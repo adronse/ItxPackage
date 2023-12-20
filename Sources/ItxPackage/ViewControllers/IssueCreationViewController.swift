@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import Apollo
 
 
 class FullScreenImageViewController: UIViewController {
@@ -134,9 +133,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton()
     {
-        let apolloClient = ApolloClient(url: URL(string: "https://api.itx.coffee/graphql/")!)
-        
-        
     
     }
     
