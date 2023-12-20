@@ -211,6 +211,9 @@ public enum IterationXEvent
     case screenshot
 }
 
+import UIKit
+import CoreMotion
+
 public struct MySwiftPackage {
     public static var apiKey: String?
     public static var currentEvent: IterationXEvent?
@@ -229,8 +232,7 @@ public struct MySwiftPackage {
         MySwiftPackage.dispatchEvent(event: event)
     }
     
-    private static func dispatchEvent(event: IterationXEvent)
-    {
+    private static func dispatchEvent(event: IterationXEvent) {
         if event == .screenshot {
             // Add screenshot detection if needed
         }
@@ -259,6 +261,7 @@ public struct MySwiftPackage {
         return apiKey.count == 36  // Replace with your actual validation logic
     }
 }
+
 
 
 public class ScreenshotObserver {
