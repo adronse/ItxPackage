@@ -234,26 +234,7 @@ public struct MySwiftPackage {
     
     private static func dispatchEvent(event: IterationXEvent) {
         if event == .screenshot {
-            // Add screenshot detection if needed
-        }
-        
-        if event == .shake {
-            // Add motion detection for shake
-            let motionManager = CMMotionManager()
-            motionManager.accelerometerUpdateInterval = 0.1 // Adjust the interval as needed
-            
-            if motionManager.isAccelerometerAvailable {
-                motionManager.startAccelerometerUpdates(to: .main) { (data, error) in
-                    if let acceleration = data?.acceleration {
-                        let totalAcceleration = sqrt(pow(acceleration.x, 2) + pow(acceleration.y, 2) + pow(acceleration.z, 2))
-                        
-                        if totalAcceleration > 2.0 {
-                            // Shake detected, you can call a method or perform an action here
-                            print("Shake detected!")
-                        }
-                    }
-                }
-            }
+            ScreenshotObserver.detectScreenshot()
         }
     }
     
