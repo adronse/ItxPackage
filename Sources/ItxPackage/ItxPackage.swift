@@ -206,15 +206,26 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
 
 
 public struct MySwiftPackage {
+    let apiKey: String
     
-    public init() {
+    public init(apiKey: String) {
+        guard MySwiftPackage.isGUID(apiKey) else {
+            fatalError("Invalid API key. Please provide a valid GUID.")
+        }
+        
+        self.apiKey = apiKey
+        
         let _ = NotificationCenter.default.addObserver(
             forName: UIApplication.userDidTakeScreenshotNotification,
             object: nil,
             queue: .main
-        ) { _ in
+        ) { [apiKey] _ in
             ScreenshotObserver.detectScreenshot()
         }
+    }
+    
+    private static func isGUID(_ apiKey: String) -> Bool {
+        return apiKey.count == 36  // Replace with your actual validation logic
     }
 }
 
