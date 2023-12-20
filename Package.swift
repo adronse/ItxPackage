@@ -16,7 +16,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.6.0"),
-        .package(url: "https://github.com/adronse/iOS-gql", .branch("main")),
     ],
     targets: [
         .target(
