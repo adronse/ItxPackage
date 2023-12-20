@@ -35,16 +35,6 @@ public struct MySwiftPackage {
                 EventObserver.detectScreenshot()
             }
         }
-        
-        if event == .shake {
-            let _ = NotificationCenter.default.addObserver(
-                forName: UIDevice.deviceDidShakeNotification,
-                object: nil,
-                queue: .main
-            ) { _ in
-                EventObserver.detectScreenshot()
-            }
-        }
     }
     
     private static func isGUID(_ apiKey: String) -> Bool {
