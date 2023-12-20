@@ -2,6 +2,7 @@
 
 import UIKit
 import SnapKit
+import CoreMotion
 
 
 class PopupViewController: UIViewController {
@@ -204,23 +205,53 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
 }
 
 
+public enum IterationXEvent
+{
+    case shake
+    case screenshot
+}
 
 public struct MySwiftPackage {
-    let apiKey: String
+    public static var apiKey: String?
+    public static var currentEvent: IterationXEvent?
     
-    public init(apiKey: String) {
+    public init(apiKey: String, event: IterationXEvent) {
         guard MySwiftPackage.isGUID(apiKey) else {
             fatalError("Invalid API key. Please provide a valid GUID.")
         }
         
-        self.apiKey = apiKey
+        // Your package initialization and configuration logic here based on the event type
         
-        let _ = NotificationCenter.default.addObserver(
-            forName: UIApplication.userDidTakeScreenshotNotification,
-            object: nil,
-            queue: .main
-        ) { [apiKey] _ in
-            ScreenshotObserver.detectScreenshot()
+        MySwiftPackage.apiKey = apiKey
+        MySwiftPackage.currentEvent = event
+        
+        // Call the method to set up event detection based on the provided event type
+        MySwiftPackage.dispatchEvent(event: event)
+    }
+    
+    private static func dispatchEvent(event: IterationXEvent)
+    {
+        if event == .screenshot {
+            // Add screenshot detection if needed
+        }
+        
+        if event == .shake {
+            // Add motion detection for shake
+            let motionManager = CMMotionManager()
+            motionManager.accelerometerUpdateInterval = 0.1 // Adjust the interval as needed
+            
+            if motionManager.isAccelerometerAvailable {
+                motionManager.startAccelerometerUpdates(to: .main) { (data, error) in
+                    if let acceleration = data?.acceleration {
+                        let totalAcceleration = sqrt(pow(acceleration.x, 2) + pow(acceleration.y, 2) + pow(acceleration.z, 2))
+                        
+                        if totalAcceleration > 2.0 {
+                            // Shake detected, you can call a method or perform an action here
+                            print("Shake detected!")
+                        }
+                    }
+                }
+            }
         }
     }
     
@@ -228,6 +259,7 @@ public struct MySwiftPackage {
         return apiKey.count == 36  // Replace with your actual validation logic
     }
 }
+
 
 public class ScreenshotObserver {
     
@@ -239,7 +271,6 @@ public class ScreenshotObserver {
                     print("Captured screenshot with size: \(jpegData.count) bytes")
                 }
                 
-                // Create and present the DummyController
                 let controller = PopupViewController(imageView: UIImageView(image: screenshot))
                 
                 controller.modalPresentationStyle = .fullScreen
