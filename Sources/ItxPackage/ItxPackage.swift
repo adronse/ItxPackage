@@ -234,12 +234,18 @@ public struct MySwiftPackage {
     
     private static func dispatchEvent(event: IterationXEvent) {
         if event == .screenshot {
-            ScreenshotObserver.detectScreenshot()
+            let _ = NotificationCenter.default.addObserver(
+                        forName: UIApplication.userDidTakeScreenshotNotification,
+                        object: nil,
+                        queue: .main
+            ) {  _ in
+                ScreenshotObserver.detectScreenshot()
+            }
         }
     }
     
     private static func isGUID(_ apiKey: String) -> Bool {
-        return apiKey.count == 36  // Replace with your actual validation logic
+        return apiKey.count == 36
     }
 }
 
