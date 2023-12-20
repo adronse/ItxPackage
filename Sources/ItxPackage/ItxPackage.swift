@@ -3,8 +3,6 @@
 import UIKit
 import SnapKit
 import CoreMotion
-import ItxAPI
-
 
 
 public enum IterationXEvent {
@@ -37,15 +35,6 @@ public struct MySwiftPackage {
                 EventObserver.detectScreenshot()
             }
         }
-    }
-    
-    private static func getIssueTitle(issueId: String) -> Void {
-        
-        ItxAPI.shared.getIssueTitle("DYw6d2") { title in
-            // Do something with the title
-            print("Issue Title: \(title)")
-        }
-
     }
     
     private static func isGUID(_ apiKey: String) -> Bool {

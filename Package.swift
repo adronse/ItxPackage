@@ -20,7 +20,6 @@ let package = Package(
             url: "https://github.com/apollographql/apollo-ios.git",
             .upToNextMajor(from: "1.7.1")
         ),
-        .package(path: "./ItxAPI")
     ],
     targets: [
         .target(
@@ -28,7 +27,6 @@ let package = Package(
             dependencies: [
                 "SnapKit",
                 .product(name: "Apollo", package: "apollo-ios"),
-                "ItxAPI"
             ]
         ),
         .testTarget(

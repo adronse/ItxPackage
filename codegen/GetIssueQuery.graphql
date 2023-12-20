@@ -1,8 +1,0 @@
-
-query GetIssue($issueId: ID!) {
- issue(id: $issueId) {
-   id
-   description
-   title
- }
-}
