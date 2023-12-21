@@ -141,16 +141,16 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         
         let mutation = """
-        {
-            createEmptyIssue(input: {
-                title: \(issueTitle),
-                description: \(issueDescription)
-                priority: HIGH,
-                projectId: "70oZeD"
-              }) {
-                id
-                title
-              }
+        mutation {
+          createEmptyIssue(input: {
+              title: \(String(describing: issueTitle)),
+              description: \(String(describing: issueDescription)),
+              priority: HIGH,
+              projectId: "70oZeD"
+            }) {
+              id
+              title
+            }
         }
         """
         
