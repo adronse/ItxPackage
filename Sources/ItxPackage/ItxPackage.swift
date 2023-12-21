@@ -15,18 +15,19 @@ public struct MySwiftPackage {
     public static var apiKey: String?
     public static var currentEvent: IterationXEvent?
     
-    public init(apiKey: String, event: IterationXEvent) {
-        guard MySwiftPackage.isGUID(apiKey) else {
-            fatalError("Invalid API key. Please provide a valid GUID.")
+    public init(apiKey: String, event: IterationXEvent, completion: @escaping (Bool) -> Void) {
+            MySwiftPackage.isGUID(apiKey) { isValid in
+                if isValid {
+                    MySwiftPackage.apiKey = apiKey
+                    MySwiftPackage.currentEvent = event
+                    MySwiftPackage.dispatchEvent(event: event)
+                    completion(true)
+                } else {
+                    // API key is invalid, handle accordingly
+                    completion(false)
+                }
+            }
         }
-        
-        MySwiftPackage.apiKey = apiKey
-        MySwiftPackage.currentEvent = event
-        
-        MySwiftPackage.dispatchEvent(event: event)
-    
-        
-    }
     
     private static func dispatchEvent(event: IterationXEvent) {
         if event == .screenshot {
@@ -40,27 +41,29 @@ public struct MySwiftPackage {
         }
     }
     
-    private static func isGUID(_ apiKey: String) -> Bool {
-        
+    
+    private static func isGUID(_ apiKey: String, completion: @escaping (Bool) -> Void) {
         let client = GraphQLClient(url: URL(string: "https://api.itx.coffee/graphql")!)
         
         let query = """
         {
-            isValidApiKey(apiKey: \(apiKey))
+            isValidApiKey(apiKey: "\(apiKey)")
         }
         """
-        
+
         client.performQuery(query: query) { result in
-            switch result {
-            case .success(let response):
-                print("GraphQL Response: \(response)")
-            case .failure(let error):
-                print("Error performing GraphQL query: \(error)")
+            client.unpackQueryResult(result) { (response: Result<IsValidApiKeyResponse, Error>) in
+                switch response {
+                case .success(let data):
+                    completion(data.isValidApiKey)
+                case .failure(_):
+                    completion(false)
+                }
             }
         }
-        
-        return apiKey.count == 36
     }
+
+
 }
 
 public class EventObserver {
