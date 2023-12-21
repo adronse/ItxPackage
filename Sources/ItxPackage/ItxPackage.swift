@@ -42,14 +42,11 @@ public struct MySwiftPackage {
     
     private static func isGUID(_ apiKey: String) -> Bool {
         
-        let client = GraphQLClient(url: URL(string: "https://api.itx.coffee/graphql")!)
+        let client = GraphQLClient(url: URL(string: "https://localhost:5001/graphql/")!)
         
         let query = """
         {
-           issue(id: "DYw6d2") {
-               id
-               title
-             }
+           isValidApiKey(apiKey: \(apiKey))
         }
         """
         
