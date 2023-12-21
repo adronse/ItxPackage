@@ -119,7 +119,6 @@ extension GraphQLClient {
                 if let data = graphQLResponse.data {
                     completion(.success(data))
                 } else if let errors = graphQLResponse.errors {
-                    // Handle or propagate GraphQL errors
                 } else {
                     completion(.failure(GraphQLError.serializationError))
                 }
