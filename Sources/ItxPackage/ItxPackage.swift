@@ -46,7 +46,10 @@ public struct MySwiftPackage {
         
         let query = """
         {
-            __typename
+           issue(id: "DYw6d2") {
+               id
+               title
+             }
         }
         """
         
