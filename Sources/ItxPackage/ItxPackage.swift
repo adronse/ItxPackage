@@ -3,7 +3,6 @@
 import UIKit
 import SnapKit
 import CoreMotion
-import ItxAPI
 
 
 public enum IterationXEvent {
