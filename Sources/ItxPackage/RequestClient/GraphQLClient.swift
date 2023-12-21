@@ -40,6 +40,7 @@ class GraphQLClient {
         request.httpMethod = "POST"
         request.httpBody = httpBody
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
         
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -119,6 +120,7 @@ extension GraphQLClient {
                 if let data = graphQLResponse.data {
                     completion(.success(data))
                 } else if let errors = graphQLResponse.errors {
+                    // TODO: handle errors
                 } else {
                     completion(.failure(GraphQLError.serializationError))
                 }

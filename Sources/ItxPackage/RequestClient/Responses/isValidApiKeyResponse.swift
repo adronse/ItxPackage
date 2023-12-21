@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct IsValidApiKeyResponse: Decodable {
     let isValidApiKey: Bool
 }
