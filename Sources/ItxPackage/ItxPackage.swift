@@ -3,11 +3,19 @@
 import UIKit
 import SnapKit
 import CoreMotion
+import Apollo
+import ItxAPI
 
 
 public enum IterationXEvent {
     case screenshot
     case shake
+}
+
+public class Network {
+    static let shared = Network()
+    
+    private(set) lazy var apollo = ApolloClient(url: URL(string: "https://apollo-fullstack-tutorial.herokuapp.com/graphql")!)
 }
 
 public struct MySwiftPackage {
@@ -23,6 +31,7 @@ public struct MySwiftPackage {
         MySwiftPackage.currentEvent = event
         
         MySwiftPackage.dispatchEvent(event: event)
+        
     }
     
     private static func dispatchEvent(event: IterationXEvent) {
@@ -61,7 +70,7 @@ public class EventObserver {
             topViewController.present(controller, animated: true)
         }
     }
-
+    
     
     static func captureScreen(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)

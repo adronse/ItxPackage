@@ -1,0 +1,3 @@
+query dummyQuery {
+    __typename
+}
