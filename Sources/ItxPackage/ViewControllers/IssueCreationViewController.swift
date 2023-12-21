@@ -31,21 +31,21 @@ class FullScreenImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        configureUI()
+        addGestures()
+    }
+    
+    private func configureUI()
+    {
         view.backgroundColor = .black
         
-        // Setup image view
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         
-        // Setup drawing view
         drawingView.backgroundColor = .clear
         drawingView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(drawingView)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        view.addGestureRecognizer(tapGesture)
         
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -54,6 +54,12 @@ class FullScreenImageViewController: UIViewController {
         drawingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+    
+    private func addGestures()
+    {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tapGesture)
         
         view.addGestureRecognizer(panGesture.onChange { gesture in
             let point = gesture.location(in: self.view)
@@ -127,7 +133,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }
     
     @objc private func handleTap() {
-        // Dismiss the keyboard by resigning the first responder
         view.endEditing(true)
     }
     
@@ -139,12 +144,11 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         let issueTitle = issueTitleInput.text
         let issueDescription = descriptionFieldInput.text
         
-        
         let mutation = """
             mutation {
                 createEmptyIssue(input: {
-                    title: "test test",
-                    description: "supe test mec",
+                    title: \(issueTitle ?? ""),
+                    description: \(issueDescription ?? ""),
                     projectId: "70oZeD"
                 }) {
                     id
@@ -152,7 +156,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
                 }
             }
         """
-
         
         client.performMutation(mutation: mutation) { result in
             switch result {
@@ -279,11 +282,9 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             return
         }
         
-        // Display the image in full screen
         let fullScreenImageViewController = FullScreenImageViewController(image: image)
         fullScreenImageViewController.modalPresentationStyle = .fullScreen
         
-        // Set the closure to update the original image
         fullScreenImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageView.image = modifiedImage
         }
