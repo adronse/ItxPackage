@@ -20,7 +20,7 @@ let package = Package(
             url: "https://github.com/apollographql/apollo-ios.git",
             .upToNextMajor(from: "1.7.1")
         ),
-        .package(path: "./codegen/ItxAPI")
+        .package(path: "./Sources/codegen/ItxAPI")
     ],
     targets: [
         .target(
