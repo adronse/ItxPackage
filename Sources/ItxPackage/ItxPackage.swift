@@ -46,9 +46,7 @@ public struct MySwiftPackage {
         
         let query = """
         {
-          query {
             __typename
-          }
         }
         """
         
