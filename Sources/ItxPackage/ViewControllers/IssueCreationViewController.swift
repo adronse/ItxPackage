@@ -133,7 +133,35 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton()
     {
-    
+        let client = GraphQLClient(url: URL(string: "https://api.itx.coffee/graphql")!)
+        
+        
+        let issueTitle = issueTitleInput.text
+        let issueDescription = descriptionFieldInput.text
+        
+        
+        let mutation = """
+        {
+            createEmptyIssue(input: {
+                title: \(issueTitle),
+                description: \(issueDescription)
+                priority: HIGH,
+                projectId: "70oZeD"
+              }) {
+                id
+                title
+              }
+        }
+        """
+        
+        client.performMutation(mutation: mutation) { result in
+            switch result {
+            case .success(let response):
+                print("GraphQL Response: \(response)")
+            case .failure(let error):
+                print("Error performing GraphQL query: \(error)")
+            }
+        }
     }
     
     private lazy var issueTitleHeader: UILabel = {
