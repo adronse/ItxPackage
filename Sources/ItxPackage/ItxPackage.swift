@@ -42,7 +42,7 @@ public struct MySwiftPackage {
     
     private static func isGUID(_ apiKey: String) -> Bool {
         
-        let client = GraphQLClient(url: URL(string: "https://localhost:5001/graphql/")!)
+        let client = GraphQLClient(url: URL(string: "https://8480-2a05-6e02-10d1-a710-1116-917f-7dd2-df90/graphql")!)
         
         let query = """
         {
