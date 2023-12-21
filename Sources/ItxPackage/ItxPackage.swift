@@ -46,7 +46,7 @@ public struct MySwiftPackage {
         
         let query = """
         {
-            __typename
+            isValidApiKey(apiKey: \(apiKey))
         }
         """
         

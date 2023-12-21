@@ -66,10 +66,10 @@ class GraphQLClient {
         }
         
         var request = URLRequest(url: url)
+        
         request.httpMethod = "POST"
         request.httpBody = httpBody
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MDI5MTk4MDAsImlzcyI6Imh0dHBzOi8vYXBpLml0eC5jb2ZmZWUvYXV0aCIsImF1ZCI6Imh0dHBzOi8vYXBpLml0eC5jb2ZmZWUvKiovKiIsImF0aSI6NTkxODV9.llyobV3wILxSzUMZFzYogBqsLLUBfT1wa3eWro0oAOc", forHTTPHeaderField: "Authorization")
         
         let task = session.dataTask(with: request) { data, response, error in
             if let error = error {
