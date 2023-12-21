@@ -3,7 +3,6 @@
 import UIKit
 import SnapKit
 import CoreMotion
-import Apollo
 import ItxAPI
 
 
@@ -12,11 +11,6 @@ public enum IterationXEvent {
     case shake
 }
 
-public class Network {
-    static let shared = Network()
-    
-    private(set) lazy var apollo = ApolloClient(url: URL(string: "https://apollo-fullstack-tutorial.herokuapp.com/graphql")!)
-}
 
 public struct MySwiftPackage {
     public static var apiKey: String?
@@ -31,6 +25,7 @@ public struct MySwiftPackage {
         MySwiftPackage.currentEvent = event
         
         MySwiftPackage.dispatchEvent(event: event)
+    
         
     }
     
@@ -47,6 +42,26 @@ public struct MySwiftPackage {
     }
     
     private static func isGUID(_ apiKey: String) -> Bool {
+        
+        let client = GraphQLClient(url: URL(string: "https://api.itx.coffee/graphql")!)
+        
+        let query = """
+        {
+          query DummyQuery {
+            __typename
+          }
+        }
+        """
+        
+        client.performQuery(query: query) { result in
+            switch result {
+            case .success(let response):
+                print("GraphQL Response: \(response)")
+            case .failure(let error):
+                print("Error performing GraphQL query: \(error)")
+            }
+        }
+        
         return apiKey.count == 36
     }
 }
