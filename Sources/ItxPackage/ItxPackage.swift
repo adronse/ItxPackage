@@ -1,7 +1,7 @@
 import UIKit
 
-public class MySwiftPackage {
-    public static let shared = MySwiftPackage()
+public class IterationX {
+    public static let shared = IterationX()
     private var apiKey: String?
     private var currentEvent: IterationXEvent?
 
