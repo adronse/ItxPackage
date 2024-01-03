@@ -39,6 +39,7 @@ class GraphQLClient {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = httpBody
+        request.setValue("5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8", forHTTPHeaderField: "X-Project-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         

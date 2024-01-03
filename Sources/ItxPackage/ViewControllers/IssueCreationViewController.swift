@@ -54,6 +54,7 @@ class FullScreenImageViewController: UIViewController {
         
         drawingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
+            make.width.height.equalTo(imageView)
         }
     }
     
@@ -139,23 +140,23 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton()
     {
-        let client = GraphQLClient(url: URL(string: "https://api.itx.coffee/graphql")!)
+        let client = GraphQLClient(url: URL(string: "https://localhost:5001/graphql/")!)
         
         
-        let issueTitle = issueTitleInput.text
-        let issueDescription = descriptionFieldInput.text
+        let issueTitle = issueTitleInput.text ?? ""
+        let issueDescription = descriptionFieldInput.text ?? ""
         
         let mutation = """
-            mutation {
-                createEmptyIssue(input: {
-                    title: \(issueTitle ?? ""),
-                    description: \(issueDescription ?? ""),
-                    projectId: "70oZeD"
-                }) {
-                    id
-                    title
-                }
-            }
+        mutation {
+          createMobileIssue(input: {
+            apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
+            title: "\(issueTitle)",
+            priority: NONE
+            projectId: "7zaPpD",
+          }) {
+            id
+          }
+        }
         """
         
         client.performMutation(mutation: mutation) { result in
