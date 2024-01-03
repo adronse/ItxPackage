@@ -152,7 +152,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
             title: "\(issueTitle)",
             priority: NONE
-            projectId: "7zaPpD",
           }) {
             id
           }
