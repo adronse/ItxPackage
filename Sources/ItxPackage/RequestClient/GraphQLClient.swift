@@ -20,10 +20,12 @@ struct GraphQLErrorDetail: Decodable {
 class GraphQLClient {
     private let url: URL
     private let session: URLSession
+    private let apiKey: String
     
-    init(url: URL, session: URLSession = .shared) {
+    init(url: URL, session: URLSession = .shared, apiKey: String) {
         self.url = url
         self.session = session
+        self.apiKey = apiKey
     }
     
     func performQuery(query: String, completion: @escaping (Result<Any, Error>) -> Void) {
@@ -39,7 +41,8 @@ class GraphQLClient {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.httpBody = httpBody
-        request.setValue("5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8", forHTTPHeaderField: "X-Project-API-Key")
+                
+        request.setValue(apiKey, forHTTPHeaderField: "X-Project-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
         

@@ -41,6 +41,10 @@ public class IterationX {
         // Implement API Key validation
         completion(true)
     }
+    
+    public func getApiKey() -> String {
+        return apiKey ?? ""
+    }
 }
 
 public enum IterationXEvent {

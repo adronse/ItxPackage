@@ -140,7 +140,9 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton()
     {
-        let client = GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!)
+         let apiKey = IterationX.shared.getApiKey()
+        
+        let client = GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!, apiKey: apiKey)
         
         
         let issueTitle = issueTitleInput.text ?? ""
