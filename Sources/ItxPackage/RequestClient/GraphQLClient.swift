@@ -79,6 +79,7 @@ class GraphQLClient {
         
         request.httpMethod = "POST"
         request.httpBody = httpBody
+        request.setValue("5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8", forHTTPHeaderField: "X-Project-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let task = session.dataTask(with: request) { data, response, error in
