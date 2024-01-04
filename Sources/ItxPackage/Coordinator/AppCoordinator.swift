@@ -33,12 +33,17 @@ public class ScreenshotCoordinator: Coordinator {
 
 extension ScreenshotCoordinator: PopupViewControllerDelegate {
     func didSelectReportBug() {
-        let controller = IssueCreationViewController(image: imageView, viewControllerTitle: "Report Bug")
-        presentingController.present(controller, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report Bug")
+            self.presentingController.present(controller, animated: true, completion: nil)
+        }
     }
 
     func didSelectSuggestImprovement() {
-        let controller = IssueCreationViewController(image: imageView, viewControllerTitle: "Suggest Improvement")
-        presentingController.present(controller, animated: true, completion: nil)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Suggest Improvement")
+            self.presentingController.present(controller, animated: true, completion: nil)
+        }
     }
 }
+
