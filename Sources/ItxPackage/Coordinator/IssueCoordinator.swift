@@ -102,9 +102,8 @@ class IssueCoordinator: IssueReporting {
             createPreSignedUrl(image: image, contentType: contentType, completion: { [weak self] result in
                 switch result {
                 case .success(let response):
-                    print("GraphQL Response: \(response)")
-                    // Convert UUID to String and pass to createMobileIssue
                     self?.createMobileIssue(title: title, description: description, preSignedUrlId: response.id, completion: completion)
+                    completion(.success(()))
                 case .failure(let error):
                     print("Error performing GraphQL query: \(error)")
                     completion(.failure(error))
