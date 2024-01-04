@@ -152,22 +152,30 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private func setupForm()
     {
-        view.addSubview(issueTitleField)
-        view.addSubview(issueDescriptionField)
+        view.addSubview(formView)
+        formView.addSubview(issueTitleFieldHeader)
+        formView.addSubview(issueTitleField)
+        formView.addSubview(issueDescriptionFieldHeader)
+        formView.addSubview(issueDescriptionField)
+        
+        formView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(20)
+            make.left.equalToSuperview().offset(20)
+            make.right.equalToSuperview().offset(-20)
+        }
+        
+        issueTitleFieldHeader.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+        }
         
         issueTitleField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
-            make.left.equalToSuperview().offset(20)
-            make.right.equalToSuperview().offset(-20)
-            make.height.equalTo(40)
+            make.top.equalTo(issueTitleFieldHeader.snp.bottom).offset(10)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
         }
-        
-        issueDescriptionField.snp.makeConstraints { make in
-            make.top.equalTo(issueTitleField.snp.bottom).offset(20)
-            make.left.equalToSuperview().offset(20)
-            make.right.equalToSuperview().offset(-20)
-            make.height.equalTo(40)
-        }
+    
     }
     
     // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
@@ -191,11 +199,20 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     
+    private lazy var issueTitleFieldHeader = UILabel()
+        .with(\.text, value: "Issue title")
+    
     private lazy var issueTitleField = UITextField()
         .with(\.placeholder, value: "Your issue title")
     
+    private lazy var issueDescriptionFieldHeader = UILabel()
+        .with(\.text, value: "Issue title")
+    
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Your issue description")
+    
+    
+    private lazy var formView = UIView()
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
 
