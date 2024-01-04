@@ -1,15 +1,73 @@
 import Foundation
 import UIKit
 
+class ColorPickerView: UIView {
+    
+    var colorChangedBlock: ((UIColor) -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupView()
+    }
+    
+    private func setupView() {
+        // This is where you can add additional setup if needed, like borders
+    }
+    
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        
+        // Drawing the color spectrum gradient
+        let context = UIGraphicsGetCurrentContext()
+        let colors = [UIColor.red.cgColor, UIColor.orange.cgColor, UIColor.yellow.cgColor, UIColor.green.cgColor, UIColor.blue.cgColor, UIColor.purple.cgColor]
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let colorLocations: [CGFloat] = [0.0, 0.17, 0.34, 0.51, 0.68, 0.85]
+        let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: colorLocations)
+        let startPoint = CGPoint.zero
+        let endPoint = CGPoint(x: 0, y: self.bounds.height)
+        
+        context?.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: [])
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.selectColor(touches: touches)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.selectColor(touches: touches)
+    }
+    
+    private func selectColor(touches: Set<UITouch>) {
+        if let touch = touches.first {
+            let point = touch.location(in: self)
+            self.colorChangedBlock?(self.getColor(at: point))
+        }
+    }
+    
+    private func getColor(at point: CGPoint) -> UIColor {
+        let sortedColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
+        let proportion = point.y / self.bounds.height
+        let colorIndex = min(max(Int(proportion * CGFloat(sortedColors.count)), 0), sortedColors.count - 1)
+        return sortedColors[colorIndex]
+    }
+    
+}
+
+
 class DrawOnImageViewController: UIViewController {
 
     private let imageView: UIImageView
     private let drawingView: UIView
-    private var path: UIBezierPath?
-    private var startPoint: CGPoint?
-    private var panGesture = UIPanGestureRecognizer()
     private var currentBezierPath = UIBezierPath()
     private var shapeLayers: [CAShapeLayer] = []
+    private var selectedColor: UIColor = .black // Default drawing color
+    private let colorPicker = ColorPickerView()
+
     private let clearButton: UIButton = {
         let button = UIButton()
         button.setTitle("Clear", for: .normal)
@@ -17,8 +75,8 @@ class DrawOnImageViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     var didFinishDrawing: ((UIImage) -> Void)?
-    var delegate: PopupViewControllerDelegate?
 
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -35,6 +93,7 @@ class DrawOnImageViewController: UIViewController {
         configureUI()
         addGestures()
         setupClearButton()
+        setupColorPicker()
     }
 
     private func configureUI() {
@@ -59,30 +118,8 @@ class DrawOnImageViewController: UIViewController {
     }
 
     private func addGestures() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        view.addGestureRecognizer(tapGesture)
-
-        view.addGestureRecognizer(panGesture.onChange { gesture in
-            let point = gesture.location(in: self.view)
-
-            let shapeLayer = CAShapeLayer()
-            shapeLayer.strokeColor = UIColor.red.cgColor
-            shapeLayer.lineWidth = 5
-            shapeLayer.fillColor = UIColor.clear.cgColor
-
-            switch gesture.state {
-            case .began:
-                self.currentBezierPath = UIBezierPath()
-                self.currentBezierPath.move(to: point)
-            case .changed:
-                self.currentBezierPath.addLine(to: point)
-            default:
-                break
-            }
-            shapeLayer.path = self.currentBezierPath.cgPath
-            self.view.layer.addSublayer(shapeLayer)
-            self.shapeLayers.append(shapeLayer)
-        })
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+        drawingView.addGestureRecognizer(panGesture)
     }
 
     private func setupClearButton() {
@@ -97,11 +134,57 @@ class DrawOnImageViewController: UIViewController {
         }
     }
 
+    private func setupColorPicker() {
+        colorPicker.colorChangedBlock = { [weak self] color in
+            self?.selectedColor = color
+        }
+        
+        view.addSubview(colorPicker)
+        
+        colorPicker.snp.makeConstraints { make in
+            make.left.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.width.equalTo(30) // Adjust width as necessary
+            make.height.equalTo(view.snp.height).multipliedBy(0.5) // Adjust height as necessary
+        }
+    }
+
+    @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
+        let point = gesture.location(in: drawingView)
+
+        switch gesture.state {
+        case .began:
+            startNewPath(at: point)
+        case .changed:
+            continuePath(to: point)
+        default:
+            break
+        }
+    }
+
+    private func startNewPath(at point: CGPoint) {
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.strokeColor = selectedColor.cgColor // Use the selected color
+        shapeLayer.lineWidth = 5
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        currentBezierPath = UIBezierPath()
+        currentBezierPath.move(to: point)
+        shapeLayer.path = currentBezierPath.cgPath
+        drawingView.layer.addSublayer(shapeLayer)
+        shapeLayers.append(shapeLayer)
+    }
+    
+    private func continuePath(to point: CGPoint) {
+        currentBezierPath.addLine(to: point)
+        shapeLayers.last?.path = currentBezierPath.cgPath
+    }
+    
     @objc private func clearDrawing() {
         shapeLayers.forEach { $0.removeFromSuperlayer() }
         shapeLayers.removeAll()
     }
 
+    
     @objc private func handleTap() {
         guard imageView.image != nil else {
             dismiss(animated: true, completion: nil)
@@ -120,5 +203,7 @@ class DrawOnImageViewController: UIViewController {
         didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
     }
-
 }
+
+
+
