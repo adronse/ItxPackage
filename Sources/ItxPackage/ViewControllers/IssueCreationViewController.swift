@@ -100,7 +100,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.top.equalTo(issueDescriptionField.snp.bottom).offset(50)
             make.left.equalTo(issueDescriptionField)
             make.size.equalTo(40)
-            make.height.equalTo(200)
         }
         
         imageView.snp.makeConstraints { make     in
