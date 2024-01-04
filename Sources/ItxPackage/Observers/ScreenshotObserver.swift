@@ -17,6 +17,7 @@ public class ScreenshotObserver {
             return
         }
         if let screenshot = captureScreen(view: topViewController.view) {
+            print("I have a screenshot lets use delegate")
             delegate?.didDetectScreenshot(image: screenshot, from: topViewController)
         }
     }
