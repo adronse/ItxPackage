@@ -33,20 +33,32 @@ public class ScreenshotCoordinator: Coordinator {
 
 extension ScreenshotCoordinator: PopupViewControllerDelegate {
     func didSelectReportBug() {
-        DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let graphQLClient = GraphQLClientFactory.createClient()
-            let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
-            let controller = BugReportViewController()
-            self.presentingController.present(controller, animated: true, completion: nil)
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                let graphQLClient = GraphQLClientFactory.createClient()
+                let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
+                let issueCreationVC = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report a bug", issueReport: issueCoordinator)
+                
+                let navigationController = UINavigationController(rootViewController: issueCreationVC)
+                
+                navigationController.navigationBar.prefersLargeTitles = true
+                issueCreationVC.navigationItem.title = "Report a bug"
+                
+                self.presentingController.present(navigationController, animated: true, completion: nil)
+            }
         }
-    }
     
     func didSelectSuggestImprovement() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             let graphQLClient = GraphQLClientFactory.createClient()
             let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
-            let controller = BugReportViewController()
-            self.presentingController.present(controller, animated: true, completion: nil)
+            let issueCreationVC = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report a bug", issueReport: issueCoordinator)
+            
+            let navigationController = UINavigationController(rootViewController: issueCreationVC)
+            
+            navigationController.navigationBar.prefersLargeTitles = true
+            issueCreationVC.navigationItem.title = "Suggest an improvement"
+            
+            self.presentingController.present(navigationController, animated: true, completion: nil)
         }
     }
 }
