@@ -158,4 +158,3 @@ class IssueCoordinator: IssueReporting {
     }
 
 }
-

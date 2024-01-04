@@ -65,10 +65,13 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
 }
 
 extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
+    func didCreateIssue() {
+        self.presentingController.dismiss(animated: true)
+    }
+    
     func didTapCross() {
         self.presentingController.dismiss(animated: true)
         IterationX.shared.setFlowActive(false)
-
     }
 }
 

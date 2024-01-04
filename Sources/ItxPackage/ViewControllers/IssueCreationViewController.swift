@@ -167,7 +167,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         issueReport?.reportIssue(title: title, description: description, image: image) { result in
             switch result {
             case .success:
-                self.navigationController?.popViewController(animated: true)
+                self.delegate?.didCreateIssue()
             case .failure(let error):
                 print(error)
             }
