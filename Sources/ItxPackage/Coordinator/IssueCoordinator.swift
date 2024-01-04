@@ -123,7 +123,7 @@ class IssueCoordinator: IssueReporting {
             preSignedBlobString = """
             preSignedBlob: {
                 preSignedUrlId: "\(preSignedUrlId)",
-                type: PROCESSED_SCREENSHOT
+                type: SCREENSHOT
             }
             """
         } else {
