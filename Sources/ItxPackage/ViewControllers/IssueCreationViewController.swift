@@ -196,8 +196,18 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         return button
     }()
     
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: nil)
+        return button
+    }()
+    
     
     private func configureUI() {
+        
+        
+        
+        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        
         view.addSubview(issueTitleHeader)
         view.addSubview(issueTitleInput)
         view.addSubview(imageBox)
