@@ -149,6 +149,7 @@ class IssueCoordinator: IssueReporting {
             switch result {
             case .success(let response):
                 print("GraphQL Response: \(response)")
+                IterationX.shared.setFlowActive(false)
                 completion(.success(()))
             case .failure(let error):
                 print("Error performing GraphQL query: \(error)")

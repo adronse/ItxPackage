@@ -9,8 +9,19 @@ public class IterationX {
     public static let shared = IterationX()
     private var apiKey: String?
     private var currentEvent: IterationXEvent?
+    private var isFlowActive: Bool = false
     
     private init() {}
+    
+
+    public func setFlowActive(_ isActive: Bool) {
+            isFlowActive = isActive
+    }
+
+    public func getFlowActive() -> Bool {
+            return isFlowActive
+    }
+
     
     public func configure(apiKey: String, event: IterationXEvent, completion: @escaping (Bool) -> Void) {
         isValidApiKey(apiKey) { [weak self] isValid in

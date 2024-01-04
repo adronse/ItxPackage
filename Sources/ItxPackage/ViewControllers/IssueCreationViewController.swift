@@ -165,7 +165,13 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
         
         issueReport?.reportIssue(title: title, description: description, image: image) { result in
-        
+            switch result {
+            case .success:
+                self.delegate?.didTapCross()
+                
+            case .failure(let error):
+                print(error)
+            }
         }
     }
     

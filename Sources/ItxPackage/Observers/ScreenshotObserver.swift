@@ -13,6 +13,11 @@ public class ScreenshotObserver {
     static weak var delegate: EventObserverDelegate?
 
     static func handleScreenshot() {
+        
+        if IterationX.shared.getFlowActive() {
+            return
+        }
+        
         guard let topViewController = UIApplication.shared.topMostViewController else {
             return
         }
@@ -39,8 +44,8 @@ public protocol EventObserverDelegate: AnyObject {
 
 class DidDetectScreenshotCoordinator: EventObserverDelegate {
     func didDetectScreenshot(image: UIImage, from viewController: UIViewController) {
-        
         let screenshotCoordinator = ScreenshotCoordinator(iterationX: IterationX.shared, presentingController: viewController, imageView: UIImageView(image: image))
         screenshotCoordinator.start()
+        IterationX.shared.setFlowActive(true)
     }
 }
