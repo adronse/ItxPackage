@@ -17,7 +17,7 @@ class ThankYouPopupViewController: UIViewController {
         .with(\.layer.masksToBounds, value: true)
     
     private lazy var checkMarkIcon = UIImageView()
-        .with(\.image, value: UIImage(named: "checkMarkIcon"))
+        .with(\.image, value: UIImage(named: "checkMarkIcon", in: Bundle.main, compatibleWith: nil))
         .with(\.contentMode, value: .scaleAspectFit)
     
     private lazy var thankYouLabel = UILabel()
