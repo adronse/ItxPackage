@@ -56,43 +56,53 @@ class IssueCoordinator: IssueReporting {
     
     
     func reportIssue(title: String, description: String, image: UIImage?, completion: @escaping (Result<Void, Error>) -> Void) {
-        let preSignedUrlId: UUID? = nil
-        
-        
         if let image = image, let _ = convertImageToJPEGData(image: image) {
             let contentType = "image/jpeg"
             
-            createPreSignedUrl(image: image, contentType: contentType, completion: { result in
+            createPreSignedUrl(image: image, contentType: contentType, completion: { [weak self] result in
                 switch result {
                 case .success(let response):
                     print("GraphQL Response: \(response)")
-                    completion(.success(()))
+                    // Convert UUID to String and pass to createMobileIssue
+                    self?.createMobileIssue(title: title, description: description, preSignedUrlId: response.id, completion: completion)
                 case .failure(let error):
                     print("Error performing GraphQL query: \(error)")
                     completion(.failure(error))
                 }
             })
+        } else {
+            // If there's no image, call createMobileIssue without a preSignedUrlId
+            createMobileIssue(title: title, description: description, preSignedUrlId: nil, completion: completion)
         }
-        
-        
-        
+    }
+    
+    func createMobileIssue(title: String, description: String, preSignedUrlId: String?, completion: @escaping (Result<Void, Error>) -> Void) {
+        let preSignedBlobString: String
+        if let preSignedUrlId = preSignedUrlId {
+            preSignedBlobString = """
+            preSignedBlob: {
+                preSignedUrlId: "\(preSignedUrlId)",
+                type: SCREENSHOT
+            }
+            """
+        } else {
+            preSignedBlobString = ""
+        }
+
         let mutation = """
         mutation {
-          createMobileIssue(input: {
-            apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
-            title: "\(title)",
-            description: "\(description)"
-            priority: NONE,
-            preSignedBlob: {
-              preSignedUrlId: "\(preSignedUrlId ?? UUID())",
-              type: SCREENSHOT
+            createMobileIssue(input: {
+                apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
+                title: "\(title)",
+                description: "\(description)"
+                priority: NONE,
+                \(preSignedBlobString)
+            }) {
+                id
             }
-          }) {
-            id
-          }
         }
         """
-        
+
         graphQLClient.performMutation(mutation: mutation) { result in
             switch result {
             case .success(let response):
@@ -104,5 +114,6 @@ class IssueCoordinator: IssueReporting {
             }
         }
     }
+
 }
 
