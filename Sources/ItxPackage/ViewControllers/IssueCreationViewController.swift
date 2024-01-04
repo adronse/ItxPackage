@@ -108,12 +108,10 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     private let imageView: UIImageView
-    private let controllerTitle: String
     var issueReport: IssueReporting?
     
-    init(image: UIImageView, viewControllerTitle: String, issueReport: IssueCoordinator) {
+    init(image: UIImageView, issueReport: IssueCoordinator) {
         self.imageView = image
-        self.controllerTitle = viewControllerTitle
         self.issueReport = issueReport
         super.init(nibName: nil, bundle: nil)
     }
@@ -124,7 +122,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = self.controllerTitle
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         
