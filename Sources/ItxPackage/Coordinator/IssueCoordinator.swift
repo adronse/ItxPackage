@@ -95,6 +95,7 @@ class IssueCoordinator: IssueReporting {
                 title: "\(title)",
                 description: "\(description)"
                 priority: NONE,
+                projectId: "Dm4E5G",
                 \(preSignedBlobString)
             }) {
                 id
