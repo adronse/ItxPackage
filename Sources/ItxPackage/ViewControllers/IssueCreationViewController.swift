@@ -146,12 +146,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         
         issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
-            switch result {
-            case .success:
-                self.dismiss(animated: true, completion: nil)
-            case .failure(let error):
-                print(error)
-            }
+
         }
     }
     
