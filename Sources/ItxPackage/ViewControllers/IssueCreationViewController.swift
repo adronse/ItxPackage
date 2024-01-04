@@ -20,6 +20,8 @@ class FullScreenImageViewController: UIViewController {
     private var currentBezierPath = UIBezierPath()
     var didFinishDrawing: ((UIImage) -> Void)?
 
+    var delegate: PopupViewControllerDelegate?
+
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -108,6 +110,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     private let imageView: UIImageView
+    
+    var delegate: IssueCreationViewControllerDelegate?
     var issueReport: IssueReporting?
     
     init(image: UIImageView, issueReport: IssueCoordinator) {
@@ -140,12 +144,15 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton() {
         guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
-        
-
-        
+    
         issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
             
         }
+    }
+    
+    @objc private func didTapCancel()
+    {
+        self.delegate?.didTapCross()
     }
     
     private lazy var issueTitleHeader: UILabel = {
@@ -194,7 +201,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     private lazy var leftBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: nil)
+        let button = UIBarButtonItem(image: UIImage(named: "cross"), style: .plain, target: self, action: #selector(didTapCancel))
         return button
     }()
     
@@ -203,7 +210,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         if #available(iOS 13.0, *) {
             let image = UIImage(systemName: "paperplane.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
             
-            let button = UIBarButtonItem(image: image, style: .plain, target: self, action: nil)
+            let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(didTapSendButton))
             return button
         } else {
             // Fallback on earlier versions

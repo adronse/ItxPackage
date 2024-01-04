@@ -38,6 +38,8 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
                 let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
                 let issueCreationVC = IssueCreationViewController(image: self.imageView, issueReport: issueCoordinator)
                 
+                issueCreationVC.delegate = self
+                
                 let navigationController = UINavigationController(rootViewController: issueCreationVC)
                 
                 navigationController.modalPresentationStyle = .fullScreen
@@ -52,10 +54,19 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
             let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
             let issueCreationVC = IssueCreationViewController(image: self.imageView, issueReport: issueCoordinator)
             
+            
+            issueCreationVC.delegate = self
+            
             let navigationController = UINavigationController(rootViewController: issueCreationVC)
             
             self.presentingController.present(navigationController, animated: true, completion: nil)
         }
+    }
+}
+
+extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
+    func didTapCross() {
+        self.presentingController.dismiss(animated: true)
     }
 }
 
