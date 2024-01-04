@@ -155,6 +155,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.addSubview(formView)
         formView.addSubview(issueTitleFieldHeader)
         formView.addSubview(issueTitleField)
+        formView.addSubview(separator)
         formView.addSubview(issueDescriptionFieldHeader)
         formView.addSubview(issueDescriptionField)
         
@@ -164,7 +165,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.right.equalToSuperview().offset(-20)
         }
 
-        
         issueTitleFieldHeader.snp.makeConstraints { make in
             make.top.equalToSuperview()
             make.left.equalToSuperview()
@@ -175,6 +175,13 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.top.equalTo(issueTitleFieldHeader.snp.bottom).offset(10)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
+        }
+        
+        separator.snp.makeConstraints { make in
+            make.top.equalTo(issueTitleField.snp.bottom).offset(20)
+            make.left.equalToSuperview()
+            make.right.equalToSuperview()
+            make.height.equalTo(1)
         }
     }
     
@@ -204,6 +211,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private lazy var issueTitleField = UITextField()
         .with(\.placeholder, value: "Your issue title")
+    
+    private lazy var separator = UIView.separator(color: .gray)
     
     private lazy var issueDescriptionFieldHeader = UILabel()
         .with(\.text, value: "Issue title")
