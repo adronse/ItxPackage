@@ -61,7 +61,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.addSubview(separator)
         view.addSubview(issueDescriptionFieldHeader)
         view.addSubview(issueDescriptionField)
-    
+        
         issueTitleFieldHeader.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.left.equalToSuperview().offset(20)
@@ -106,9 +106,9 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         deleteImageButton.snp.makeConstraints { make in
-            make.top.equalTo(imageBox.snp.top).offset(10)
-            make.right.equalTo(imageBox.snp.right).offset(-10)
-            make.size.equalTo(CGSize(width: 4, height: 4))
+            make.top.equalTo(imageBox.snp.top).offset(-5)
+            make.right.equalTo(imageBox.snp.right).offset(5)
+            make.size.equalTo(CGSize(width: 10, height: 19))
         }
     }
     
@@ -152,7 +152,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         .with(\.isUserInteractionEnabled, value: true)
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
-
+    
     
     @objc private func handleTap() {
         view.endEditing(true)
@@ -175,11 +175,11 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     @objc private func didTapSendButton() {
-//        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
-    
-//        issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
-            
-//        }
+        //        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+        
+        //        issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
+        
+        //        }
     }
     
     
