@@ -36,7 +36,7 @@ class ThankYouPopupViewController: UIViewController {
 
 
         if #available(iOS 13.0, *) {
-            checkMarkIcon.image = UIImage(named: "checkMarkIcon")
+            checkMarkIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
             checkMarkIcon.tintColor = .systemGreen
         } else {
             // Fallback on earlier versions or add a custom checkmark image
@@ -55,7 +55,7 @@ class ThankYouPopupViewController: UIViewController {
         checkMarkIcon.snp.makeConstraints { make in
             make.top.equalTo(popupView.snp.top).offset(20)
             make.centerX.equalToSuperview()
-            make.size.equalTo(60) // Assuming a square icon
+            make.size.equalTo(60)
         }
 
         thankYouLabel.snp.makeConstraints { make in
