@@ -12,10 +12,10 @@ import SnapKit
 class ThankYouPopupViewController: UIViewController {
 
     private lazy var popupView = UIView()
+        .with(\.backgroundColor, value: UIColor.from(hex: "#333333"))
     
     private lazy var checkMarkIcon = UIImageView()
         .with(\.contentMode, value: .scaleAspectFit)
-        .with(\.backgroundColor, value: UIColor.from(hex: "#333333"))
     
     private lazy var thankYouLabel = UILabel()
         .with(\.text, value: "Thank you")
@@ -49,6 +49,7 @@ class ThankYouPopupViewController: UIViewController {
         checkMarkIcon.snp.makeConstraints { make in
             make.centerX.equalTo(popupView.center.x)
             make.top.equalTo(popupView.snp.top).offset(5)
+            make.width.equalTo(30)
         }
         
         thankYouLabel.snp.makeConstraints { make in
