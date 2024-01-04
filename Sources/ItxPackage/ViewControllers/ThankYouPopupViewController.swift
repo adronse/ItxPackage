@@ -15,6 +15,7 @@ class ThankYouPopupViewController: UIViewController {
     
     private lazy var checkMarkIcon = UIImageView()
         .with(\.contentMode, value: .scaleAspectFit)
+        .with(\.backgroundColor, value: UIColor.from(hex: "#333333"))
     
     private lazy var thankYouLabel = UILabel()
         .with(\.text, value: "Thank you")
