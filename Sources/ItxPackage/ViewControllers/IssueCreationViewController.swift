@@ -199,11 +199,27 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        if #available(iOS 13.0, *) {
+            let image = UIImage(systemName: "paperplane.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
+            
+            let button = UIBarButtonItem(image: image, style: .plain, target: self, action: nil)
+            return button
+        } else {
+            // Fallback on earlier versions
+        }
+        return UIBarButtonItem()
+    }()
+
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        navigationItem.title = "Report a bug"
+    }
+    
     private func configureUI() {
         
-        
-        
-        self.navigationItem.leftBarButtonItem = leftBarButtonItem
+        setupNavigationBar()
         
         view.addSubview(issueTitleHeader)
         view.addSubview(issueTitleInput)
