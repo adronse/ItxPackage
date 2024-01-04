@@ -19,20 +19,20 @@ class IssueCoordinator: IssueReporting {
         self.graphQLClient = graphQLClient
     }
     
-    func createPreSignedUrl(completion: @escaping (Result<PreSignedUrl, Error>) -> Void) {
+    func createPreSignedUrl(image: UIImage, contentType: String, completion: @escaping (Result<PreSignedUrl, Error>) -> Void) {
         let mutation = """
-        mutation {
-              createPreSignedUrl(contentType: "image/jpg", filename: "toto", scope: ISSUE_ATTACHMENT) {
-                url
-                id
-                headers {
-                  key
-                  value
-                }
-                expiresAt
-              }
-        }
-        """
+            mutation {
+                  createPreSignedUrl(contentType: "\(contentType)", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
+                    url
+                    id
+                    headers {
+                      key
+                      value
+                    }
+                    expiresAt
+                  }
+            }
+            """
         
         graphQLClient.performMutation(mutation: mutation) { [weak self] result in
             guard let self = self else { return }
@@ -50,12 +50,19 @@ class IssueCoordinator: IssueReporting {
         }
     }
     
+    func convertImageToJPEGData(image: UIImage) -> Data? {
+        return image.jpegData(compressionQuality: 0.9)  // You can adjust the compression quality
+    }
     
     
     func reportIssue(title: String, description: String, image: UIImage?, completion: @escaping (Result<Void, Error>) -> Void) {
+        let preSignedUrlId: UUID? = nil
         
-        if (image != nil) {
-            createPreSignedUrl(completion: { result in
+        
+        if let image = image, let _ = convertImageToJPEGData(image: image) {
+            let contentType = "image/jpeg"
+            
+            createPreSignedUrl(image: image, contentType: contentType, completion: { result in
                 switch result {
                 case .success(let response):
                     print("GraphQL Response: \(response)")
@@ -65,8 +72,8 @@ class IssueCoordinator: IssueReporting {
                     completion(.failure(error))
                 }
             })
-            
         }
+        
         
         
         let mutation = """
@@ -75,7 +82,11 @@ class IssueCoordinator: IssueReporting {
             apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
             title: "\(title)",
             description: "\(description)"
-            priority: NONE
+            priority: NONE,
+            preSignedBlob: {
+              preSignedUrlId: \(preSignedUrlId)
+              type: SCREENSHOT
+            }
           }) {
             id
           }
