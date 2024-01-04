@@ -201,7 +201,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }()
     
     private lazy var leftBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(image: UIImage(named: "cross"), style: .plain, target: self, action: #selector(didTapCancel))
+        let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: #selector(didTapCancel))
         return button
     }()
     
