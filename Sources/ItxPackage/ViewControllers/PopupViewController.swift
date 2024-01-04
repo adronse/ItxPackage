@@ -193,16 +193,13 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Handle cell selection if needed
-        print("Selected row at index: \(indexPath.row)")
-        
-        // For example, if the user clicks on the first cell, present a new view controller
-        if indexPath.row == 0 {
-            self.delegate?.didSelectReportBug()
-        }
-        
-        if indexPath.row == 1 {
-            self.delegate?.didSelectSuggestImprovement()
+        dismiss(animated: true) { [weak self] in
+            if indexPath.row == 0 {
+                self?.delegate?.didSelectReportBug()
+            } else if indexPath.row == 1 {
+                self?.delegate?.didSelectSuggestImprovement()
+            }
         }
     }
+
 }
