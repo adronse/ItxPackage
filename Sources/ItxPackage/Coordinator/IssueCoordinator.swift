@@ -80,7 +80,7 @@ class IssueCoordinator: IssueReporting {
         let preSignedBlobString: String
         if let preSignedUrlId = preSignedUrlId {
             preSignedBlobString = """
-            preSignedBlob: {
+                preSignedBlob: {
                 preSignedUrlId: "\(preSignedUrlId)",
                 type: SCREENSHOT
             }
@@ -92,9 +92,10 @@ class IssueCoordinator: IssueReporting {
         let mutation = """
         mutation {
             createMobileIssue(input: {
+                apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
                 title: "\(title)",
                 description: "\(description)"
-                priority: NONE,
+                priority: NONE
                 \(preSignedBlobString)
             }) {
                 id
