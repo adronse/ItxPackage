@@ -9,9 +9,9 @@ public class IterationX {
     public static let shared = IterationX()
     private var apiKey: String?
     private var currentEvent: IterationXEvent?
-
+    
     private init() {}
-
+    
     public func configure(apiKey: String, event: IterationXEvent, completion: @escaping (Bool) -> Void) {
         isValidApiKey(apiKey) { [weak self] isValid in
             guard let self = self else { return }
@@ -20,14 +20,17 @@ public class IterationX {
                 self.currentEvent = event
                 self.dispatchEvent(event: event)
                 completion(true)
+                
             } else {
                 completion(false)
             }
         }
     }
     
+    static var didDetectScreenshotCoordinator: DidDetectScreenshotCoordinator?
+    
     public static func initializeScreenshotHandling() {
-        let didDetectScreenshotCoordinator = DidDetectScreenshotCoordinator()
+        didDetectScreenshotCoordinator = DidDetectScreenshotCoordinator()
         ScreenshotObserver.delegate = didDetectScreenshotCoordinator
     }
     
