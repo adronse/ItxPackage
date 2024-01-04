@@ -18,7 +18,7 @@ class IssueCoordinator: IssueReporting {
     let graphQLClient: GraphQLClient
     
     init(graphQLClient: GraphQLClient) {
-        self.graphQLClient = GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!, apiKey: IterationX.shared.getApiKey())
+        self.graphQLClient = graphQLClient
     }
     
     func reportIssue(title: String, description: String, completion: @escaping (Result<Void, Error>) -> Void) {
