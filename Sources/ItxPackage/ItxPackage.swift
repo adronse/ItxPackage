@@ -26,6 +26,11 @@ public class IterationX {
         }
     }
     
+    public static func initializeScreenshotHandling() {
+        let didDetectScreenshotCoordinator = DidDetectScreenshotCoordinator()
+        ScreenshotObserver.delegate = didDetectScreenshotCoordinator
+    }
+    
     private func dispatchEvent(event: IterationXEvent) {
         switch event {
         case .screenshot:
