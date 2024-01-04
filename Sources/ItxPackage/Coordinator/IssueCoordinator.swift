@@ -91,8 +91,7 @@ class IssueCoordinator: IssueReporting {
 
         let mutation = """
         mutation {
-            createMobileIssue(input: {
-                apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
+            createEmptyIssue(input: {
                 title: "\(title)",
                 description: "\(description)"
                 priority: NONE,
