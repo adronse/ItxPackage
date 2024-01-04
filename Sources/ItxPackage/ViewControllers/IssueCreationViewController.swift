@@ -94,6 +94,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.addSubview(deleteImageButton)
         imageBox.addSubview(imageView)
         
+        imageBox.backgroundColor = .blue
+        
         imageBox.snp.makeConstraints { make in
             make.top.equalTo(issueDescriptionField.snp.bottom).offset(50)
             make.left.equalTo(issueDescriptionField)
