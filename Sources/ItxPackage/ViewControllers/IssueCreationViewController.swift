@@ -224,60 +224,60 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         setupNavigationBar()
         
-        view.addSubview(issueTitleHeader)
-        view.addSubview(issueTitleInput)
-        view.addSubview(imageBox)
-        imageBox.addSubview(imageView)
-        view.addSubview(separator)
-        view.addSubview(descriptionFieldTitle)
-        view.addSubview(descriptionFieldInput)
-        view.addSubview(sendButton)
-        
-        issueTitleHeader.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(60)
-            make.leading.trailing.equalToSuperview().inset(2)
-            make.height.equalTo(40)
-        }
-        
-        issueTitleInput.snp.makeConstraints { make in
-            make.top.equalTo(issueTitleHeader.snp.bottom).offset(2)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(40)
-        }
-        
-        separator.snp.makeConstraints { make in
-            make.top.equalTo(issueTitleInput.snp.bottom).offset(2)
-            make.height.equalTo(1)
-            make.leading.trailing.equalToSuperview().inset(5)
-        }
-        
-        descriptionFieldTitle.snp.makeConstraints { make in
-            make.top.equalTo(separator.snp.bottom).offset(5)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(40)
-        }
-        
-        descriptionFieldInput.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(2)
-            make.leading.trailing.equalToSuperview().inset(5)
-            make.height.equalTo(40)
-        }
-        
-        imageBox.snp.makeConstraints { make in
-            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(30)
-            make.leading.equalTo(descriptionFieldInput)
-            make.size.equalTo(40)
-        }
-        
-        imageView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        sendButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().inset(20)
-            make.leading.trailing.equalToSuperview().offset(10)
-            make.height.equalTo(30)
-        }
+//        view.addSubview(issueTitleHeader)
+//        view.addSubview(issueTitleInput)
+//        view.addSubview(imageBox)
+//        imageBox.addSubview(imageView)
+//        view.addSubview(separator)
+//        view.addSubview(descriptionFieldTitle)
+//        view.addSubview(descriptionFieldInput)
+//        view.addSubview(sendButton)
+//
+//        issueTitleHeader.snp.makeConstraints { make in
+//            make.top.equalToSuperview().offset(60)
+//            make.leading.trailing.equalToSuperview().inset(2)
+//            make.height.equalTo(40)
+//        }
+//
+//        issueTitleInput.snp.makeConstraints { make in
+//            make.top.equalTo(issueTitleHeader.snp.bottom).offset(2)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//            make.height.equalTo(40)
+//        }
+//
+//        separator.snp.makeConstraints { make in
+//            make.top.equalTo(issueTitleInput.snp.bottom).offset(2)
+//            make.height.equalTo(1)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//        }
+//
+//        descriptionFieldTitle.snp.makeConstraints { make in
+//            make.top.equalTo(separator.snp.bottom).offset(5)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//            make.height.equalTo(40)
+//        }
+//
+//        descriptionFieldInput.snp.makeConstraints { make in
+//            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(2)
+//            make.leading.trailing.equalToSuperview().inset(5)
+//            make.height.equalTo(40)
+//        }
+//
+//        imageBox.snp.makeConstraints { make in
+//            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(30)
+//            make.leading.equalTo(descriptionFieldInput)
+//            make.size.equalTo(40)
+//        }
+//
+//        imageView.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
+//
+//        sendButton.snp.makeConstraints { make in
+//            make.bottom.equalToSuperview().inset(20)
+//            make.leading.trailing.equalToSuperview().offset(10)
+//            make.height.equalTo(30)
+//        }
     }
     
     
