@@ -29,37 +29,53 @@ class ThankYouPopupViewController: UIViewController {
     }
 
     private func setupPopupView() {
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5) // Semi-transparent background
         view.addSubview(popupView)
-        
+
+        popupView.backgroundColor = .white
+        popupView.layer.cornerRadius = 10
+        popupView.layer.masksToBounds = true
+
         if #available(iOS 13.0, *) {
-            checkMarkIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
+            checkMarkIcon.image = UIImage(systemName: "checkmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
+            checkMarkIcon.tintColor = .systemGreen
         } else {
-            // Fallback on earlier versions
+            // Fallback on earlier versions or add a custom checkmark image
         }
-        
+
         popupView.addSubview(checkMarkIcon)
         popupView.addSubview(thankYouLabel)
         popupView.addSubview(descriptionLabel)
-        
+
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.height.equalTo(80)
+            make.width.equalToSuperview().multipliedBy(0.8) // 80% of screen width
+            make.height.equalTo(popupView.snp.width).multipliedBy(0.5) // half the width for height
         }
-        
+
         checkMarkIcon.snp.makeConstraints { make in
-            make.centerX.equalTo(popupView.center.x)
-            make.top.equalTo(popupView.snp.top).offset(5)
-            make.width.equalTo(30)
+            make.top.equalTo(popupView.snp.top).offset(20)
+            make.centerX.equalToSuperview()
+            make.size.equalTo(60) // Assuming a square icon
         }
-        
+
         thankYouLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(popupView.snp.centerX)
-            make.top.equalTo(checkMarkIcon.snp.bottom).offset(5)
+            make.top.equalTo(checkMarkIcon.snp.bottom).offset(20)
+            make.centerX.equalToSuperview()
         }
-        
+
         descriptionLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(popupView.snp.centerX)
-            make.top.equalTo(thankYouLabel.snp.bottom).offset(5)
+            make.top.equalTo(thankYouLabel.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(popupView.snp.bottom).offset(-20) // Padding at the bottom
         }
+
+        thankYouLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+        descriptionLabel.textColor = .darkGray
+        descriptionLabel.numberOfLines = 0 // Allow label to wrap
+        descriptionLabel.textAlignment = .center
     }
+
+
 }
