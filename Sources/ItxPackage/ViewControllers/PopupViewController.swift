@@ -12,7 +12,7 @@ import UIKit
 class PopupViewController: UIViewController {
     
     private let imageView: UIImageView
-    weak var delegate: PopupViewControllerDelegate?
+    var delegate: PopupViewControllerDelegate?
     
     private let reportButtonData = [
         ("Report a bug", "Something in the app is broken or doesn't work as expected", "ladybug"),
