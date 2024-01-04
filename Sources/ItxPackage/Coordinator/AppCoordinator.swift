@@ -40,9 +40,6 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
                 
                 let navigationController = UINavigationController(rootViewController: issueCreationVC)
                 
-                navigationController.navigationBar.prefersLargeTitles = true
-                issueCreationVC.navigationItem.title = "Report a bug"
-                
                 self.presentingController.present(navigationController, animated: true, completion: nil)
             }
         }
@@ -54,9 +51,6 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
             let issueCreationVC = IssueCreationViewController(image: self.imageView, issueReport: issueCoordinator)
             
             let navigationController = UINavigationController(rootViewController: issueCreationVC)
-            
-            navigationController.navigationBar.prefersLargeTitles = true
-            issueCreationVC.navigationItem.title = "Suggest an improvement"
             
             self.presentingController.present(navigationController, animated: true, completion: nil)
         }

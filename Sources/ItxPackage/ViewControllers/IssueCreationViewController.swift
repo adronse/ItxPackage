@@ -214,10 +214,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private func setupNavigationBar() {
         navigationItem.leftBarButtonItem = leftBarButtonItem
         navigationItem.rightBarButtonItem = rightBarButtonItem
-        navigationItem.titleView?.snp.makeConstraints { make in
-            make.center.equalTo(self.view)
-            
-        }
+        navigationItem.title = "Report a bug"
     }
     
     private func configureUI() {
