@@ -70,14 +70,13 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         issueTitleField.snp.makeConstraints { make in
             make.top.equalTo(issueTitleFieldHeader.snp.bottom).offset(10)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.left.right.equalTo(issueTitleFieldHeader)
         }
         
         separator.snp.makeConstraints { make in
             make.top.equalTo(issueTitleField.snp.bottom).offset(10)
-            make.left.equalToSuperview()
-            make.right.equalToSuperview()
+            make.left.equalToSuperview().offset(5)
+            make.right.equalToSuperview().offset(-5)
             make.height.equalTo(1)
         }
     }
@@ -104,7 +103,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     private lazy var issueTitleFieldHeader = UILabel()
-        .with(\.text, value: "Issue title")
+        .with(\.text, value: "Title")
+        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
     
     private lazy var issueTitleField = UITextField()
         .with(\.placeholder, value: "Your issue title")
