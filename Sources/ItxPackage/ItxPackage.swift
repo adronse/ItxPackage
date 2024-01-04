@@ -42,7 +42,6 @@ public class IterationX {
                 object: nil,
                 queue: .main
             ) { _ in
-                print("Calling handle screenshot class")
                 ScreenshotObserver.handleScreenshot()
             }
         case .shake:

@@ -19,6 +19,7 @@ class FullScreenImageViewController: UIViewController {
     private var panGesture = UIPanGestureRecognizer()
     private var currentBezierPath = UIBezierPath()
     var didFinishDrawing: ((UIImage) -> Void)?
+
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -108,6 +109,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private let imageView: UIImageView
     private let controllerTitle: String
+    var issueReport: IssueReporting?
     
     init(image: UIImageView, viewControllerTitle: String) {
         self.imageView = image
@@ -138,35 +140,10 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.endEditing(true)
     }
     
-    @objc private func didTapSendButton()
-    {
-         let apiKey = IterationX.shared.getApiKey()
-        
-        let client = GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!, apiKey: apiKey)
-        
-        
-        let issueTitle = issueTitleInput.text ?? ""
-        let issueDescription = descriptionFieldInput.text ?? ""
-        
-        let mutation = """
-        mutation {
-          createMobileIssue(input: {
-            apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
-            title: "\(issueTitle)",
-            priority: NONE
-          }) {
-            id
-          }
-        }
-        """
-        
-        client.performMutation(mutation: mutation) { result in
-            switch result {
-            case .success(let response):
-                print("GraphQL Response: \(response)")
-            case .failure(let error):
-                print("Error performing GraphQL query: \(error)")
-            }
+    @objc private func didTapSendButton() {
+        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+        issueReport?.reportIssue(title: title, description: description) { result in
+            // Handle the result
         }
     }
     

@@ -193,7 +193,6 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Delegate is: \(String(describing: delegate))")
         
         dismiss(animated: true) { [weak self] in
             if indexPath.row == 0 {
