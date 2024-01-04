@@ -71,7 +71,6 @@ class IssueCoordinator: IssueReporting {
                 }
             })
         } else {
-            // If there's no image, call createMobileIssue without a preSignedUrlId
             createMobileIssue(title: title, description: description, preSignedUrlId: nil, completion: completion)
         }
     }
@@ -80,9 +79,9 @@ class IssueCoordinator: IssueReporting {
         let preSignedBlobString: String
         if let preSignedUrlId = preSignedUrlId {
             preSignedBlobString = """
-                preSignedBlob: {
+            preSignedBlob: {
                 preSignedUrlId: "\(preSignedUrlId)",
-                type: SCREENSHOT
+                type: PROCESSED_SCREENSHOT
             }
             """
         } else {
