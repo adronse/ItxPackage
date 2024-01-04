@@ -159,10 +159,11 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         formView.addSubview(issueDescriptionField)
         
         formView.snp.makeConstraints { make in
-            make.top.equalTo(navigationController?.view.snp.bottom).offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
             make.left.equalToSuperview().offset(20)
             make.right.equalToSuperview().offset(-20)
         }
+
         
         issueTitleFieldHeader.snp.makeConstraints { make in
             make.top.equalToSuperview()
@@ -175,7 +176,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.left.equalToSuperview()
             make.right.equalToSuperview()
         }
-    
     }
     
     // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
