@@ -91,11 +91,10 @@ class IssueCoordinator: IssueReporting {
 
         let mutation = """
         mutation {
-            createEmptyIssue(input: {
+            createMobileIssue(input: {
                 title: "\(title)",
                 description: "\(description)"
                 priority: NONE,
-                projectId: "Dm4E5G",
                 \(preSignedBlobString)
             }) {
                 id
