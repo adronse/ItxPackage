@@ -181,7 +181,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             return
         }
         
-        let fullScreenImageViewController = DrawOnImageVIewController(image: image)
+        let fullScreenImageViewController = DrawOnImageViewController(image: image)
         fullScreenImageViewController.modalPresentationStyle = .fullScreen
         
         fullScreenImageViewController.didFinishDrawing = { [weak self] modifiedImage in
