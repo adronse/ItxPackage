@@ -91,7 +91,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         view.addSubview(imageBox)
-        imageBox.addSubview(deleteImageButton)
+        view.addSubview(deleteImageButton)
         imageBox.addSubview(imageView)
         
         imageBox.snp.makeConstraints { make in
