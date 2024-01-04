@@ -84,7 +84,7 @@ class IssueCoordinator: IssueReporting {
             description: "\(description)"
             priority: NONE,
             preSignedBlob: {
-              preSignedUrlId: \(preSignedUrlId)
+              preSignedUrlId: "\(preSignedUrlId ?? UUID())",
               type: SCREENSHOT
             }
           }) {
