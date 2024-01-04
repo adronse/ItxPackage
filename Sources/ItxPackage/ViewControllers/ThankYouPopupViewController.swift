@@ -8,53 +8,50 @@
 import UIKit
 import SnapKit
 
+@available(iOS 13.0, *)
 class ThankYouPopupViewController: UIViewController {
+
+    private lazy var popupView = UIView()
     
-    let popupView = UIView()
-    let checkmarkImageView = UIImageView()
-    let thankYouLabel = UILabel()
+    private lazy var checkMarkIcon = UIImageView()
+        .with(\.image, value: UIImage(systemName: "checkmark.circle"))
+        .with(\.contentMode, value: .scaleAspectFit)
+    
+    private lazy var thankYouLabel = UILabel()
+        .with(\.text, value: "Thank you")
+    
+    private lazy var descriptionLabel = UILabel()
+        .with(\.text, value: "Your issue has been sent to Iteration X")
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupPopupView()
-        setupCheckmarkImageView()
-        setupThankYouLabel()
     }
 
     private func setupPopupView() {
         view.addSubview(popupView)
-        popupView.backgroundColor = .white
-        popupView.layer.cornerRadius = 12
+        
+        popupView.addSubview(checkMarkIcon)
+        popupView.addSubview(thankYouLabel)
+        popupView.addSubview(descriptionLabel)
+        
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalTo(240)
-            make.height.equalTo(140)
+            make.width.height.equalTo(80)
         }
-    }
-
-    private func setupCheckmarkImageView() {
-        popupView.addSubview(checkmarkImageView)
-        if #available(iOS 13.0, *) {
-            checkmarkImageView.image = UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
-        } else {
+        
+        checkMarkIcon.snp.makeConstraints { make in
+            make.centerX.equalTo(popupView.center.x)
+            make.top.equalTo(popupView.snp.top).offset(5)
         }
-        checkmarkImageView.contentMode = .scaleAspectFit
-        checkmarkImageView.snp.makeConstraints { make in
-            make.top.equalTo(popupView.snp.top).offset(20)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(40)
-        }
-    }
-
-    private func setupThankYouLabel() {
-        popupView.addSubview(thankYouLabel)
-        thankYouLabel.text = "Thank You"
-        thankYouLabel.textAlignment = .center
-        thankYouLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        
         thankYouLabel.snp.makeConstraints { make in
-            make.top.equalTo(checkmarkImageView.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
-            make.left.right.equalToSuperview().inset(20)
+            make.centerX.equalTo(popupView.snp.centerX)
+            make.top.equalTo(checkMarkIcon.snp.bottom).offset(5)
+        }
+        
+        descriptionLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(popupView.snp.centerX)
+            make.top.equalTo(thankYouLabel.snp.bottom).offset(5)
         }
     }
 }
