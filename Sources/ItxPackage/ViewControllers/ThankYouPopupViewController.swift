@@ -25,6 +25,7 @@ class ThankYouPopupViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupPopupView()
     }
 
     private func setupPopupView() {
