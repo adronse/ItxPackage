@@ -8,13 +8,12 @@
 import UIKit
 import SnapKit
 
-@available(iOS 13.0, *)
+
 class ThankYouPopupViewController: UIViewController {
 
     private lazy var popupView = UIView()
     
     private lazy var checkMarkIcon = UIImageView()
-        .with(\.image, value: UIImage(systemName: "checkmark.circle"))
         .with(\.contentMode, value: .scaleAspectFit)
     
     private lazy var thankYouLabel = UILabel()
@@ -29,6 +28,12 @@ class ThankYouPopupViewController: UIViewController {
 
     private func setupPopupView() {
         view.addSubview(popupView)
+        
+        if #available(iOS 13.0, *) {
+            checkMarkIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
+        } else {
+            // Fallback on earlier versions
+        }
         
         popupView.addSubview(checkMarkIcon)
         popupView.addSubview(thankYouLabel)
