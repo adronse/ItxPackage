@@ -99,17 +99,24 @@ class IssueCoordinator: IssueReporting {
         if let image = image, let _ = convertImageToJPEGData(image: image) {
             let contentType = "image/jpeg"
             
-            createPreSignedUrl(image: image, contentType: contentType, completion: { [weak self] result in
+            createPreSignedUrl(image: image, contentType: contentType) { [weak self] result in
                 switch result {
-                case .success(let response):
-                    self?.createMobileIssue(title: title, description: description, preSignedUrlId: response.id, completion: completion)
-                    completion(.success(()))
+                case .success(let preSignedUrl):
+                    self?.uploadImageToPreSignedUrl(image: image, preSignedUrl: preSignedUrl.url, headers: preSignedUrl.headers) { uploadResult in
+                        switch uploadResult {
+                        case .success():
+                            // Call the method to create issue after successful image upload
+                            self?.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrl.id, completion: completion)
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 case .failure(let error):
-                    print("Error performing GraphQL query: \(error)")
                     completion(.failure(error))
                 }
-            })
+            }
         } else {
+            // Call directly if there is no image to upload
             createMobileIssue(title: title, description: description, preSignedUrlId: nil, completion: completion)
         }
     }
