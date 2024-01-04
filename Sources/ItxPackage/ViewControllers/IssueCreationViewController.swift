@@ -178,7 +178,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         separator.snp.makeConstraints { make in
-            make.top.equalTo(issueTitleField.snp.bottom).offset(20)
+            make.top.equalTo(issueTitleField.snp.bottom).offset(10)
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.height.equalTo(1)
@@ -205,6 +205,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         return UIBarButtonItem()
     }()
     
+    private lazy var formView = UIView()
+        .with(\.isUserInteractionEnabled, value: true)
     
     private lazy var issueTitleFieldHeader = UILabel()
         .with(\.text, value: "Issue title")
@@ -219,9 +221,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Your issue description")
-    
-    
-    private lazy var formView = UIView()
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
 
