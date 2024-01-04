@@ -78,6 +78,7 @@ extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
                     thankYouVC.dismiss(animated: true)
                 }
             }
+            IterationX.shared.setFlowActive(false)
         }
     }
     
