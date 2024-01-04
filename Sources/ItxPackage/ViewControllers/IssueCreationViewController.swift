@@ -213,6 +213,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private lazy var issueTitleField = UITextField()
         .with(\.placeholder, value: "Your issue title")
+        .with(\.isUserInteractionEnabled, value: true)
     
     private lazy var separator = UIView.separator(color: .gray)
     
@@ -221,6 +222,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Your issue description")
+        .with(\.isUserInteractionEnabled, value: true)
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
 
