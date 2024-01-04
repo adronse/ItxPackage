@@ -36,7 +36,7 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             let graphQLClient = GraphQLClientFactory.createClient()
             let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report a bug", issueReport: issueCoordinator)
+            let controller = BugReportViewController()
             self.presentingController.present(controller, animated: true, completion: nil)
         }
     }
@@ -45,7 +45,7 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
             let graphQLClient = GraphQLClientFactory.createClient()
             let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Suggest an improvement", issueReport: issueCoordinator)
+            let controller = BugReportViewController()
             self.presentingController.present(controller, animated: true, completion: nil)
         }
     }

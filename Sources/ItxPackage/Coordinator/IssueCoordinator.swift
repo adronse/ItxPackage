@@ -54,7 +54,8 @@ class IssueCoordinator: IssueReporting {
     }
     
     func createPreSignedUrl(image: UIImage, contentType: String, completion: @escaping (Result<PreSignedUrl, Error>) -> Void) {
-        let mutation = """
+        let mutation = 
+            """
             mutation {
                   createPreSignedUrl(contentType: "\(contentType)", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
                     url
@@ -91,11 +92,8 @@ class IssueCoordinator: IssueReporting {
     }
     
     func convertImageToJPEGData(image: UIImage) -> Data? {
-        return image.jpegData(compressionQuality: 0.9)  // You can adjust the compression quality
+        return image.jpegData(compressionQuality: 0.9)
     }
-    
-    
-    
     
     func reportIssue(title: String, description: String, image: UIImage?, completion: @escaping (Result<Void, Error>) -> Void) {
         if let image = image, let _ = convertImageToJPEGData(image: image) {
