@@ -124,6 +124,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
@@ -138,67 +139,38 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         imageBox.addGestureRecognizer(tapGestureOnImageBox)
     }
     
-    @objc private func handleTap() {
-        view.endEditing(true)
+    private func configureUI() {
+        setupNavigationBar()
+        setupForm()
     }
     
-    @objc private func didTapSendButton() {
-        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+    private func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = leftBarButtonItem
+        navigationItem.rightBarButtonItem = rightBarButtonItem
+        navigationItem.title = "Report a bug"
+    }
     
-        issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
-            
+    private func setupForm()
+    {
+        view.addSubview(issueTitleField)
+        view.addSubview(issueDescriptionField)
+        
+        issueTitleField.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20)
+            make.left.equalToSuperview().offset(20)
+            make.right.equalToSuperview().offset(-20)
+            make.height.equalTo(40)
+        }
+        
+        issueDescriptionField.snp.makeConstraints { make in
+            make.top.equalTo(issueTitleField.snp.bottom).offset(20)
+            make.left.equalToSuperview().offset(20)
+            make.right.equalToSuperview().offset(-20)
+            make.height.equalTo(40)
         }
     }
     
-    @objc private func didTapCancel()
-    {
-        self.delegate?.didTapCross()
-    }
-    
-    private lazy var issueTitleHeader: UILabel = {
-        let label = UILabel()
-        label.text = "Issue"
-        label.textColor = .white
-        return label
-    }()
-    
-    private lazy var issueTitleInput: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Issue title"
-        textField.textColor = .white
-        return textField
-    }()
-    
-    lazy var separator = UIView.separator(color: .white)
-    
-    private lazy var descriptionFieldTitle: UILabel = {
-        let label = UILabel()
-        label.text = "Description"
-        label.textColor = .white
-        return label
-    }()
-    
-    private lazy var descriptionFieldInput: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Please be as detailed as possible. What did you expect and what happened instead?"
-        textField.textColor = .white
-        return textField
-    }()
-    
-    
-    private lazy var imageBox: UIView = {
-        let box = UIView()
-        return box
-    }()
-    
-    
-    private lazy var sendButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Send issue", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(didTapSendButton), for: .touchUpInside)
-        return button
-    }()
+    // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
     
     private lazy var leftBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: #selector(didTapCancel))
@@ -213,77 +185,43 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(didTapSendButton))
             return button
         } else {
-            // Fallback on earlier versions
+            
         }
         return UIBarButtonItem()
     }()
+    
+    
+    private lazy var issueTitleField = UITextField()
+        .with(\.placeholder, value: "Your issue title")
+    
+    private lazy var issueDescriptionField = UITextField()
+        .with(\.placeholder, value: "Your issue description")
+    
+    //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
 
-    private func setupNavigationBar() {
-        navigationItem.leftBarButtonItem = leftBarButtonItem
-        navigationItem.rightBarButtonItem = rightBarButtonItem
-        navigationItem.title = "Report a bug"
+    
+    @objc private func handleTap() {
+        view.endEditing(true)
     }
     
-    private func configureUI() {
-        
-        setupNavigationBar()
-        
-//        view.addSubview(issueTitleHeader)
-//        view.addSubview(issueTitleInput)
-//        view.addSubview(imageBox)
-//        imageBox.addSubview(imageView)
-//        view.addSubview(separator)
-//        view.addSubview(descriptionFieldTitle)
-//        view.addSubview(descriptionFieldInput)
-//        view.addSubview(sendButton)
-//
-//        issueTitleHeader.snp.makeConstraints { make in
-//            make.top.equalToSuperview().offset(60)
-//            make.leading.trailing.equalToSuperview().inset(2)
-//            make.height.equalTo(40)
-//        }
-//
-//        issueTitleInput.snp.makeConstraints { make in
-//            make.top.equalTo(issueTitleHeader.snp.bottom).offset(2)
-//            make.leading.trailing.equalToSuperview().inset(5)
-//            make.height.equalTo(40)
-//        }
-//
-//        separator.snp.makeConstraints { make in
-//            make.top.equalTo(issueTitleInput.snp.bottom).offset(2)
-//            make.height.equalTo(1)
-//            make.leading.trailing.equalToSuperview().inset(5)
-//        }
-//
-//        descriptionFieldTitle.snp.makeConstraints { make in
-//            make.top.equalTo(separator.snp.bottom).offset(5)
-//            make.leading.trailing.equalToSuperview().inset(5)
-//            make.height.equalTo(40)
-//        }
-//
-//        descriptionFieldInput.snp.makeConstraints { make in
-//            make.top.equalTo(descriptionFieldTitle.snp.bottom).offset(2)
-//            make.leading.trailing.equalToSuperview().inset(5)
-//            make.height.equalTo(40)
-//        }
-//
-//        imageBox.snp.makeConstraints { make in
-//            make.top.equalTo(descriptionFieldInput.snp.bottom).offset(30)
-//            make.leading.equalTo(descriptionFieldInput)
-//            make.size.equalTo(40)
-//        }
-//
-//        imageView.snp.makeConstraints { make in
-//            make.edges.equalToSuperview()
-//        }
-//
-//        sendButton.snp.makeConstraints { make in
-//            make.bottom.equalToSuperview().inset(20)
-//            make.leading.trailing.equalToSuperview().offset(10)
-//            make.height.equalTo(30)
-//        }
+    @objc private func didTapCancel()
+    {
+        self.delegate?.didTapCross()
     }
     
+    
+    private lazy var imageBox: UIView = {
+        let box = UIView()
+        return box
+    }()
+    
+    @objc private func didTapSendButton() {
+//        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+    
+//        issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
+            
+//        }
+    }
     
     
     // UITextFieldDelegate method to dismiss keyboard on return key
