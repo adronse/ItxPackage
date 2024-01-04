@@ -124,7 +124,7 @@ extension GraphQLClient {
                 
                 if let data = graphQLResponse.data {
                     completion(.success(data))
-                } else if let errors = graphQLResponse.errors {
+                } else if graphQLResponse.errors != nil {
                     // TODO: handle errors
                 } else {
                     completion(.failure(GraphQLError.serializationError))

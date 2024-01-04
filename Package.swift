@@ -22,9 +22,6 @@ let package = Package(
             name: "ItxPackage",
             dependencies: [
                 "SnapKit",
-            ],
-            resources: [
-                .process("Resources")
             ]
         ),
         .testTarget(

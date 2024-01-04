@@ -17,7 +17,6 @@ class ThankYouPopupViewController: UIViewController {
         .with(\.layer.masksToBounds, value: true)
     
     private lazy var checkMarkIcon = UIImageView()
-        .with(\.image, value: UIImage(named: "checkMarkIcon", in: Bundle.main, compatibleWith: nil))
         .with(\.contentMode, value: .scaleAspectFit)
     
     private lazy var thankYouLabel = UILabel()
@@ -34,6 +33,14 @@ class ThankYouPopupViewController: UIViewController {
     private func setupPopupView() {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5) // Semi-transparent background
         view.addSubview(popupView)
+
+
+        if #available(iOS 13.0, *) {
+            checkMarkIcon.image = UIImage(named: "checkMarkIcon")
+            checkMarkIcon.tintColor = .systemGreen
+        } else {
+            // Fallback on earlier versions or add a custom checkmark image
+        }
 
         popupView.addSubview(checkMarkIcon)
         popupView.addSubview(thankYouLabel)
