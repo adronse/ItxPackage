@@ -39,6 +39,8 @@ public protocol EventObserverDelegate: AnyObject {
 
 class DidDetectScreenshotCoordinator: EventObserverDelegate {
     func didDetectScreenshot(image: UIImage, from viewController: UIViewController) {
+        
+        print("Screenshot detected, initliazing coordinator")
         let screenshotCoordinator = ScreenshotCoordinator(iterationX: IterationX.shared, presentingController: viewController, imageView: UIImageView(image: image))
         screenshotCoordinator.start()
     }
