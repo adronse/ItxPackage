@@ -25,7 +25,20 @@ public class ScreenshotCoordinator: Coordinator {
 
     public func start() {
         let popupViewController = PopupViewController(imageView: imageView)
+        popupViewController.delegate = self
         presentingController.present(popupViewController, animated: true, completion: nil)
     }
 }
 
+
+extension ScreenshotCoordinator: PopupViewControllerDelegate {
+    func didSelectReportBug() {
+        let controller = IssueCreationViewController(image: imageView, viewControllerTitle: "Report Bug")
+        presentingController.present(controller, animated: true, completion: nil)
+    }
+
+    func didSelectSuggestImprovement() {
+        let controller = IssueCreationViewController(image: imageView, viewControllerTitle: "Suggest Improvement")
+        presentingController.present(controller, animated: true, completion: nil)
+    }
+}

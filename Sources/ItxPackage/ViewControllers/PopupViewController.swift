@@ -8,9 +8,11 @@
 import Foundation
 import UIKit
 
+
 class PopupViewController: UIViewController {
     
     private let imageView: UIImageView
+    weak var delegate: PopupViewControllerDelegate?
     
     private let reportButtonData = [
         ("Report a bug", "Something in the app is broken or doesn't work as expected", "ladybug"),
@@ -196,13 +198,11 @@ extension PopupViewController: UITableViewDataSource, UITableViewDelegate {
         
         // For example, if the user clicks on the first cell, present a new view controller
         if indexPath.row == 0 {
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report bug")
-            present(controller, animated: true, completion: nil)
+            self.delegate?.didSelectReportBug()
         }
         
         if indexPath.row == 1 {
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report bug")
-            present(controller, animated: true, completion: nil)
+            self.delegate?.didSelectSuggestImprovement()
         }
     }
 }
