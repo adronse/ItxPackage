@@ -106,8 +106,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         deleteImageButton.snp.makeConstraints { make in
-            make.top.equalTo(imageBox.snp.top).offset(-5)
-            make.right.equalTo(imageBox.snp.right).offset(5)
+            make.top.equalTo(imageBox.snp.top).offset(-2)
+            make.right.equalTo(imageBox.snp.right).offset(2)
             make.size.equalTo(CGSize(width: 10, height: 19))
         }
     }
