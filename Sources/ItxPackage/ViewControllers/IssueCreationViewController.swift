@@ -137,7 +137,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private lazy var separator = UIView.separator(color: .gray)
     
     private lazy var issueDescriptionFieldHeader = UILabel()
-        .with(\.text, value: "Issue title")
+        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
+        .with(\.text, value: "Description")
     
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Please be as detailed as possible about the issue you are facing")
@@ -156,10 +157,9 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }
     
     
-    private lazy var imageBox: UIView = {
-        let box = UIView()
-        return box
-    }()
+    private lazy var imageBox = UIView()
+        .with(\.layer.cornerRadius, value: 5)
+        .with(\.layer.masksToBounds, value: true)
     
     @objc private func didTapSendButton() {
 //        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
