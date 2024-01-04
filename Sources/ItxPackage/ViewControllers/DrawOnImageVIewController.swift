@@ -108,12 +108,17 @@ class DrawOnImageViewController: UIViewController {
             return
         }
 
+        clearButton.isHidden = true
+
         let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
         let imageWithDrawing = renderer.image { context in
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
 
+        clearButton.isHidden = false
+
         didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
     }
+
 }
