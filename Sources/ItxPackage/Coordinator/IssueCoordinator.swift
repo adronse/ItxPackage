@@ -140,6 +140,9 @@ class IssueCoordinator: IssueReporting {
                 \(preSignedBlobString)
             }) {
                 id
+                preview {
+                    url
+                }
             }
         }
         """
