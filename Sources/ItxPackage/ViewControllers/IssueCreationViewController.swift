@@ -111,9 +111,10 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private let controllerTitle: String
     var issueReport: IssueReporting?
     
-    init(image: UIImageView, viewControllerTitle: String) {
+    init(image: UIImageView, viewControllerTitle: String, issueReport: IssueCoordinator) {
         self.imageView = image
         self.controllerTitle = viewControllerTitle
+        self.issueReport = issueReport
         super.init(nibName: nil, bundle: nil)
     }
     

@@ -34,14 +34,17 @@ public class ScreenshotCoordinator: Coordinator {
 extension ScreenshotCoordinator: PopupViewControllerDelegate {
     func didSelectReportBug() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report a bug")
+            let issueCoordinator = IssueCoordinator(graphQLClient: GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!, apiKey: self.iterationX.getApiKey()))
+            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Report a bug", issueReport: issueCoordinator)
             self.presentingController.present(controller, animated: true, completion: nil)
         }
     }
 
     func didSelectSuggestImprovement() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Suggest Improvement")
+            
+            let issueCoordinator = IssueCoordinator(graphQLClient: GraphQLClient(url: URL(string: "https://d4c9-2a05-6e02-10d1-a710-959-3410-e847-4238.ngrok-free.app/graphql")!, apiKey: self.iterationX.getApiKey()))
+            let controller = IssueCreationViewController(image: self.imageView, viewControllerTitle: "Suggest an improvement", issueReport: issueCoordinator)
             self.presentingController.present(controller, animated: true, completion: nil)
         }
     }
