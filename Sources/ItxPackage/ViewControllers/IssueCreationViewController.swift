@@ -91,10 +91,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         view.addSubview(imageBox)
-        view.addSubview(deleteImageButton)
         imageBox.addSubview(imageView)
         
-        imageBox.backgroundColor = .blue
         
         imageBox.snp.makeConstraints { make in
             make.top.equalTo(issueDescriptionField.snp.bottom).offset(50)
@@ -104,12 +102,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         imageView.snp.makeConstraints { make     in
             make.edges.equalToSuperview()
-        }
-        
-        deleteImageButton.snp.makeConstraints { make in
-            make.top.equalTo(imageBox.snp.top).offset(-1)
-            make.right.equalTo(imageBox.snp.right).offset(-5)
-            make.size.equalTo(CGSize(width: 5, height: 5))
         }
     }
     
@@ -169,18 +161,12 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         .with(\.layer.cornerRadius, value: 5)
         .with(\.layer.masksToBounds, value: true)
     
-    private lazy var deleteImageButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("\u{274C}", for: .normal)
-        return button
-    }()
-    
     @objc private func didTapSendButton() {
-        //        guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+        guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
         
-        //        issueReport?.reportIssue(title: title, description: description, image: imageView.image) { result in
+        issueReport?.reportIssue(title: title, description: description, image: image) { result in
         
-        //        }
+        }
     }
     
     
