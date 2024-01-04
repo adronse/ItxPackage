@@ -167,8 +167,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         issueReport?.reportIssue(title: title, description: description, image: image) { result in
             switch result {
             case .success:
-                self.delegate?.didTapCross()
-                
+                self.dismiss(animated: true)
             case .failure(let error):
                 print(error)
             }
