@@ -13,6 +13,8 @@ class ThankYouPopupViewController: UIViewController {
 
     private lazy var popupView = UIView()
         .with(\.backgroundColor, value: UIColor.from(hex: "#333333"))
+        .with(\.layer.cornerRadius, value: 10)
+        .with(\.layer.masksToBounds, value: true)
     
     private lazy var checkMarkIcon = UIImageView()
         .with(\.contentMode, value: .scaleAspectFit)
@@ -32,12 +34,9 @@ class ThankYouPopupViewController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.5) // Semi-transparent background
         view.addSubview(popupView)
 
-        popupView.backgroundColor = .white
-        popupView.layer.cornerRadius = 10
-        popupView.layer.masksToBounds = true
 
         if #available(iOS 13.0, *) {
-            checkMarkIcon.image = UIImage(systemName: "checkmark.circle.fill")?.withRenderingMode(.alwaysTemplate)
+            checkMarkIcon.image = UIImage(named: "checkMarkIcon")
             checkMarkIcon.tintColor = .systemGreen
         } else {
             // Fallback on earlier versions or add a custom checkmark image
