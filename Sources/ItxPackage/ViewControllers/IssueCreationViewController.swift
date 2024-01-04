@@ -142,6 +142,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     @objc private func didTapSendButton() {
         guard let title = issueTitleInput.text, let description = descriptionFieldInput.text else { return }
+        print("calling repot issue")
         issueReport?.reportIssue(title: title, description: description) { result in
             // Handle the result
         }

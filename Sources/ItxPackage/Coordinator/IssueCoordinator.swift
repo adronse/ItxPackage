@@ -35,6 +35,8 @@ class IssueCoordinator: IssueReporting {
         }
         """
         
+        print("perform mutation")
+        
         graphQLClient.performMutation(mutation: mutation) { result in
             switch result {
             case .success(let response):
