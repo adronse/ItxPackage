@@ -19,6 +19,40 @@ class IssueCoordinator: IssueReporting {
         self.graphQLClient = graphQLClient
     }
     
+    
+    func uploadImageToPreSignedUrl(image: UIImage, preSignedUrl: String, headers: [Header], completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let imageData = image.jpegData(compressionQuality: 0.9) else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+        
+        guard let url = URL(string: preSignedUrl) else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        headers.forEach { header in
+            request.setValue(header.value, forHTTPHeaderField: header.key)
+        }
+        
+        let task = URLSession.shared.uploadTask(with: request, from: imageData) { _, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                completion(.failure(URLError(.badServerResponse)))
+                return
+            }
+
+            completion(.success(()))
+        }
+        task.resume()
+    }
+    
     func createPreSignedUrl(image: UIImage, contentType: String, completion: @escaping (Result<PreSignedUrl, Error>) -> Void) {
         let mutation = """
             mutation {
@@ -37,13 +71,19 @@ class IssueCoordinator: IssueReporting {
         graphQLClient.performMutation(mutation: mutation) { [weak self] result in
             guard let self = self else { return }
             
-            graphQLClient.unpackQueryResult(result) { (result: Result<CreatePreSignedUrlResponse, Error>) in
+            self.graphQLClient.unpackQueryResult(result) { (result: Result<CreatePreSignedUrlResponse, Error>) in
                 switch result {
                 case .success(let response):
-                    print(response.createPreSignedUrl)
-                    completion(.success(response.createPreSignedUrl))
+                    let preSignedUrl = response.createPreSignedUrl
+                    self.uploadImageToPreSignedUrl(image: image, preSignedUrl: preSignedUrl.url, headers: preSignedUrl.headers) { uploadResult in
+                        switch uploadResult {
+                        case .success():
+                            completion(.success(preSignedUrl))
+                        case .failure(let error):
+                            completion(.failure(error))
+                        }
+                    }
                 case .failure(let error):
-                    print(error)
                     completion(.failure(error))
                 }
             }
@@ -53,6 +93,8 @@ class IssueCoordinator: IssueReporting {
     func convertImageToJPEGData(image: UIImage) -> Data? {
         return image.jpegData(compressionQuality: 0.9)  // You can adjust the compression quality
     }
+    
+    
     
     
     func reportIssue(title: String, description: String, image: UIImage?, completion: @escaping (Result<Void, Error>) -> Void) {
