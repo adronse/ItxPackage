@@ -40,6 +40,8 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
                 
                 let navigationController = UINavigationController(rootViewController: issueCreationVC)
                 
+                navigationController.modalPresentationStyle = .fullScreen
+                
                 self.presentingController.present(navigationController, animated: true, completion: nil)
             }
         }
