@@ -79,6 +79,30 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.right.equalToSuperview().offset(-5)
             make.height.equalTo(1)
         }
+        
+        issueDescriptionFieldHeader.snp.makeConstraints { make in
+            make.top.equalTo(separator.snp.bottom).offset(20)
+            make.left.right.equalTo(issueTitleFieldHeader)
+        }
+        
+        issueDescriptionField.snp.makeConstraints { make in
+            make.top.equalTo(issueDescriptionFieldHeader.snp.bottom).offset(10)
+            make.left.right.equalTo(issueDescriptionFieldHeader)
+        }
+        
+        view.addSubview(imageBox)
+        imageBox.addSubview(imageView)
+        
+        imageBox.snp.makeConstraints { make in
+            make.top.equalTo(issueDescriptionField.snp.bottom).offset(50)
+            make.left.equalTo(issueDescriptionField)
+            make.size.equalTo(40)
+            make.height.equalTo(200)
+        }
+        
+        imageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
     }
     
     // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
@@ -116,7 +140,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         .with(\.text, value: "Issue title")
     
     private lazy var issueDescriptionField = UITextField()
-        .with(\.placeholder, value: "Your issue description")
+        .with(\.placeholder, value: "Please be as detailed as possible about the issue you are facing")
         .with(\.isUserInteractionEnabled, value: true)
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
