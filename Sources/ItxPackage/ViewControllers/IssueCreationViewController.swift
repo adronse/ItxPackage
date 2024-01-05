@@ -189,11 +189,14 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         let drawOnImageViewController = DrawOnImageViewController(image: image)
         drawOnImageViewController.modalPresentationStyle = .fullScreen
         
+        
         drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageView.image = modifiedImage
         }
         
         let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
+        
+        navigationController.interactivePopGestureRecognizer?.isEnabled = false
         present(navigationController, animated: true, completion: nil)
     }
 }
