@@ -163,12 +163,13 @@ class DrawOnImageViewController: UIViewController {
         }
         
         
+        
+        colorPicker.isHidden = true
+        
         let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
         let imageWithDrawing = renderer.image { context in
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
-        
-        colorPicker.isHidden = true
         
         didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
