@@ -57,7 +57,11 @@ class ColorPickerView: UIView {
     
     private func moveIndicator(to yPos: CGFloat) {
         UIView.animate(withDuration: 0.1) {
-            self.colorIndicator.center.y = yPos
+            let minY = self.colorIndicator.frame.height / 2
+            let maxY = self.bounds.height - minY
+            let clampedYPos = min(max(yPos, minY), maxY)
+
+            self.colorIndicator.center.y = clampedYPos
         }
     }
     
