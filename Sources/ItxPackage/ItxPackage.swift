@@ -15,7 +15,7 @@ public class NavigationTracker {
     public static let shared = NavigationTracker()
     private var history: [String] = []
 
-    func trackViewController(_ viewController: UIViewController, appeared: Bool) {
+    public func trackViewController(_ viewController: UIViewController, appeared: Bool) {
         let identifier = String(describing: type(of: viewController))
         if appeared {
             history.append(identifier)
