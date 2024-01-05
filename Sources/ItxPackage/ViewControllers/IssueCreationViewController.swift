@@ -195,6 +195,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
+        navigationController.modalPresentationStyle = .fullScreen
         
         present(navigationController, animated: true, completion: nil)
     }
