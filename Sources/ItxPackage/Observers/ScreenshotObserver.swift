@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Adrien Ronse on 04/01/2024.
 //
@@ -11,7 +11,7 @@ import UIKit
 
 public class ScreenshotObserver {
     static weak var delegate: EventObserverDelegate?
-
+    
     static func handleScreenshot() {
         
         if IterationX.shared.getFlowActive() {
@@ -30,15 +30,17 @@ public class ScreenshotObserver {
     }
     
     static func getDeviceInfo() -> [String: String] {
-           var info = [String: String]()
-           let device = UIDevice.current
-           info["iOSVersion"] = device.systemVersion
-           info["DeviceModel"] = device.model
-
-           // Add more details as needed
-           return info
-       }
-
+        var info = [String: String]()
+        let device = UIDevice.current
+        info["iOSVersion"] = device.systemVersion
+        info["DeviceModel"] = device.model
+        info["DeviceName"] = device.name
+        info["DeviceType"] = device.localizedModel
+        info["DeviceUUID"] = device.identifierForVendor?.uuidString
+        info["AppVersion"] = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        return info
+    }
+    
     static func captureScreen(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
         view.layer.render(in: UIGraphicsGetCurrentContext()!)
