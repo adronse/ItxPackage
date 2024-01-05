@@ -14,8 +14,10 @@ extension UIViewController {
         
         print("IterationX tracking this screen: \(type(of: self))")
         
+        if self is UIViewController {
+            itx_tracked_viewWillAppear(animated)
+        }
         // Call the original viewWillAppear
-        itx_tracked_viewWillAppear(animated)
     }
     
     static func itx_enableSwizzling() {
