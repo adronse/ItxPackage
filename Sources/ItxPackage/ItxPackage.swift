@@ -6,9 +6,14 @@ public enum IterationXEvent {
 }
 
 
-public protocol NavigationTrackable {
+public protocol TrackableViewController {
     func trackAppearance()
-    func trackDisappearance()
+}
+
+public extension TrackableViewController where Self: UIViewController {
+    func trackAppearance() {
+        NavigationTracker.shared.trackViewController(self, appeared: true)
+    }
 }
 
 public class NavigationTracker {
@@ -20,14 +25,15 @@ public class NavigationTracker {
         if appeared {
             history.append(identifier)
         } else {
-            history.removeAll { $0 == identifier }
+            // Handle disappearance if needed
         }
     }
 
-    func getHistory() -> [String] {
+    public func getHistory() -> [String] {
         return history
     }
 }
+
 
 public class IterationX {
     public static let shared = IterationX()
