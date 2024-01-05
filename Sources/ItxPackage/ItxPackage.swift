@@ -2,9 +2,7 @@ import UIKit
 
 public enum IterationXEvent {
     case screenshot
-    case shake
 }
-
 
 public class IterationX {
     public static let shared = IterationX()
@@ -46,9 +44,6 @@ public class IterationX {
             ) { _ in
                 ScreenshotObserver.handleScreenshot()
             }
-        case .shake:
-            // Implement shake handling
-            break
         }
     }
     
