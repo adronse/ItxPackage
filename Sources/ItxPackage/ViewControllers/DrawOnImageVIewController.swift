@@ -42,12 +42,14 @@ class ColorPickerView: UIView {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         onTouchesBegan?()
+        colorIndicator.isHidden = false
         selectColor(touches: touches)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         onTouchesEnded?()
+        colorIndicator.isHidden = true
     }
     
     
