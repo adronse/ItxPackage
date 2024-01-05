@@ -4,6 +4,34 @@ public enum IterationXEvent {
     case screenshot
 }
 
+import UIKit
+
+extension UIViewController {
+    
+    @objc func itx_tracked_viewWillAppear(_ animated: Bool) {
+        
+        
+        
+        print("IterationX tracking this screen: \(type(of: self))")
+        
+        // Call the original viewWillAppear
+        itx_tracked_viewWillAppear(animated)
+    }
+    
+    static func itx_enableSwizzling() {
+        let originalSelector = #selector(UIViewController.viewWillAppear(_:))
+        let swizzledSelector = #selector(UIViewController.itx_tracked_viewWillAppear(_:))
+        
+        guard let originalMethod = class_getInstanceMethod(UIViewController.self, originalSelector),
+              let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzledSelector) else {
+            return
+        }
+        
+        method_exchangeImplementations(originalMethod, swizzledMethod)
+    }
+}
+
+
 public class IterationX {
     public static let shared = IterationX()
     private var apiKey: String?
@@ -12,15 +40,15 @@ public class IterationX {
     
     private init() {}
     
-
+    
     public func setFlowActive(_ isActive: Bool) {
-            isFlowActive = isActive
+        isFlowActive = isActive
     }
-
+    
     public func getFlowActive() -> Bool {
-            return isFlowActive
+        return isFlowActive
     }
-
+    
     
     public func configure(apiKey: String, event: IterationXEvent) -> Void {
         self.currentEvent = event
@@ -32,6 +60,11 @@ public class IterationX {
     public static func initializeScreenshotHandling() {
         didDetectScreenshotCoordinator = DidDetectScreenshotCoordinator()
         ScreenshotObserver.delegate = didDetectScreenshotCoordinator
+    }
+    
+    public static func enableViewControllerTracking()
+    {
+        UIViewController.itx_enableSwizzling()
     }
     
     private func dispatchEvent(event: IterationXEvent) {
