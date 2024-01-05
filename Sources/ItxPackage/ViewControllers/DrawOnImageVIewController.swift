@@ -94,14 +94,31 @@ class ColorPickerView: UIView {
     }
     
     private func getColor(at point: CGPoint) -> UIColor {
-        let sortedColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
-        
         let adjustedYPos = max(min(point.y, self.bounds.height), 0)
         let proportion = adjustedYPos / self.bounds.height
-        
-        let colorIndex = min(max(Int(proportion * CGFloat(sortedColors.count)), 0), sortedColors.count - 1)
-        return sortedColors[colorIndex]
+
+        let gradientColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
+        let colorSpace = CGColorSpaceCreateDeviceRGB()
+        let colorLocations: [CGFloat] = [0.0, 0.17, 0.34, 0.51, 0.68, 0.85]
+        guard let gradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors.map { $0.cgColor } as CFArray, locations: colorLocations) else {
+            return .black // Fallback color
+        }
+
+        let start = CGPoint(x: self.bounds.midX, y: 0)
+        let end = CGPoint(x: self.bounds.midX, y: self.bounds.height)
+        let context = CGContext(data: nil, width: 1, height: Int(self.bounds.height), bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
+        context.drawLinearGradient(gradient, start: start, end: end, options: [])
+        guard let data = context.data else { return .black }
+
+        let offset = Int(proportion * self.bounds.height) * 4
+        let r = data.load(fromByteOffset: offset, as: UInt8.self)
+        let g = data.load(fromByteOffset: offset+1, as: UInt8.self)
+        let b = data.load(fromByteOffset: offset+2, as: UInt8.self)
+        let a = data.load(fromByteOffset: offset+3, as: UInt8.self)
+
+        return UIColor(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: CGFloat(a) / 255.0)
     }
+
 }
 
 
