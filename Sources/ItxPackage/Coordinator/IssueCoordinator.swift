@@ -30,7 +30,7 @@ class IssueCoordinator: IssueReporting {
             completion(.failure(URLError(.badURL)))
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         headers.forEach { header in
@@ -42,19 +42,19 @@ class IssueCoordinator: IssueReporting {
                 completion(.failure(error))
                 return
             }
-
+            
             guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
                 completion(.failure(URLError(.badServerResponse)))
                 return
             }
-
+            
             completion(.success(()))
         }
         task.resume()
     }
     
     func createPreSignedUrl(image: UIImage, contentType: String, completion: @escaping (Result<PreSignedUrl, Error>) -> Void) {
-        let mutation = 
+        let mutation =
             """
             mutation {
                   createPreSignedUrl(contentType: "\(contentType)", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
@@ -105,7 +105,6 @@ class IssueCoordinator: IssueReporting {
                     self?.uploadImageToPreSignedUrl(image: image, preSignedUrl: preSignedUrl.url, headers: preSignedUrl.headers) { uploadResult in
                         switch uploadResult {
                         case .success():
-                            // Call the method to create issue after successful image upload
                             self?.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrl.id, completion: completion)
                         case .failure(let error):
                             completion(.failure(error))
@@ -133,14 +132,23 @@ class IssueCoordinator: IssueReporting {
         } else {
             preSignedBlobString = ""
         }
-
+        
+        let deviceInfo = DeviceInfo.getDeviceInfo()
+        
         let mutation = """
         mutation {
             createMobileIssue(input: {
                 apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
                 title: "\(title)",
                 description: "\(description)"
-                priority: NONE
+                priority: NONE,
+                appConsumerVersion: "\(deviceInfo.AppConsumerVersion)",
+                deviceModel: "\(deviceInfo.DeviceModel)",
+                deviceType: "\(deviceInfo.DeviceType)",
+                screenSize: "\(deviceInfo.ScreenSize)",
+                deviceName: "\(deviceInfo.DeviceName)"
+                systemVersion: "\(deviceInfo.SystemVersion)",
+                locale: "\(deviceInfo.Locale)"
                 \(preSignedBlobString)
             }) {
                 id
@@ -150,7 +158,7 @@ class IssueCoordinator: IssueReporting {
             }
         }
         """
-
+        
         graphQLClient.performMutation(mutation: mutation) { result in
             switch result {
             case .success(let response):
@@ -163,5 +171,5 @@ class IssueCoordinator: IssueReporting {
             }
         }
     }
-
+    
 }
