@@ -186,13 +186,14 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             return
         }
         
-        let fullScreenImageViewController = DrawOnImageViewController(image: image)
-        fullScreenImageViewController.modalPresentationStyle = .fullScreen
+        let drawOnImageViewController = DrawOnImageViewController(image: image)
+        drawOnImageViewController.modalPresentationStyle = .fullScreen
         
-        fullScreenImageViewController.didFinishDrawing = { [weak self] modifiedImage in
+        drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageView.image = modifiedImage
         }
         
-        present(fullScreenImageViewController, animated: true, completion: nil)
+        let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
+        present(navigationController, animated: true, completion: nil)
     }
 }
