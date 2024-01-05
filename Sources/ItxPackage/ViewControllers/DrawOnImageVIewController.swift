@@ -60,7 +60,7 @@ class ColorPickerView: UIView {
             let minY = self.colorIndicator.frame.height / 2
             let maxY = self.bounds.height - minY
             let clampedYPos = min(max(yPos, minY), maxY)
-
+            
             self.colorIndicator.center.y = clampedYPos
         }
     }
@@ -76,103 +76,68 @@ class ColorPickerView: UIView {
 
 
 class DrawOnImageViewController: UIViewController {
-
+    
     private let imageView: UIImageView
     private let drawingView: UIView
     private var currentBezierPath = UIBezierPath()
     private var shapeLayers: [CAShapeLayer] = []
     private var selectedColor: UIColor = .black // Default drawing color
     private let colorPicker = ColorPickerView()
-
-    private let clearButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Clear", for: .normal)
-        button.backgroundColor = .red
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
-    private let saveButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Save", for: .normal)
-        button.backgroundColor = .red
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     
     var didFinishDrawing: ((UIImage) -> Void)?
-
+    
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
         self.drawingView = UIView()
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
         addGestures()
-        setupClearButton()
         setupColorPicker()
+        setupNavigationBar()
     }
-
+    
     private func configureUI() {
         view.backgroundColor = .black
-
+        
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
-
+        
         drawingView.backgroundColor = .clear
         drawingView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(drawingView)
         
-
+        
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
+        
         drawingView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
             make.width.height.equalTo(imageView)
         }
         
     }
-
+    
     private func addGestures() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         drawingView.addGestureRecognizer(panGesture)
     }
     
-    private func setUpSaveButton()
-    {
-        saveButton.addTarget(self, action: #selector(saveDrawing), for: .touchUpInside)
-        view.addSubview(saveButton)
-
-        saveButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            make.right.equalToSuperview().offset(-20)
-            make.width.equalTo(20)
-            make.height.equalTo(20)
-        }
+    
+    private func setupNavigationBar() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveDrawing))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(clearDrawing))
     }
-
-    private func setupClearButton() {
-        clearButton.addTarget(self, action: #selector(clearDrawing), for: .touchUpInside)
-        view.addSubview(clearButton)
-
-        clearButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            make.left.equalToSuperview().offset(20)
-            make.width.equalTo(20)
-            make.height.equalTo(20)
-        }
-    }
-
+    
     private func setupColorPicker() {
         colorPicker.colorChangedBlock = { [weak self] color in
             self?.selectedColor = color
@@ -194,8 +159,6 @@ class DrawOnImageViewController: UIViewController {
     {
         let renderer = UIGraphicsImageRenderer(size: drawingView.bounds.size)
         
-        clearButton.isHidden = true
-        saveButton.isHidden = true
         colorPicker.isHidden = true
         
         let image = renderer.image { ctx in
@@ -204,10 +167,10 @@ class DrawOnImageViewController: UIViewController {
         
         didFinishDrawing?(image)
     }
-
+    
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let point = gesture.location(in: drawingView)
-
+        
         switch gesture.state {
         case .began:
             startNewPath(at: point)
@@ -217,7 +180,7 @@ class DrawOnImageViewController: UIViewController {
             break
         }
     }
-
+    
     private func startNewPath(at point: CGPoint) {
         let shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = selectedColor.cgColor // Use the selected color
@@ -239,26 +202,8 @@ class DrawOnImageViewController: UIViewController {
         shapeLayers.forEach { $0.removeFromSuperlayer() }
         shapeLayers.removeAll()
     }
-
     
-    @objc private func handleTap() {
-        guard imageView.image != nil else {
-            dismiss(animated: true, completion: nil)
-            return
-        }
-
-        clearButton.isHidden = true
-
-        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
-        let imageWithDrawing = renderer.image { context in
-            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
-        }
-
-        clearButton.isHidden = false
-
-        didFinishDrawing?(imageWithDrawing)
-        dismiss(animated: true, completion: nil)
-    }
+    
 }
 
 
