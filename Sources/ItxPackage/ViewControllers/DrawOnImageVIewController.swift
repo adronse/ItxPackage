@@ -60,7 +60,7 @@ class ColorPickerView: UIView {
     }
 
     private func animateIndicatorVisibility(hide: Bool) {
-        UIView.animate(withDuration: 0.5, animations: {
+        UIView.animate(withDuration: 0.2, animations: {
             self.colorIndicator.alpha = hide ? 0 : 1
         }, completion: { _ in
             self.colorIndicator.isHidden = hide
