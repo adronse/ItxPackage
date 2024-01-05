@@ -157,15 +157,20 @@ class DrawOnImageViewController: UIViewController {
     
     @objc private func saveDrawing()
     {
-        let renderer = UIGraphicsImageRenderer(size: drawingView.bounds.size)
+        guard imageView.image != nil else {
+            dismiss(animated: true, completion: nil)
+            return
+        }
+        
+        
+        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
+        let imageWithDrawing = renderer.image { context in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
         
         colorPicker.isHidden = true
         
-        let image = renderer.image { ctx in
-            drawingView.drawHierarchy(in: drawingView.bounds, afterScreenUpdates: true)
-        }
-        
-        didFinishDrawing?(image)
+        didFinishDrawing?(imageWithDrawing)
         dismiss(animated: true, completion: nil)
         
     }
