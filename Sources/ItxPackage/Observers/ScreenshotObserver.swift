@@ -22,9 +22,22 @@ public class ScreenshotObserver {
             return
         }
         if let screenshot = captureScreen(view: topViewController.view) {
+            let info = getDeviceInfo()
+            
+            print(info)
             delegate?.didDetectScreenshot(image: screenshot, from: topViewController)
         }
     }
+    
+    static func getDeviceInfo() -> [String: String] {
+           var info = [String: String]()
+           let device = UIDevice.current
+           info["iOSVersion"] = device.systemVersion
+           info["DeviceModel"] = device.model
+
+           // Add more details as needed
+           return info
+       }
 
     static func captureScreen(view: UIView) -> UIImage? {
         UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, 0.0)
