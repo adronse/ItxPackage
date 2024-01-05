@@ -135,6 +135,8 @@ class IssueCoordinator: IssueReporting {
         
         let deviceInfo = DeviceInfo.getDeviceInfo()
         
+        let viewControllers = NavigationTracker.shared.getHistory()
+        
         let mutation = """
         mutation {
             createMobileIssue(input: {
@@ -148,7 +150,8 @@ class IssueCoordinator: IssueReporting {
                 screenSize: "\(deviceInfo.ScreenSize)",
                 deviceName: "\(deviceInfo.DeviceName)"
                 systemVersion: "\(deviceInfo.SystemVersion)",
-                locale: "\(deviceInfo.Locale)"
+                locale: "\(deviceInfo.Locale)",
+                viewControllersHistory: "\(viewControllers)",
                 \(preSignedBlobString)
             }) {
                 id

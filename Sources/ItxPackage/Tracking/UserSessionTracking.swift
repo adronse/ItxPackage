@@ -9,15 +9,7 @@ import Foundation
 import UIKit
 
 
-public protocol TrackableViewController {
-    func trackAppearance()
-}
 
-public extension TrackableViewController where Self: UIViewController {
-    func trackAppearance() {
-        NavigationTracker.shared.trackViewController(self, appeared: true)
-    }
-}
 
 public class NavigationTracker {
     public static let shared = NavigationTracker()
@@ -34,5 +26,29 @@ public class NavigationTracker {
 
     public func getHistory() -> [String] {
         return history
+    }
+}
+
+
+extension UIViewController {
+    
+    @objc func itx_tracked_viewWillAppear(_ animated: Bool) {
+        if Bundle(for: type(of: self)) === Bundle.main && !IterationX.shared.getFlowActive() {
+            NavigationTracker.shared.trackViewController(self, appeared: true)
+        }
+        
+        itx_tracked_viewWillAppear(animated)
+    }
+    
+    static func itx_enableSwizzling() {
+        let originalSelector = #selector(UIViewController.viewWillAppear(_:))
+        let swizzledSelector = #selector(UIViewController.itx_tracked_viewWillAppear(_:))
+        
+        guard let originalMethod = class_getInstanceMethod(UIViewController.self, originalSelector),
+              let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzledSelector) else {
+            return
+        }
+        
+        method_exchangeImplementations(originalMethod, swizzledMethod)
     }
 }

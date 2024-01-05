@@ -4,32 +4,6 @@ public enum IterationXEvent {
     case screenshot
 }
 
-import UIKit
-
-extension UIViewController {
-    
-    @objc func itx_tracked_viewWillAppear(_ animated: Bool) {
-        if Bundle(for: type(of: self)) === Bundle.main {
-            print("IterationX tracking this screen: \(type(of: self))")
-        }
-        
-        // Call the original viewWillAppear
-        itx_tracked_viewWillAppear(animated)
-    }
-    
-    static func itx_enableSwizzling() {
-        let originalSelector = #selector(UIViewController.viewWillAppear(_:))
-        let swizzledSelector = #selector(UIViewController.itx_tracked_viewWillAppear(_:))
-        
-        guard let originalMethod = class_getInstanceMethod(UIViewController.self, originalSelector),
-              let swizzledMethod = class_getInstanceMethod(UIViewController.self, swizzledSelector) else {
-            return
-        }
-        
-        method_exchangeImplementations(originalMethod, swizzledMethod)
-    }
-}
-
 
 public class IterationX {
     public static let shared = IterationX()
