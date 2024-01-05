@@ -148,10 +148,10 @@ class DrawOnImageViewController: UIViewController {
         colorPicker.layer.cornerRadius = 5
         
         colorPicker.snp.makeConstraints { make in
-            make.width.equalTo(5)
+            make.width.equalTo(20)
             make.height.equalTo(200)
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().offset(-20)
+            make.right.equalToSuperview().offset(-30)
         }
     }
     
