@@ -65,6 +65,17 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
 }
 
 extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
+    func didLaunchDrawing(image: UIImage) {
+        let drawOnImageViewController = DrawOnImageViewController(image: image)
+        drawOnImageViewController.modalPresentationStyle = .fullScreen
+        
+        drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
+            self?.imageView.image = modifiedImage
+        }
+        
+        self.presentingController.present(drawOnImageViewController, animated: true)
+    }
+    
     func didCreateIssue() {
         DispatchQueue.main.async {
             self.presentingController.dismiss(animated: true)

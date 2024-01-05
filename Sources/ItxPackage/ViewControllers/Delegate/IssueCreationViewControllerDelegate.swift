@@ -6,9 +6,10 @@
 //
 
 import Foundation
-
+import UIKit
 
 protocol IssueCreationViewControllerDelegate: AnyObject {
     func didTapCross()
     func didCreateIssue()
+    func didLaunchDrawing(image: UIImage)
 }

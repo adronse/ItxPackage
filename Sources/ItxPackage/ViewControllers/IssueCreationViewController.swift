@@ -186,14 +186,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             return
         }
         
-        let drawOnImageViewController = DrawOnImageViewController(image: image)
-        drawOnImageViewController.modalPresentationStyle = .fullScreen
-        
-        drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
-            self?.imageView.image = modifiedImage
-        }
-        
-        let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
-        present(navigationController, animated: true, completion: nil)
+        self.delegate?.didLaunchDrawing(image: image)
     }
 }
