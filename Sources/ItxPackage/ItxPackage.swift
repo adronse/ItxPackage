@@ -9,10 +9,7 @@ import UIKit
 extension UIViewController {
     
     @objc func itx_tracked_viewWillAppear(_ animated: Bool) {
-
-        let isAppViewController = NSStringFromClass(type(of: self)).contains(Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String)
-        
-        if isAppViewController {
+        if Bundle(for: type(of: self)) === Bundle.main {
             print("IterationX tracking this screen: \(type(of: self))")
         }
         
