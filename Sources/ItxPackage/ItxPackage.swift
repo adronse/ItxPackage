@@ -5,6 +5,30 @@ public enum IterationXEvent {
     case shake
 }
 
+
+public protocol NavigationTrackable {
+    func trackAppearance()
+    func trackDisappearance()
+}
+
+public class NavigationTracker {
+    static let shared = NavigationTracker()
+    private var history: [String] = []
+
+    func trackViewController(_ viewController: UIViewController, appeared: Bool) {
+        let identifier = String(describing: type(of: viewController))
+        if appeared {
+            history.append(identifier)
+        } else {
+            history.removeAll { $0 == identifier }
+        }
+    }
+
+    func getHistory() -> [String] {
+        return history
+    }
+}
+
 public class IterationX {
     public static let shared = IterationX()
     private var apiKey: String?

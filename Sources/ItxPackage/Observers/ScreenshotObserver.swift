@@ -21,6 +21,10 @@ public class ScreenshotObserver {
         guard let topViewController = UIApplication.shared.topMostViewController else {
             return
         }
+        
+        let history = NavigationTracker.shared.getHistory()
+        print("User navigation history before screenshot: \(history)")
+        
         if let screenshot = captureScreen(view: topViewController.view) {
             let info = getDeviceInfo()
             
