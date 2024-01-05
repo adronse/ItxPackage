@@ -73,9 +73,7 @@ extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
             self?.imageView.image = modifiedImage
         }
         
-        let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
-        
-        self.presentingController.present(navigationController, animated: true, completion: nil)
+        self.presentingController.present(drawOnImageViewController, animated: true)
     }
     
     func didCreateIssue() {
