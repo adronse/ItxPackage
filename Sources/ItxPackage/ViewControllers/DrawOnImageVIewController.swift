@@ -166,6 +166,8 @@ class DrawOnImageViewController: UIViewController {
         }
         
         didFinishDrawing?(image)
+        
+        navigationController?.popViewController(animated: true)
     }
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
