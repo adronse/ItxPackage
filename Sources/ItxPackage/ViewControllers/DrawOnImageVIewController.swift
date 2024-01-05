@@ -19,7 +19,7 @@ class ColorPickerView: UIView {
     
     private func setupView() {
         self.addSubview(colorIndicator)
-        colorIndicator.layer.cornerRadius = 5
+        colorIndicator.layer.cornerRadius = colorIndicator.frame.width / 2
         colorIndicator.layer.borderColor = UIColor.white.cgColor
         colorIndicator.layer.borderWidth = 2
         colorIndicator.layer.masksToBounds = true
@@ -156,6 +156,8 @@ class DrawOnImageViewController: UIViewController {
         }
         
         view.addSubview(colorPicker)
+        
+        colorPicker.layer.cornerRadius = 5
         
         colorPicker.snp.makeConstraints { make in
             make.left.equalToSuperview()
