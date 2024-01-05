@@ -12,7 +12,7 @@ public protocol NavigationTrackable {
 }
 
 public class NavigationTracker {
-    static let shared = NavigationTracker()
+    public static let shared = NavigationTracker()
     private var history: [String] = []
 
     func trackViewController(_ viewController: UIViewController, appeared: Bool) {
