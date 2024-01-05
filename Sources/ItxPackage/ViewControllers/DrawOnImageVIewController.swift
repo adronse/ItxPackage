@@ -39,17 +39,32 @@ class ColorPickerView: UIView {
         context?.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: [])
     }
     
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         onTouchesBegan?()
         colorIndicator.isHidden = false
+        colorIndicator.alpha = 1
         selectColor(touches: touches)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesEnded(touches, with: event)
         onTouchesEnded?()
-        colorIndicator.isHidden = true
+        animateIndicatorVisibility(hide: true)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        animateIndicatorVisibility(hide: true)
+    }
+
+    private func animateIndicatorVisibility(hide: Bool) {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.colorIndicator.alpha = hide ? 0 : 1
+        }, completion: { _ in
+            self.colorIndicator.isHidden = hide
+        })
     }
     
     
