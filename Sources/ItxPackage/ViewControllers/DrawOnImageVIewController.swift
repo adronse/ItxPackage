@@ -94,7 +94,7 @@ class ColorPickerView: UIView {
     }
     
     private func getColor(at point: CGPoint) -> UIColor {
-        let adjustedYPos = max(min(point.y, self.bounds.height), 0)
+        let adjustedYPos = self.bounds.height - max(min(point.y, self.bounds.height), 0)
         let proportion = adjustedYPos / self.bounds.height
 
         let gradientColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
