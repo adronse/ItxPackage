@@ -162,17 +162,17 @@ class DrawOnImageViewController: UIViewController {
             return
         }
         
-        
-        
-        colorPicker.isHidden = true
-        
-        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
-        let imageWithDrawing = renderer.image { context in
-            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        DispatchQueue.main.async {
+            self.colorPicker.isHidden = true
+            
+            let renderer = UIGraphicsImageRenderer(size: self.view.bounds.size)
+            let imageWithDrawing = renderer.image { _ in
+                self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+            }
+            
+            self.didFinishDrawing?(imageWithDrawing)
+            self.dismiss(animated: true, completion: nil)
         }
-        
-        didFinishDrawing?(imageWithDrawing)
-        dismiss(animated: true, completion: nil)
         
     }
     
@@ -191,7 +191,7 @@ class DrawOnImageViewController: UIViewController {
     
     private func startNewPath(at point: CGPoint) {
         let shapeLayer = CAShapeLayer()
-        shapeLayer.strokeColor = selectedColor.cgColor // Use the selected color
+        shapeLayer.strokeColor = selectedColor.cgColor
         shapeLayer.lineWidth = 5
         shapeLayer.fillColor = UIColor.clear.cgColor
         currentBezierPath = UIBezierPath()
