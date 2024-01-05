@@ -151,7 +151,7 @@ class DrawOnImageViewController: UIViewController {
             make.width.equalTo(5)
             make.height.equalTo(200)
             make.centerY.equalToSuperview()
-            make.right.equalToSuperview().offset(-10)
+            make.right.equalToSuperview().offset(-20)
         }
     }
     
