@@ -149,7 +149,7 @@ class DrawOnImageViewController: UIViewController {
         
         colorPicker.snp.makeConstraints { make in
             make.width.equalTo(5)
-            make.height.equalTo(50)
+            make.height.equalTo(200)
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-10)
         }
