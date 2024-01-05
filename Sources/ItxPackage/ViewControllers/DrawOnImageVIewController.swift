@@ -59,6 +59,7 @@ class ColorPickerView: UIView {
         UIView.animate(withDuration: 0.1) {
             let minY = self.colorIndicator.frame.height / 2
             let maxY = self.bounds.height - minY
+
             let clampedYPos = min(max(yPos, minY), maxY)
             
             self.colorIndicator.center.y = clampedYPos
@@ -67,7 +68,10 @@ class ColorPickerView: UIView {
     
     private func getColor(at point: CGPoint) -> UIColor {
         let sortedColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
-        let proportion = point.y / self.bounds.height
+
+        let adjustedYPos = max(min(point.y, self.bounds.height), 0)
+        let proportion = adjustedYPos / self.bounds.height
+
         let colorIndex = min(max(Int(proportion * CGFloat(sortedColors.count)), 0), sortedColors.count - 1)
         return sortedColors[colorIndex]
     }
