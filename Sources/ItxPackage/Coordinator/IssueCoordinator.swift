@@ -137,6 +137,8 @@ class IssueCoordinator: IssueReporting {
         
         let viewControllers = NavigationTracker.shared.getHistory()
         
+        let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
+
         
         let mutation = """
         mutation {
@@ -152,7 +154,7 @@ class IssueCoordinator: IssueReporting {
                 deviceName: "\(deviceInfo.DeviceName)"
                 systemVersion: "\(deviceInfo.SystemVersion)",
                 locale: "\(deviceInfo.Locale)",
-                viewControllersHistory: "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]",
+                viewControllersHistory: \(viewControllerHistoryArray)
                 \(preSignedBlobString)
             }) {
                 id
