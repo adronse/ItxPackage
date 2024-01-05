@@ -9,10 +9,10 @@ import UIKit
 extension UIViewController {
     
     @objc func itx_tracked_viewWillAppear(_ animated: Bool) {
-        // Check if the view controller's class is in the app's namespace
+
         let isAppViewController = NSStringFromClass(type(of: self)).contains(Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String)
         
-        if isAppViewController && IterationX.shared.getFlowActive() {
+        if isAppViewController {
             print("IterationX tracking this screen: \(type(of: self))")
         }
         
