@@ -196,7 +196,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
         
-        navigationController.interactivePopGestureRecognizer?.isEnabled = false
         present(navigationController, animated: true, completion: nil)
     }
 }

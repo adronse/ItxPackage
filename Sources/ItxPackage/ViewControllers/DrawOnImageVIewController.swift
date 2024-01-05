@@ -6,6 +6,8 @@ class ColorPickerView: UIView {
     
     var colorChangedBlock: ((UIColor) -> Void)?
     private let colorIndicator = UIView(frame: CGRect(x: -25, y: 0, width: 50, height: 50))
+    var onTouchesBegan: (() -> Void)?
+    var onTouchesEnded: (() -> Void)?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,8 +40,16 @@ class ColorPickerView: UIView {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.selectColor(touches: touches)
+        super.touchesBegan(touches, with: event)
+        onTouchesBegan?()
+        selectColor(touches: touches)
     }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        onTouchesEnded?()
+    }
+    
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.selectColor(touches: touches)
@@ -59,7 +69,7 @@ class ColorPickerView: UIView {
         UIView.animate(withDuration: 0.1) {
             let minY = self.colorIndicator.frame.height / 2
             let maxY = self.bounds.height - minY
-
+            
             let clampedYPos = min(max(yPos, minY), maxY)
             
             self.colorIndicator.center.y = clampedYPos
@@ -68,10 +78,10 @@ class ColorPickerView: UIView {
     
     private func getColor(at point: CGPoint) -> UIColor {
         let sortedColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
-
+        
         let adjustedYPos = max(min(point.y, self.bounds.height), 0)
         let proportion = adjustedYPos / self.bounds.height
-
+        
         let colorIndex = min(max(Int(proportion * CGFloat(sortedColors.count)), 0), sortedColors.count - 1)
         return sortedColors[colorIndex]
     }
@@ -102,8 +112,6 @@ class DrawOnImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
         
         configureUI()
         addGestures()
@@ -148,6 +156,15 @@ class DrawOnImageViewController: UIViewController {
     private func setupColorPicker() {
         colorPicker.colorChangedBlock = { [weak self] color in
             self?.selectedColor = color
+        }
+        
+        
+        colorPicker.onTouchesBegan = { [weak self] in
+            self?.drawingView.gestureRecognizers?.forEach { $0.isEnabled = false }
+        }
+        
+        colorPicker.onTouchesEnded = { [weak self] in
+            self?.drawingView.gestureRecognizers?.forEach { $0.isEnabled = true }
         }
         
         view.addSubview(colorPicker)
