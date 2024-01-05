@@ -137,8 +137,9 @@ class IssueCoordinator: IssueReporting {
         
         let viewControllers = NavigationTracker.shared.getHistory()
         
-        let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
-        
+        let viewControllerHistoryArray = "[\(viewControllers.map { String(describing: type(of: $0)) }.joined(separator: ", "))]"
+
+    
         let mutation = """
         mutation {
             createMobileIssue(input: {
