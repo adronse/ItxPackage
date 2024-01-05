@@ -92,6 +92,14 @@ class DrawOnImageViewController: UIViewController {
         return button
     }()
     
+    private let saveButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("Save", for: .normal)
+        button.backgroundColor = .red
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     var didFinishDrawing: ((UIImage) -> Void)?
 
     init(image: UIImage) {
@@ -122,6 +130,7 @@ class DrawOnImageViewController: UIViewController {
         drawingView.backgroundColor = .clear
         drawingView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(drawingView)
+        
 
         imageView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -131,11 +140,25 @@ class DrawOnImageViewController: UIViewController {
             make.edges.equalToSuperview()
             make.width.height.equalTo(imageView)
         }
+        
     }
 
     private func addGestures() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
         drawingView.addGestureRecognizer(panGesture)
+    }
+    
+    private func setUpSaveButton()
+    {
+        saveButton.addTarget(self, action: #selector(saveDrawing), for: .touchUpInside)
+        view.addSubview(saveButton)
+
+        saveButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.right.equalToSuperview().offset(-20)
+            make.width.equalTo(20)
+            make.height.equalTo(20)
+        }
     }
 
     private func setupClearButton() {
@@ -144,9 +167,9 @@ class DrawOnImageViewController: UIViewController {
 
         clearButton.snp.makeConstraints { make in
             make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            make.centerX.equalToSuperview()
-            make.width.equalTo(100)
-            make.height.equalTo(50)
+            make.left.equalToSuperview().offset(20)
+            make.width.equalTo(20)
+            make.height.equalTo(20)
         }
     }
 
@@ -165,6 +188,21 @@ class DrawOnImageViewController: UIViewController {
             make.width.equalTo(30) // Adjust width as necessary
             make.height.equalTo(view.snp.height).multipliedBy(0.5) // Adjust height as necessary
         }
+    }
+    
+    @objc private func saveDrawing()
+    {
+        let renderer = UIGraphicsImageRenderer(size: drawingView.bounds.size)
+        
+        clearButton.isHidden = true
+        saveButton.isHidden = true
+        colorPicker.isHidden = true
+        
+        let image = renderer.image { ctx in
+            drawingView.drawHierarchy(in: drawingView.bounds, afterScreenUpdates: true)
+        }
+        
+        didFinishDrawing?(image)
     }
 
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
