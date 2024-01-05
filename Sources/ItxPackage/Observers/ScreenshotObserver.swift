@@ -23,11 +23,8 @@ public class ScreenshotObserver {
         }
         if let screenshot = captureScreen(view: topViewController.view) {
             let info = getDeviceInfo()
-            let viewControllerHistory = ViewControllerHistoryTracker.shared.getHistory()
-            print("View Controller History before Screenshot: \(viewControllerHistory)")
             
-            // Clear history if needed
-            ViewControllerHistoryTracker.shared.clearHistory()
+            print(info)
             delegate?.didDetectScreenshot(image: screenshot, from: topViewController)
         }
     }
@@ -41,7 +38,6 @@ public class ScreenshotObserver {
         info["DeviceType"] = device.localizedModel
         info["DeviceUUID"] = device.identifierForVendor?.uuidString
         info["AppVersion"] = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-        
         return info
     }
     
