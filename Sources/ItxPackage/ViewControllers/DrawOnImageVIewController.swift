@@ -102,6 +102,9 @@ class DrawOnImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        
         configureUI()
         addGestures()
         setupColorPicker()
