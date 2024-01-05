@@ -23,19 +23,9 @@ public class IterationX {
     }
 
     
-    public func configure(apiKey: String, event: IterationXEvent, completion: @escaping (Bool) -> Void) {
-        isValidApiKey(apiKey) { [weak self] isValid in
-            guard let self = self else { return }
-            if isValid {
-                self.apiKey = apiKey
-                self.currentEvent = event
-                self.dispatchEvent(event: event)
-                completion(true)
-                
-            } else {
-                completion(false)
-            }
-        }
+    public func configure(apiKey: String, event: IterationXEvent) -> Void {
+        self.currentEvent = event
+        self.dispatchEvent(event: event)
     }
     
     static var didDetectScreenshotCoordinator: DidDetectScreenshotCoordinator?
