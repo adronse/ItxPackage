@@ -1,9 +1,11 @@
 import Foundation
 import UIKit
 
+
 class ColorPickerView: UIView {
     
     var colorChangedBlock: ((UIColor) -> Void)?
+    private let colorIndicator = UIView(frame: CGRect(x: -25, y: 0, width: 50, height: 50))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -16,13 +18,15 @@ class ColorPickerView: UIView {
     }
     
     private func setupView() {
-        // This is where you can add additional setup if needed, like borders
+        self.addSubview(colorIndicator)
+        colorIndicator.layer.cornerRadius = colorIndicator.frame.width / 2
+        colorIndicator.layer.borderColor = UIColor.white.cgColor
+        colorIndicator.layer.borderWidth = 2
+        colorIndicator.layer.masksToBounds = true
     }
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        
-        // Drawing the color spectrum gradient
         let context = UIGraphicsGetCurrentContext()
         let colors = [UIColor.red.cgColor, UIColor.orange.cgColor, UIColor.yellow.cgColor, UIColor.green.cgColor, UIColor.blue.cgColor, UIColor.purple.cgColor]
         let colorSpace = CGColorSpaceCreateDeviceRGB()
@@ -30,7 +34,6 @@ class ColorPickerView: UIView {
         let gradient = CGGradient(colorsSpace: colorSpace, colors: colors as CFArray, locations: colorLocations)
         let startPoint = CGPoint.zero
         let endPoint = CGPoint(x: 0, y: self.bounds.height)
-        
         context?.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: [])
     }
     
@@ -45,7 +48,16 @@ class ColorPickerView: UIView {
     private func selectColor(touches: Set<UITouch>) {
         if let touch = touches.first {
             let point = touch.location(in: self)
-            self.colorChangedBlock?(self.getColor(at: point))
+            let color = self.getColor(at: point)
+            self.colorChangedBlock?(color)
+            self.moveIndicator(to: point.y)
+            colorIndicator.backgroundColor = color
+        }
+    }
+    
+    private func moveIndicator(to yPos: CGFloat) {
+        UIView.animate(withDuration: 0.1) {
+            self.colorIndicator.center.y = yPos
         }
     }
     
@@ -55,8 +67,8 @@ class ColorPickerView: UIView {
         let colorIndex = min(max(Int(proportion * CGFloat(sortedColors.count)), 0), sortedColors.count - 1)
         return sortedColors[colorIndex]
     }
-    
 }
+
 
 
 class DrawOnImageViewController: UIViewController {
