@@ -5,6 +5,31 @@ public enum IterationXEvent {
     case shake
 }
 
+
+public protocol IterationXCViewControllerTracking {
+    func currentViewController() -> UIViewController?
+}
+
+
+public class ViewControllerHistoryTracker {
+    public static let shared = ViewControllerHistoryTracker()
+    private var history: [String] = []
+    
+    func recordViewController(_ viewController: UIViewController) {
+        let viewControllerName = NSStringFromClass(type(of: viewController))
+        history.append(viewControllerName)
+    }
+    
+    func getHistory() -> [String] {
+        return history
+    }
+    
+    func clearHistory() {
+        history.removeAll()
+    }
+}
+
+
 public class IterationX {
     public static let shared = IterationX()
     private var apiKey: String?
@@ -13,15 +38,15 @@ public class IterationX {
     
     private init() {}
     
-
+    
     public func setFlowActive(_ isActive: Bool) {
-            isFlowActive = isActive
+        isFlowActive = isActive
     }
-
+    
     public func getFlowActive() -> Bool {
-            return isFlowActive
+        return isFlowActive
     }
-
+    
     
     public func configure(apiKey: String, event: IterationXEvent) -> Void {
         self.currentEvent = event
