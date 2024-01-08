@@ -90,6 +90,7 @@ class ImageStackView: UIView {
     
     public func addImage(_ image: UIImage) {
         images.append(image)
+        updateImages()
     }
     
     override init(frame: CGRect) {
@@ -97,10 +98,14 @@ class ImageStackView: UIView {
         setupView()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private func setupView() {
         stackView.axis = .horizontal
         stackView.alignment = .center
-        stackView.distribution = .fillProportionally
+        stackView.distribution = .fill
         stackView.spacing = 8
         
         addSubview(stackView)
@@ -114,20 +119,31 @@ class ImageStackView: UIView {
         self.addGestureRecognizer(tapGesture)
     }
     
-    
-    
     private func updateImages() {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         for (index, image) in images.enumerated() {
-            let imageView = UIImageView(image: image)
-            imageView.contentMode = .scaleAspectFill
-            imageView.clipsToBounds = true
-            imageView.isUserInteractionEnabled = true
-            imageView.tag = index
-            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage)))
+            let imageView = createImageView(for: image, withTag: index)
             stackView.addArrangedSubview(imageView)
         }
+    }
+    
+    private func createImageView(for image: UIImage, withTag tag: Int) -> UIImageView {
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 8
+        imageView.layer.borderColor = UIColor.white.cgColor
+        imageView.layer.borderWidth = 2
+        imageView.isUserInteractionEnabled = true
+        imageView.tag = tag
+        imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage)))
+        
+        imageView.snp.makeConstraints { make in
+            make.width.height.equalTo(60)
+        }
+        
+        return imageView
     }
     
     @objc private func didTapView() {
@@ -138,12 +154,8 @@ class ImageStackView: UIView {
         guard let imageView = sender.view as? UIImageView else { return }
         onImageTapped?(imageView.tag)
     }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
 }
+
 
 
 
