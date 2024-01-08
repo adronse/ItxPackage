@@ -225,6 +225,12 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     public override func viewDidLoad() {
         super.viewDidLoad()
         imageStackView.addImage(self.imageView.image!)
+        
+        imageStackView.addImage(self.imageView.image!)
+        
+        imageStackView.addImage(self.imageView.image!)
+        
+        imageStackView.addImage(self.imageView.image!)
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         
