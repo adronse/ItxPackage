@@ -164,8 +164,6 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        calculateImageScaleAndOffset()
         setupNavigationBar()
         configureUI()
         addGestures()
@@ -175,6 +173,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
+        calculateImageScaleAndOffset()
         
         colorPicker.layer.cornerRadius = 10
         colorPicker.layoutIfNeeded()
