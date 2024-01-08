@@ -29,7 +29,6 @@ class AddPictureView: UIView {
         setupView()
     }
     
-    
     private lazy var addPicture: UIImageView = {
         if #available(iOS 13.0, *) {
             let imageView = UIImageView(image: UIImage(systemName: "photo.on.rectangle", withConfiguration: UIImage.SymbolConfiguration(weight: .medium)))
@@ -55,18 +54,14 @@ class AddPictureView: UIView {
         stackView.addArrangedSubview(label)
         addSubview(stackView)
         
-        // Setup the image view
         addPicture.contentMode = .scaleAspectFit
         
-        // Setup the label
         label.textColor = .white
         
-        // Setup constraints using SnapKit
         stackView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        // Setup the tap gesture
         self.isUserInteractionEnabled = true
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
         self.addGestureRecognizer(tapGesture)
@@ -308,9 +303,8 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
     
     // UIImagePickerControllerDelegate method
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        // Extract the image from the info dictionary
         if let selectedImage = info[.originalImage] as? UIImage {
-            // Update your imageView with the selected image
+
             imageView.image = selectedImage
         }
         
