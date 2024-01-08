@@ -122,7 +122,6 @@ class ColorPickerView: UIView {
 }
 
 
-
 class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     
@@ -140,6 +139,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         let button = UIButton()
         if #available(iOS 13.0, *) {
             button.setImage(UIImage(systemName: "pencil.tip", withConfiguration: UIImage.SymbolConfiguration(weight: .medium)), for: .normal)
+            button.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
             button.addTarget(self, action: #selector(toggleColorPicker), for: .touchUpInside)
         }
         return button
@@ -178,7 +178,6 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         pencilButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.centerY.equalToSuperview().multipliedBy(0.33)
-            make.size.equalTo(80)
         }
     }
     
