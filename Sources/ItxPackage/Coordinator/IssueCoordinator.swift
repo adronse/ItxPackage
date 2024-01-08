@@ -33,21 +33,19 @@ class IssueCoordinator: IssueReporting {
     func createPreSignedUrl(image: UIImage, contentType: String) -> Observable<PreSignedUrl> {
         return Observable.create { observer in
             let mutation =
-                """
-                mutation {
-                    createPreSignedUrl(input: {
-                        contentType: "\(contentType)"
-                    }) {
-                        url
-                        id
-                        headers {
-                            key
-                            value
-                        }
-                        expiresAt
-                    }
-                }
-                """
+                            """
+                            mutation {
+                                  createPreSignedUrl(contentType: "\(contentType)", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
+                                    url
+                                    id
+                                    headers {
+                                      key
+                                      value
+                                    }
+                                    expiresAt
+                                  }
+                            }
+                            """
             
             self.graphQLClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreatePreSignedUrlResponse>) in
