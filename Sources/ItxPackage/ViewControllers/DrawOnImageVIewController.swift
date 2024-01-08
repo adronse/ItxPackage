@@ -157,6 +157,8 @@ class DrawOnImageViewController: UIViewController {
         super.viewDidLayoutSubviews()
         colorPicker.layer.cornerRadius = 10
         colorPicker.clipsToBounds = true
+        colorPicker.layoutIfNeeded()
+        
     }
     
     private func configureUI() {
@@ -209,7 +211,6 @@ class DrawOnImageViewController: UIViewController {
         
         view.addSubview(colorPicker)
         
-        colorPicker.layer.cornerRadius = 10
         
         colorPicker.snp.makeConstraints { make in
             make.width.equalTo(20)
