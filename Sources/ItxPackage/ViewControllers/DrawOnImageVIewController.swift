@@ -182,17 +182,18 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     
     private func calculateImageScaleAndOffset() {
-        guard let imageSize = imageView.image?.size else { return }
-        let imageViewSize = imageView.bounds.size
-        let widthScale = imageViewSize.width / imageSize.width
-        let heightScale = imageViewSize.height / imageSize.height
-        imageScale = min(widthScale, heightScale)
-        let scaledImageWidth = imageScale * imageSize.width
-        let scaledImageHeight = imageScale * imageSize.height
-        imageOffset.x = (imageViewSize.width - scaledImageWidth) / 2
-        imageOffset.y = (imageViewSize.height - scaledImageHeight) / 2
+        guard let imageSize = originalImage?.size else { return }
+        let viewSize = imageView.bounds.size
+        let widthRatio = viewSize.width / imageSize.width
+        let heightRatio = viewSize.height / imageSize.height
+        let scale = min(widthRatio, heightRatio)
+        let scaledImageSize = CGSize(width: imageSize.width * scale, height: imageSize.height * scale)
+        imageScale = scale
+        imageOffset = CGPoint(
+            x: (viewSize.width - scaledImageSize.width) / 2,
+            y: (viewSize.height - scaledImageSize.height) / 2
+        )
     }
-    
     private func setUpPencilButton()
     {
         view.addSubview(pencilButton)
@@ -320,22 +321,14 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     }
     
     private func transformPointToImageCoordinates(_ point: CGPoint) -> CGPoint {
-        let viewSize = imageView.bounds.size
-        guard let imageSize = imageView.image?.size else { return .zero }
-
-        let ratioX = viewSize.width / imageSize.width
-        let ratioY = viewSize.height / imageSize.height
-        let scale = min(ratioX, ratioY)
-        let offsetX = (viewSize.width - imageSize.width * scale) / 2
-        let offsetY = (viewSize.height - imageSize.height * scale) / 2
-
-        let x = (point.x - offsetX) / scale
-        let y = (point.y - offsetY) / scale
-
-        let finalX = min(max(x, 0), imageSize.width)
-        let finalY = min(max(y, 0), imageSize.height)
-        
-        return CGPoint(x: finalX, y: finalY)
+        let adjustedPoint = CGPoint(
+            x: (point.x - imageOffset.x) / imageScale,
+            y: (point.y - imageOffset.y) / imageScale
+        )
+        return CGPoint(
+            x: max(min(adjustedPoint.x, imageView.image?.size.width ?? 0), 0),
+            y: max(min(adjustedPoint.y, imageView.image?.size.height ?? 0), 0)
+        )
     }
 
     
