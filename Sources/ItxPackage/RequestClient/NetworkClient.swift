@@ -2,6 +2,7 @@ import Foundation
 import RxSwift
 import RxAlamofire
 import Alamofire
+import UIKit
 
 struct GraphQLResponse<T: Decodable>: Decodable {
     let data: T?
@@ -12,7 +13,13 @@ struct GraphQLErrorDetail: Decodable {
     let message: String
 }
 
-class GraphQLClient {
+protocol INetworkClient {
+    func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T>
+    func uploadImageToPreSignedUrl(data: PreSignedUrl, image: UIImage) -> Observable<Bool>
+}
+
+class NetworkClient : INetworkClient {
+    
     private let disposeBag = DisposeBag()
     private let url: URL
     private let apiKey: String
@@ -22,6 +29,47 @@ class GraphQLClient {
         self.url = url
         self.apiKey = apiKey
         self.scheduler = SerialDispatchQueueScheduler(qos: .default)
+    }
+    
+    func uploadImageToPreSignedUrl(data: PreSignedUrl, image: UIImage) -> Observable<Bool>
+    {
+        return Observable.create { observer in
+            guard let imageData = image.jpegData(compressionQuality: 0.9) else {
+                observer.onError(URLError(.badURL))
+                return Disposables.create()
+            }
+            
+            guard let url = URL(string: data.url) else {
+                observer.onError(URLError(.badURL))
+                return Disposables.create()
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            data.headers.forEach { header in
+                request.setValue(header.value, forHTTPHeaderField: header.key)
+            }
+            
+            let task = URLSession.shared.uploadTask(with: request, from: imageData) { _, response, error in
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                    observer.onError(URLError(.badServerResponse))
+                    return
+                }
+                
+                observer.onNext((true))
+                observer.onCompleted()
+            }
+            task.resume()
+            
+            return Disposables.create {
+                task.cancel()
+            }
+        }
     }
 
     func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T> {
@@ -50,7 +98,7 @@ class GraphQLClient {
         }
     }
 
-    private func createRequest(method: HTTPMethod, httpBody: Data) -> URLRequest {
+    public func createRequest(method: HTTPMethod, httpBody: Data) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.httpBody = httpBody

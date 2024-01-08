@@ -7,11 +7,11 @@ protocol IssueReporting {
 }
 
 class IssueCoordinator: IssueReporting {
-    private let graphQLClient: GraphQLClient
+    private let networkClient: NetworkClient
     private let disposeBag = DisposeBag()
     
-    init(graphQLClient: GraphQLClient) {
-        self.graphQLClient = graphQLClient
+    init(networkCli: NetworkClient) {
+        self.networkClient = networkCli
     }
     
     
@@ -22,13 +22,13 @@ class IssueCoordinator: IssueReporting {
             return createPreSignedUrl(image: image, contentType: contentType)
                 .flatMap { [weak self] preSignedUrl -> Observable<Void> in
                     guard let self = self else { return Observable.empty() }
+                    
                     return self.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrl.id)
                 }
         } else {
             return createMobileIssue(title: title, description: description, preSignedUrlId: nil)
         }
     }
-    
     
     func createPreSignedUrl(image: UIImage, contentType: String) -> Observable<PreSignedUrl> {
         return Observable.create { observer in
@@ -47,12 +47,11 @@ class IssueCoordinator: IssueReporting {
                             }
                             """
             
-            self.graphQLClient.performRequest(query: mutation, method: .POST)
+            self.networkClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreatePreSignedUrlResponse>) in
                     guard let preSignedUrl = response.data?.createPreSignedUrl else {
                         return
                     }
-                    
                     observer.onNext(preSignedUrl)
                     observer.onCompleted()
                 }, onError: { error in
@@ -111,7 +110,7 @@ class IssueCoordinator: IssueReporting {
             }
             """
             
-            self.graphQLClient.performRequest(query: mutation, method: .POST)
+            self.networkClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreateMobileIssueResponse>) in
                     observer.onNext(())
                     observer.onCompleted()

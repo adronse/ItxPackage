@@ -34,8 +34,8 @@ public class ScreenshotCoordinator: Coordinator {
 extension ScreenshotCoordinator: PopupViewControllerDelegate {
     func didSelectReportBug() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let graphQLClient = GraphQLClientFactory.createClient()
-            let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
+            let networkClient = GraphQLClientFactory.createClient()
+            let issueCoordinator = IssueCoordinator(networkCli: networkClient)
             let issueCreationVC = IssueCreationViewController(image: self.imageView, issueReport: issueCoordinator)
             
             issueCreationVC.delegate = self
@@ -50,8 +50,8 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
     
     func didSelectSuggestImprovement() {
         DispatchQueue.main.asyncAfter(deadline: .now()) {
-            let graphQLClient = GraphQLClientFactory.createClient()
-            let issueCoordinator = IssueCoordinator(graphQLClient: graphQLClient)
+            let networkClient = GraphQLClientFactory.createClient()
+            let issueCoordinator = IssueCoordinator(networkCli: networkClient)
             let issueCreationVC = IssueCreationViewController(image: self.imageView, issueReport: issueCoordinator)
             
             
