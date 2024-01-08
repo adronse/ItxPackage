@@ -203,20 +203,24 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     private func setupColorPicker() {
         colorPicker = ColorPickerView()
-        
         view.addSubview(colorPicker)
         
-        
-        colorPicker.snp.makeConstraints { make in
-            make.width.equalTo(20)
-            make.height.equalTo(200)
-            make.centerY.equalToSuperview()
-            make.right.equalToSuperview().offset(-30)
-        }
-        
         view.addSubview(colorPicker.colorIndicator)
+        
         colorPicker.delegate = self
         
+        colorPicker.snp.makeConstraints { make in
+            make.right.equalToSuperview().offset(-30)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(20)
+            make.height.equalTo(200)
+        }
+        
+        colorPicker.colorIndicator.snp.makeConstraints { make in
+            make.width.height.equalTo(50)
+            make.centerY.equalTo(colorPicker.snp.centerY)
+            make.left.equalTo(colorPicker.snp.right)
+        }
     }
     
     func colorDidChange(to color: UIColor) {
