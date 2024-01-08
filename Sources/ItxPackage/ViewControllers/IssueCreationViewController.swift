@@ -394,15 +394,13 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
         
-        // Present the image picker
+
         present(imagePicker, animated: true)
     }
     
-    // UIImagePickerControllerDelegate method
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let selectedImage = info[.originalImage] as? UIImage {
-
-            imageView.image = selectedImage
+            imageStackView.addImage(selectedImage)
         }
         
         // Dismiss the picker
