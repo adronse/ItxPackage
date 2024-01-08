@@ -14,6 +14,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     private let imageView: UIImageView
+    private var baseImage: UIImage?
     
     var delegate: IssueCreationViewControllerDelegate?
     var issueReport: IssueReporting?
@@ -182,13 +183,12 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }
     
     @objc private func handleImageBoxTap() {
-        guard let image = imageView.image else {
+        guard let baseImage = self.baseImage else {
             return
         }
         
-        let drawOnImageViewController = DrawOnImageViewController(image: image)
+        let drawOnImageViewController = DrawOnImageViewController(image: baseImage)
         drawOnImageViewController.modalPresentationStyle = .fullScreen
-        
         
         drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageView.image = modifiedImage
