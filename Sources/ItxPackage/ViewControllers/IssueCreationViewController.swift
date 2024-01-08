@@ -362,25 +362,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
-    
-//    @objc private func handleImageBoxTap(index: Int) {
-//        guard let image = imageView.image else {
-//            return
-//        }
-//        
-//        let drawOnImageViewController = DrawOnImageViewController(image: image)
-//        drawOnImageViewController.modalPresentationStyle = .fullScreen
-//        
-//        
-//        drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
-//            self?.imageView.image = modifiedImage
-//        }
-//        
-//        let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
-//        navigationController.modalPresentationStyle = .fullScreen
-//        
-//        present(navigationController, animated: true, completion: nil)
-//    }
+
 }
 
 extension IssueCreationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

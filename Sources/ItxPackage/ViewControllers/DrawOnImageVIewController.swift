@@ -132,7 +132,10 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private var selectedColor: UIColor = .black
     private var colorPicker: ColorPickerView!
     private var originalImage: UIImage?
-
+    
+    
+    private var imageScale: CGFloat = 1.0
+    private var imageOffset: CGPoint = .zero
     
     var didFinishDrawing: ((UIImage) -> Void)?
     
@@ -154,13 +157,15 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         self.drawingView = UIView()
         super.init(nibName: nil, bundle: nil)
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        calculateImageScaleAndOffset()
         setupNavigationBar()
         configureUI()
         addGestures()
@@ -174,6 +179,19 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.layer.cornerRadius = 10
         colorPicker.layoutIfNeeded()
         
+    }
+    
+    
+    private func calculateImageScaleAndOffset() {
+        guard let imageSize = imageView.image?.size else { return }
+        let imageViewSize = imageView.bounds.size
+        let widthScale = imageViewSize.width / imageSize.width
+        let heightScale = imageViewSize.height / imageSize.height
+        imageScale = min(widthScale, heightScale)
+        let scaledImageWidth = imageScale * imageSize.width
+        let scaledImageHeight = imageScale * imageSize.height
+        imageOffset.x = (imageViewSize.width - scaledImageWidth) / 2
+        imageOffset.y = (imageViewSize.height - scaledImageHeight) / 2
     }
     
     private func setUpPencilButton()
@@ -268,34 +286,40 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
             dismiss(animated: true, completion: nil)
             return
         }
-
+        
         DispatchQueue.main.async {
             self.colorPicker.isHidden = true
-
+            
             let renderer = UIGraphicsImageRenderer(size: originalImage.size)
             let imageWithDrawing = renderer.image { context in
                 originalImage.draw(at: .zero)
                 self.drawingView.layer.render(in: context.cgContext)
             }
-
+            
             self.imageView.image = imageWithDrawing
             self.didFinishDrawing?(imageWithDrawing)
             self.dismiss(animated: true, completion: nil)
         }
     }
-
+    
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let point = gesture.location(in: drawingView)
+        let transformedPoint = transformPointToImageCoordinates(point)
         
         switch gesture.state {
         case .began:
-            startNewPath(at: point)
+            startNewPath(at: transformedPoint)
         case .changed:
-            continuePath(to: point)
+            continuePath(to: transformedPoint)
         default:
             break
         }
+    }
+    
+    private func transformPointToImageCoordinates(_ point: CGPoint) -> CGPoint {
+        return CGPoint(x: (point.x - imageOffset.x) / imageScale,
+                       y: (point.y - imageOffset.y) / imageScale)
     }
     
     private func startNewPath(at point: CGPoint) {
