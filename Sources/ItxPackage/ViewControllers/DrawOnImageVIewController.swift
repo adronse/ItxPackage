@@ -139,11 +139,11 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private let pencilButton: UIButton = {
         let button = UIButton(type: .system)
         if #available(iOS 13.0, *) {
-            button.setImage(UIImage(systemName: "pencil"), for: .normal)
+            button.setImage(UIImage(systemName: "pencil.tip", withConfiguration: UIImage.SymbolConfiguration(weight: .medium)), for: .normal)
         } else {
             // Fallback on earlier versions
         } // Use a pencil icon
-        button.addTarget(self, action: #selector(toggleColorPicker), for: .touchUpInside)
+        button.addTarget(DrawOnImageViewController.self, action: #selector(toggleColorPicker), for: .touchUpInside)
         return button
     }()
     
@@ -180,8 +180,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         pencilButton.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-30)
             make.centerY.equalToSuperview().multipliedBy(0.66)
-            make.width.equalTo(20)
-            make.height.equalTo(200)
+            make.size.equalTo(50)
         }
     }
     
@@ -249,12 +248,6 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     @objc private func toggleColorPicker() {
         colorPicker.isHidden = !colorPicker.isHidden
-        let iconName = colorPicker.isHidden ? "pencil" : "pencil.slash" // Change icon based on state
-        if #available(iOS 13.0, *) {
-            pencilButton.setImage(UIImage(systemName: iconName), for: .normal)
-        } else {
-            // Fallback on earlier versions
-        }
     }
     
     @objc private func saveDrawing()
