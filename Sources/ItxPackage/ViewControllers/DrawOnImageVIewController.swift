@@ -176,7 +176,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     {
         view.addSubview(pencilButton)
         pencilButton.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-30)
+            make.right.equalTo(colorPicker)
             make.centerY.equalToSuperview().multipliedBy(0.66)
             make.size.equalTo(50)
         }
