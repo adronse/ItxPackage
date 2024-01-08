@@ -41,6 +41,7 @@ class GraphQLClient {
                 .subscribe(onNext: { (response, data) in
                     self.handleResponse(data: data, observer: observer)
                 }, onError: { error in
+                    print("Error: \(error)")
                     observer.onError(error)
                 })
                 .disposed(by: self.disposeBag)
@@ -65,7 +66,7 @@ class GraphQLClient {
                 observer.onNext(data)
                 observer.onCompleted()
             } else if let errors = graphQLResponse.errors {
-                // Handle specific GraphQL errors here
+                print(errors)
                 observer.onError(GraphQLError.custom("GraphQL Errors: \(errors)"))
             } else {
                 observer.onError(GraphQLError.noData)
