@@ -53,28 +53,28 @@ class ColorPickerView: UIView {
         guard let gradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors.map { $0.cgColor } as CFArray, locations: colorLocations) else {
             return .black // Fallback color
         }
-
+        
         let start = CGPoint(x: self.bounds.midX, y: 0)
         let end = CGPoint(x: self.bounds.midX, y: self.bounds.height)
         let context = CGContext(data: nil, width: 1, height: Int(self.bounds.height), bitsPerComponent: 8, bytesPerRow: 4, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)!
         context.drawLinearGradient(gradient, start: start, end: end, options: [])
         guard let data = context.data else { return .black }
-
+        
         let offset = Int(proportion * self.bounds.height) * 4
         let r = data.load(fromByteOffset: offset, as: UInt8.self)
         let g = data.load(fromByteOffset: offset+1, as: UInt8.self)
         let b = data.load(fromByteOffset: offset+2, as: UInt8.self)
         let a = data.load(fromByteOffset: offset+3, as: UInt8.self)
-
+        
         return UIColor(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: CGFloat(a) / 255.0)
     }
-
+    
     func showColorIndicator(at point: CGPoint) {
         colorIndicator.isHidden = false
         colorIndicator.alpha = 1
         updateIndicatorPosition(at: point)
     }
-
+    
     func hideColorIndicator() {
         UIView.animate(withDuration: 0.2, animations: {
             self.colorIndicator.alpha = 0
@@ -82,7 +82,7 @@ class ColorPickerView: UIView {
             self.colorIndicator.isHidden = true
         })
     }
-
+    
     func updateIndicatorPosition(at point: CGPoint) {
         let yPos = max(0, min(point.y, self.bounds.height))
         let color = self.getColor(at: CGPoint(x: self.bounds.midX, y: yPos))
@@ -96,12 +96,36 @@ class ColorPickerView: UIView {
             colorIndicator.center = CGPoint(x: indicatorCenterX, y: indicatorCenterY)
         }
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        guard let point = touches.first?.location(in: self) else { return }
+        showColorIndicator(at: point)
+        updateIndicatorPosition(at: point)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        guard let point = touches.first?.location(in: self) else { return }
+        updateIndicatorPosition(at: point)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        hideColorIndicator()
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesCancelled(touches, with: event)
+        hideColorIndicator()
+    }
+    
 }
 
 
 
 class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
-
+    
     
     
     
