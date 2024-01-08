@@ -131,7 +131,7 @@ class ReportButtonCell: UITableViewCell {
             if #available(iOS 13.0, *) {
                 icon.image = UIImage(systemName: iconName)
             }
-            icon.contentMode = .scaleAspectFit // Set content mode to scale aspect fit
+            icon.contentMode = .scaleAspectFit
             return icon
         }()
         

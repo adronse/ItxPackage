@@ -41,8 +41,6 @@ class ThankYouPopupViewController: UIViewController {
         if #available(iOS 13.0, *) {
             checkMarkIcon.image = UIImage(systemName: "checkmark.circle", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
             checkMarkIcon.tintColor = .systemGreen
-        } else {
-            // Fallback on earlier versions or add a custom checkmark image
         }
 
         popupView.addSubview(checkMarkIcon)

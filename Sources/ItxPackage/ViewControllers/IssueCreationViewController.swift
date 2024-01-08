@@ -28,6 +28,59 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         fatalError("init(coder:) has not been implemented")
     }
     
+    // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
+    
+    private lazy var leftBarButtonItem: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: #selector(didTapCancel))
+        return button
+    }()
+    
+    
+    private lazy var rightBarButtonItem: UIBarButtonItem = {
+        if #available(iOS 13.0, *) {
+            let image = UIImage(systemName: "paperplane.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
+            
+            let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(didTapSendButton))
+            return button
+        } else {
+            
+        }
+        return UIBarButtonItem()
+    }()
+    
+    
+    private lazy var issueTitleFieldHeader = UILabel()
+        .with(\.text, value: "Title")
+        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
+    
+    private lazy var issueTitleField = UITextField()
+        .with(\.placeholder, value: "Your issue title")
+        .with(\.isUserInteractionEnabled, value: true)
+    
+    private lazy var separator = UIView.separator(color: .gray)
+    
+    private lazy var issueDescriptionFieldHeader = UILabel()
+        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
+        .with(\.text, value: "Description")
+    
+    private lazy var issueDescriptionField = UITextField()
+        .with(\.placeholder, value: "Describe your issue")
+        .with(\.isUserInteractionEnabled, value: true)
+    
+    
+    private let addPictureButton: UIButton = {
+        let button = UIButton()
+        if #available(iOS 13.0, *) {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold)
+            let pencilImage = UIImage(systemName: "camera", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            button.setImage(pencilImage, for: .normal)
+            button.addTarget(self, action: #selector(didTapAddPictureButton), for: .touchUpInside)
+        }
+        return button
+    }()
+    
+    //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
+    
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,49 +156,19 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         imageView.snp.makeConstraints { make     in
             make.edges.equalToSuperview()
         }
+        
+        view.addSubview(addPictureButton)
+        
+        addPictureButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-20)
+            make.centerX.equalToSuperview()
+        }
     }
     
-    // ------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
     
-    private lazy var leftBarButtonItem: UIBarButtonItem = {
-        let button = UIBarButtonItem(title: "\u{274C}", style: .plain, target: self, action: #selector(didTapCancel))
-        return button
-    }()
-    
-    
-    private lazy var rightBarButtonItem: UIBarButtonItem = {
-        if #available(iOS 13.0, *) {
-            let image = UIImage(systemName: "paperplane.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .regular))
-            
-            let button = UIBarButtonItem(image: image, style: .plain, target: self, action: #selector(didTapSendButton))
-            return button
-        } else {
-            
-        }
-        return UIBarButtonItem()
-    }()
-    
-    
-    private lazy var issueTitleFieldHeader = UILabel()
-        .with(\.text, value: "Title")
-        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
-    
-    private lazy var issueTitleField = UITextField()
-        .with(\.placeholder, value: "Your issue title")
-        .with(\.isUserInteractionEnabled, value: true)
-    
-    private lazy var separator = UIView.separator(color: .gray)
-    
-    private lazy var issueDescriptionFieldHeader = UILabel()
-        .with(\.textColor, value: UIColor.from(hex: "#4a4a4d"))
-        .with(\.text, value: "Description")
-    
-    private lazy var issueDescriptionField = UITextField()
-        .with(\.placeholder, value: "Describe your issue")
-        .with(\.isUserInteractionEnabled, value: true)
-    
-    //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
-    
+    @objc private func didTapAddPictureButton() {
+        delegate?.didTapAddPicture()
+    }
     
     @objc private func handleTap() {
         view.endEditing(true)
