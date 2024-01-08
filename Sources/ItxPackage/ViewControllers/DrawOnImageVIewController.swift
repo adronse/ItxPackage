@@ -153,6 +153,12 @@ class DrawOnImageViewController: UIViewController {
         setupNavigationBar()
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        colorPicker.layer.cornerRadius = 10
+        colorPicker.clipsToBounds = true
+    }
+    
     private func configureUI() {
         view.backgroundColor = .black
         
