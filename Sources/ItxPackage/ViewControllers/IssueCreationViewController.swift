@@ -143,7 +143,6 @@ class ImageStackView: UIView {
             make.width.height.equalTo(60)
         }
         
-        // Create the cross button
         let crossButton = UIButton(type: .system)
         if #available(iOS 13.0, *) {
             crossButton.setImage(UIImage(systemName: "xmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))?.withTintColor(.systemPink, renderingMode: .alwaysOriginal), for: .normal)
