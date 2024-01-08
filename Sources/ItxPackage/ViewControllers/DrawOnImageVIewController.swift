@@ -221,6 +221,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         view.addSubview(colorPicker)
         
         colorPicker.delegate = self
+        colorPicker.alpha = 0
         
         colorPicker.snp.makeConstraints { make in
             make.centerX.equalTo(pencilButton.snp.centerX)
@@ -245,7 +246,18 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     
     @objc private func toggleColorPicker() {
-        colorPicker.isHidden = !colorPicker.isHidden
+        if colorPicker.isHidden {
+            colorPicker.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.colorPicker.alpha = 1
+            }
+        } else {
+            UIView.animate(withDuration: 0.3, animations: {
+                self.colorPicker.alpha = 0
+            }) { _ in
+                self.colorPicker.isHidden = true
+            }
+        }
     }
     
     @objc private func saveDrawing()
