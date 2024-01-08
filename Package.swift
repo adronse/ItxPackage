@@ -17,6 +17,8 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.6.0"),
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
+        .package(url: "https://github.com/RxSwiftCommunity/RxAlamofire.git",
+                           from: "6.1.0"),
     ],
     targets: [
         .target(
@@ -24,6 +26,7 @@ let package = Package(
             dependencies: [
                 "SnapKit",
                 "RxSwift",
+                "RxAlamofire"
             ]
         ),
         .testTarget(
