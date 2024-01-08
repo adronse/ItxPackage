@@ -140,7 +140,7 @@ class ImageStackView: UIView {
         imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage)))
         
         imageView.snp.makeConstraints { make in
-            make.width.height.equalTo(30)
+            make.width.height.equalTo(60)
         }
         
         // Create the cross button
