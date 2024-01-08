@@ -45,33 +45,30 @@ class ThankYouPopupViewController: UIViewController {
         popupView.addSubview(checkMarkIcon)
         popupView.addSubview(thankYouLabel)
         popupView.addSubview(descriptionLabel)
-
+        
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8)
-            make.height.equalTo(popupView.snp.width)
+            make.width.equalTo(300)
+            make.height.equalTo(200)
         }
-
+        
         checkMarkIcon.snp.makeConstraints { make in
-            make.top.equalTo(popupView.snp.top).offset(20)
+            make.top.equalToSuperview().offset(20)
             make.centerX.equalToSuperview()
-            make.size.equalTo(60)
+            make.width.height.equalTo(50)
         }
-
+        
         thankYouLabel.snp.makeConstraints { make in
-            make.top.equalTo(checkMarkIcon.snp.bottom).offset(20)
+            make.top.equalTo(checkMarkIcon.snp.bottom).offset(10)
+            make.centerX.equalToSuperview()
         }
-
+        
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(thankYouLabel.snp.bottom).offset(10)
-            make.bottom.equalTo(popupView.snp.bottom).offset(-20)
+            make.left.equalToSuperview().offset(10)
+            make.right.equalToSuperview().offset(-10)
         }
 
-        thankYouLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        descriptionLabel.textColor = .darkGray
-        descriptionLabel.numberOfLines = 0 // Allow label to wrap
-        descriptionLabel.textAlignment = .center
     }
 
 
