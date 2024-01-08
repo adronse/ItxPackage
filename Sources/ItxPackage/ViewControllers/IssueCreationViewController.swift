@@ -119,7 +119,7 @@ class ImageStackView: UIView {
         self.addGestureRecognizer(tapGesture)
     }
     
-    private func updateImages() {
+    public func updateImages() {
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
         for (index, image) in images.enumerated() {
@@ -224,13 +224,17 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        imageStackView.addImage(self.imageView.image!)
+        
         
         imageStackView.addImage(self.imageView.image!)
         
-        imageStackView.addImage(self.imageView.image!)
+        imageStackView.onImageTapped = { [weak self] index in
+            guard let strongSelf = self, index >= 0, index < strongSelf.imageStackView.images.count else { return }
+            let selectedImage = strongSelf.imageStackView.images[index]
+            strongSelf.presentDrawOnImageViewController(with: selectedImage, index: index)
+        }
         
-        imageStackView.addImage(self.imageView.image!)
+        
         self.view.backgroundColor = UIColor.from(hex: "#292A2F")
         configureUI()
         
@@ -345,24 +349,38 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         return true
     }
     
-    @objc private func handleImageBoxTap() {
-        guard let image = imageView.image else {
-            return
-        }
-        
+    private func presentDrawOnImageViewController(with image: UIImage, index: Int) {
         let drawOnImageViewController = DrawOnImageViewController(image: image)
         drawOnImageViewController.modalPresentationStyle = .fullScreen
         
-        
         drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
-            self?.imageView.image = modifiedImage
+            self?.imageStackView.images[index] = modifiedImage
+            self?.imageStackView.updateImages()
         }
         
         let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
         navigationController.modalPresentationStyle = .fullScreen
-        
         present(navigationController, animated: true, completion: nil)
     }
+    
+//    @objc private func handleImageBoxTap(index: Int) {
+//        guard let image = imageView.image else {
+//            return
+//        }
+//        
+//        let drawOnImageViewController = DrawOnImageViewController(image: image)
+//        drawOnImageViewController.modalPresentationStyle = .fullScreen
+//        
+//        
+//        drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
+//            self?.imageView.image = modifiedImage
+//        }
+//        
+//        let navigationController = UINavigationController(rootViewController: drawOnImageViewController)
+//        navigationController.modalPresentationStyle = .fullScreen
+//        
+//        present(navigationController, animated: true, completion: nil)
+//    }
 }
 
 extension IssueCreationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
