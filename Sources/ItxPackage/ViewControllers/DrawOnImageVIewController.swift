@@ -126,8 +126,6 @@ class ColorPickerView: UIView {
 class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     
-    
-    
     private let imageView: UIImageView
     private let drawingView: UIView
     private var currentBezierPath = UIBezierPath()
@@ -136,6 +134,18 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private var colorPicker: ColorPickerView!
     
     var didFinishDrawing: ((UIImage) -> Void)?
+    
+    
+    private let pencilButton: UIButton = {
+        let button = UIButton(type: .system)
+        if #available(iOS 13.0, *) {
+            button.setImage(UIImage(systemName: "pencil"), for: .normal)
+        } else {
+            // Fallback on earlier versions
+        } // Use a pencil icon
+        button.addTarget(self, action: #selector(toggleColorPicker), for: .touchUpInside)
+        return button
+    }()
     
     init(image: UIImage) {
         self.imageView = UIImageView(image: image)
@@ -152,6 +162,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         setupNavigationBar()
         configureUI()
         addGestures()
+        setUpPencilButton()
         setupColorPicker()
     }
     
@@ -161,6 +172,16 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.layer.cornerRadius = 10
         colorPicker.layoutIfNeeded()
         
+    }
+    
+    private func setUpPencilButton()
+    {
+        view.addSubview(pencilButton)
+        pencilButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.centerX.equalToSuperview()
+            make.width.height.equalTo(50)
+        }
     }
     
     private func configureUI() {
@@ -222,6 +243,17 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     func colorDidChange(to color: UIColor) {
         selectedColor = color
+    }
+    
+    
+    @objc private func toggleColorPicker() {
+        colorPicker.isHidden = !colorPicker.isHidden
+        let iconName = colorPicker.isHidden ? "pencil" : "pencil.slash" // Change icon based on state
+        if #available(iOS 13.0, *) {
+            pencilButton.setImage(UIImage(systemName: iconName), for: .normal)
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     @objc private func saveDrawing()
