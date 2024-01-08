@@ -306,6 +306,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         let point = gesture.location(in: drawingView)
         let transformedPoint = transformPointToImageCoordinates(point)
         
+        print("Pan Gesture Point: \(point), Transformed Point: \(transformedPoint)")
+
         switch gesture.state {
         case .began:
             startNewPath(at: transformedPoint)
