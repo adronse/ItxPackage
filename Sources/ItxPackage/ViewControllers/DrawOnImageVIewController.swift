@@ -27,6 +27,17 @@ class ColorPickerView: UIView {
         colorIndicator.layer.masksToBounds = true
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        updateIndicatorPosition()
+    }
+    
+    private func updateIndicatorPosition() {
+        let indicatorPosition = CGPoint(x: self.bounds.width / 2, y: self.bounds.height / 2)
+        colorIndicator.center = indicatorPosition
+    }
+    
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         let context = UIGraphicsGetCurrentContext()
