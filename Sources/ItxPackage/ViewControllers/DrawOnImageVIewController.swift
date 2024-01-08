@@ -205,6 +205,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private func configureUI() {
         view.backgroundColor = .black
         
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         
@@ -319,9 +320,24 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     }
     
     private func transformPointToImageCoordinates(_ point: CGPoint) -> CGPoint {
-        return CGPoint(x: (point.x - imageOffset.x) / imageScale,
-                       y: (point.y - imageOffset.y) / imageScale)
+        let viewSize = imageView.bounds.size
+        guard let imageSize = imageView.image?.size else { return .zero }
+
+        let ratioX = viewSize.width / imageSize.width
+        let ratioY = viewSize.height / imageSize.height
+        let scale = min(ratioX, ratioY)
+        let offsetX = (viewSize.width - imageSize.width * scale) / 2
+        let offsetY = (viewSize.height - imageSize.height * scale) / 2
+
+        let x = (point.x - offsetX) / scale
+        let y = (point.y - offsetY) / scale
+
+        let finalX = min(max(x, 0), imageSize.width)
+        let finalY = min(max(y, 0), imageSize.height)
+        
+        return CGPoint(x: finalX, y: finalY)
     }
+
     
     private func startNewPath(at point: CGPoint) {
         CATransaction.begin()
