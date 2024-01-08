@@ -169,7 +169,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         view.addSubview(addPictureLabel)
         
         addPictureButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-20)
+            make.bottom.equalToSuperview().offset(-40)
             make.leading.equalToSuperview().offset(20)
         }
         
