@@ -10,10 +10,63 @@ import UIKit
 import SnapKit
 import Photos
 
+class AddPictureView: UIView
+{
+    
+    private let addPictureButton: UIButton = {
+        let button = UIButton()
+        if #available(iOS 13.0, *) {
+            let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold)
+            let pencilImage = UIImage(systemName: "photo.on.rectangle", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            button.setImage(pencilImage, for: .normal)
+        }
+        return button
+    }()
+    
+    private let addPictureLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Select file from gallery"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20)
+        return label
+    }()
+    
+    private let addPictureStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        return stackView
+    }()
+    
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupView()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupView()
+    }
+    
+    private func setupView()
+    {
+        self.backgroundColor = UIColor.from(hex: "#292A2F")
+        self.addSubview(addPictureStackView)
+        addPictureStackView.addArrangedSubview(addPictureButton)
+        addPictureStackView.addArrangedSubview(addPictureLabel)
+        addPictureStackView.snp.makeConstraints { (make) in
+            make.center.equalToSuperview()
+        }
+    }
+    
+}
+
+
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     private let imageView: UIImageView
+    private let addPictureView = AddPictureView()
     
     var delegate: IssueCreationViewControllerDelegate?
     var issueReport: IssueReporting?
@@ -66,26 +119,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Describe your issue")
         .with(\.isUserInteractionEnabled, value: true)
-    
-    
-    private let addPictureButton: UIButton = {
-        let button = UIButton()
-        if #available(iOS 13.0, *) {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold)
-            let pencilImage = UIImage(systemName: "photo.on.rectangle", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            button.setImage(pencilImage, for: .normal)
-            button.addTarget(self, action: #selector(didTapAddPictureButton), for: .touchUpInside)
-        }
-        return button
-    }()
-    
-    private let addPictureLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Select file from gallery"
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20)
-        return label
-    }()
+
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
     
@@ -165,17 +199,13 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.edges.equalToSuperview()
         }
         
-        view.addSubview(addPictureButton)
-        view.addSubview(addPictureLabel)
+        view.addSubview(addPictureView)
         
-        addPictureButton.snp.makeConstraints { make in
+        addPictureView.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-40)
             make.leading.equalToSuperview().offset(20)
-        }
-        
-        addPictureLabel.snp.makeConstraints { make in
-            make.centerY.equalTo(addPictureButton)
-            make.leading.equalTo(addPictureButton.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().offset(-20)
+            make.height.equalTo(50)
         }
     }
 
