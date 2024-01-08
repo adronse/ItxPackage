@@ -1,13 +1,16 @@
 import Foundation
 import UIKit
 
+import UIKit
+
+protocol ColorPickerViewDelegate: AnyObject {
+    func colorDidChange(to color: UIColor)
+}
 
 class ColorPickerView: UIView {
     
-    var colorChangedBlock: ((UIColor) -> Void)?
-    private let colorIndicator = UIView(frame: CGRect(x: -25, y: 0, width: 50, height: 50))
-    var onTouchesBegan: (() -> Void)?
-    var onTouchesEnded: (() -> Void)?
+    weak var delegate: ColorPickerViewDelegate?
+    let colorIndicator = UIView(frame: CGRect(x: -25, y: 0, width: 50, height: 50))
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -20,23 +23,13 @@ class ColorPickerView: UIView {
     }
     
     private func setupView() {
-        self.clipsToBounds = false
-        self.addSubview(colorIndicator)
+        self.layer.cornerRadius = 10
+        self.layer.masksToBounds = true
         colorIndicator.layer.cornerRadius = colorIndicator.frame.width / 2
         colorIndicator.layer.borderColor = UIColor.white.cgColor
         colorIndicator.layer.borderWidth = 2
         colorIndicator.layer.masksToBounds = true
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        updateIndicatorPosition()
-    }
-    
-    private func updateIndicatorPosition() {
-        let indicatorPosition = CGPoint(x: self.bounds.width / 2, y: self.bounds.height / 2)
-        colorIndicator.center = indicatorPosition
+        colorIndicator.isHidden = true // Initially hidden
     }
     
     override func draw(_ rect: CGRect) {
@@ -51,64 +44,9 @@ class ColorPickerView: UIView {
         context?.drawLinearGradient(gradient!, start: startPoint, end: endPoint, options: [])
     }
     
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        onTouchesBegan?()
-        colorIndicator.isHidden = false
-        colorIndicator.alpha = 1
-        selectColor(touches: touches)
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesEnded(touches, with: event)
-        onTouchesEnded?()
-        animateIndicatorVisibility(hide: true)
-    }
-
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesCancelled(touches, with: event)
-        animateIndicatorVisibility(hide: true)
-    }
-
-    private func animateIndicatorVisibility(hide: Bool) {
-        UIView.animate(withDuration: 0.2, animations: {
-            self.colorIndicator.alpha = hide ? 0 : 1
-        }, completion: { _ in
-            self.colorIndicator.isHidden = hide
-        })
-    }
-    
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.selectColor(touches: touches)
-    }
-    
-    private func selectColor(touches: Set<UITouch>) {
-        if let touch = touches.first {
-            let point = touch.location(in: self)
-            let color = self.getColor(at: point)
-            self.colorChangedBlock?(color)
-            self.moveIndicator(to: point.y)
-            colorIndicator.backgroundColor = color
-        }
-    }
-    
-    private func moveIndicator(to yPos: CGFloat) {
-        UIView.animate(withDuration: 0.1) {
-            let minY = self.colorIndicator.frame.height / 2
-            let maxY = self.bounds.height - minY
-            
-            let clampedYPos = min(max(yPos, minY), maxY)
-            
-            self.colorIndicator.center.y = clampedYPos
-        }
-    }
-    
     private func getColor(at point: CGPoint) -> UIColor {
         let adjustedYPos = self.bounds.height - max(min(point.y, self.bounds.height), 0)
         let proportion = adjustedYPos / self.bounds.height
-
         let gradientColors: [UIColor] = [.red, .orange, .yellow, .green, .blue, .purple]
         let colorSpace = CGColorSpaceCreateDeviceRGB()
         let colorLocations: [CGFloat] = [0.0, 0.17, 0.34, 0.51, 0.68, 0.85]
@@ -131,18 +69,48 @@ class ColorPickerView: UIView {
         return UIColor(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: CGFloat(a) / 255.0)
     }
 
+    func showColorIndicator(at point: CGPoint) {
+        colorIndicator.isHidden = false
+        colorIndicator.alpha = 1
+        updateIndicatorPosition(at: point)
+    }
+
+    func hideColorIndicator() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.colorIndicator.alpha = 0
+        }, completion: { _ in
+            self.colorIndicator.isHidden = true
+        })
+    }
+
+    func updateIndicatorPosition(at point: CGPoint) {
+        let yPos = max(0, min(point.y, self.bounds.height))
+        let color = self.getColor(at: CGPoint(x: self.bounds.midX, y: yPos))
+        delegate?.colorDidChange(to: color)
+        colorIndicator.backgroundColor = color
+        
+        // Update the center of the indicator relative to the superview
+        if let superview = self.superview {
+            let indicatorCenterX = self.frame.maxX + (colorIndicator.frame.width / 2)
+            let indicatorCenterY = self.frame.minY + yPos
+            colorIndicator.center = CGPoint(x: indicatorCenterX, y: indicatorCenterY)
+        }
+    }
 }
 
 
 
-class DrawOnImageViewController: UIViewController {
+class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
+
+    
+    
     
     private let imageView: UIImageView
     private let drawingView: UIView
     private var currentBezierPath = UIBezierPath()
     private var shapeLayers: [CAShapeLayer] = []
     private var selectedColor: UIColor = .black
-    private let colorPicker = ColorPickerView()
+    private var colorPicker: ColorPickerView!
     
     var didFinishDrawing: ((UIImage) -> Void)?
     
@@ -159,6 +127,7 @@ class DrawOnImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         configureUI()
         addGestures()
         setupColorPicker()
@@ -167,6 +136,7 @@ class DrawOnImageViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        
         colorPicker.layer.cornerRadius = 10
         colorPicker.clipsToBounds = true
         colorPicker.layoutIfNeeded()
@@ -208,18 +178,7 @@ class DrawOnImageViewController: UIViewController {
     }
     
     private func setupColorPicker() {
-        colorPicker.colorChangedBlock = { [weak self] color in
-            self?.selectedColor = color
-        }
-        
-        
-        colorPicker.onTouchesBegan = { [weak self] in
-            self?.drawingView.gestureRecognizers?.forEach { $0.isEnabled = false }
-        }
-        
-        colorPicker.onTouchesEnded = { [weak self] in
-            self?.drawingView.gestureRecognizers?.forEach { $0.isEnabled = true }
-        }
+        colorPicker = ColorPickerView()
         
         view.addSubview(colorPicker)
         
@@ -230,6 +189,14 @@ class DrawOnImageViewController: UIViewController {
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-30)
         }
+        
+        view.addSubview(colorPicker.colorIndicator)
+        colorPicker.delegate = self
+        
+    }
+    
+    func colorDidChange(to color: UIColor) {
+        selectedColor = color
     }
     
     @objc private func saveDrawing()
