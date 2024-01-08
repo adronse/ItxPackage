@@ -146,19 +146,19 @@ class ImageStackView: UIView {
         // Create the cross button
         let crossButton = UIButton(type: .system)
         if #available(iOS 13.0, *) {
-            crossButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+            crossButton.setImage(UIImage(systemName: "xmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))?.withTintColor(.systemPink, renderingMode: .alwaysOriginal), for: .normal)
         }
-        crossButton.tintColor = .white
         crossButton.addTarget(self, action: #selector(removeImage(_:)), for: .touchUpInside)
         crossButton.tag = tag
         
         imageView.addSubview(crossButton)
         
-        // Constraints for crossButton
         crossButton.snp.makeConstraints { make in
-            make.top.right.equalToSuperview().inset(5)
+            make.top.equalTo(imageView.snp.top).offset(5)
+            make.right.equalTo(imageView.snp.right).inset(5)
             make.width.height.equalTo(20)
         }
+        
         
         return imageView
     }
