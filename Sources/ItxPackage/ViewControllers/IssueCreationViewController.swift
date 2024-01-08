@@ -356,14 +356,16 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     @objc private func didTapSendButton() {
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
         
-        issueReport?.reportIssue(title: title, description: description, image: image) { result in
-            switch result {
-            case .success:
+        // Assuming you have an instance of IssueCoordinator, e.g., issueCoordinator
+        issueReport?.reportIssue(title: title, description: description, image: image)
+            .subscribe(onNext: { _ in
+                // Handle success
                 self.delegate?.didCreateIssue()
-            case .failure(let error):
+            }, onError: { error in
+                // Handle error
                 print(error)
-            }
-        }
+            })// Dispose of the subscription when appropriate
+
     }
     
     

@@ -16,12 +16,14 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SnapKit/SnapKit", from: "5.6.0"),
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0")),
     ],
     targets: [
         .target(
             name: "ItxPackage",
             dependencies: [
                 "SnapKit",
+                "RxSwift",
             ]
         ),
         .testTarget(

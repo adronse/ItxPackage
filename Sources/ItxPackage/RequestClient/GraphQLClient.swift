@@ -1,12 +1,5 @@
-//
-//  File.swift
-//
-//
-//  Created by Adrien Ronse on 21/12/2023.
-//
-
 import Foundation
-
+import RxSwift
 
 struct GraphQLResponse<T: Decodable>: Decodable {
     let data: T?
@@ -28,83 +21,96 @@ class GraphQLClient {
         self.apiKey = apiKey
     }
     
-    func performQuery(query: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        let requestBody = [
-            "query": query
-        ]
-        
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
-            completion(.failure(GraphQLError.serializationError))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
+    func performQuery(query: String) -> Observable<Any> {
+        return Observable.create { observer in
+            let requestBody = [
+                "query": query
+            ]
+            
+            guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
+                observer.onError(GraphQLError.serializationError)
+                return Disposables.create()
+            }
+            
+            var request = URLRequest(url: self.url)
+            request.httpMethod = "POST"
+            request.httpBody = httpBody
+            
+            request.setValue(self.apiKey, forHTTPHeaderField: "X-Project-API-Key")
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let task = self.session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
                 
-        request.setValue(apiKey, forHTTPHeaderField: "X-Project-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        
-        let task = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+                guard let data = data else {
+                    observer.onError(GraphQLError.noData)
+                    return
+                }
+                
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+                    observer.onNext(jsonResponse)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
             }
             
-            guard let data = data else {
-                completion(.failure(GraphQLError.noData))
-                return
-            }
+            task.resume()
             
-            do {
-                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                completion(.success(jsonResponse))
-            } catch {
-                completion(.failure(error))
+            return Disposables.create {
+                task.cancel()
             }
         }
-        
-        task.resume()
     }
     
-    func performMutation(mutation: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        let requestBody = [
-            "query": mutation
-        ]
-        
-        guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
-            completion(.failure(GraphQLError.serializationError))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        
-        request.httpMethod = "POST"
-        request.httpBody = httpBody
-        request.setValue("5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8", forHTTPHeaderField: "X-Project-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = session.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(.failure(error))
-                return
+    func performMutation(mutation: String) -> Observable<Any> {
+        return Observable.create { observer in
+            let requestBody = [
+                "query": mutation
+            ]
+            
+            guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
+                observer.onError(GraphQLError.serializationError)
+                return Disposables.create()
             }
             
-            guard let data = data else {
-                completion(.failure(GraphQLError.noData))
-                return
+            var request = URLRequest(url: self.url)
+            
+            request.httpMethod = "POST"
+            request.httpBody = httpBody
+            request.setValue("5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8", forHTTPHeaderField: "X-Project-API-Key")
+            request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+            
+            let task = self.session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
+                
+                guard let data = data else {
+                    observer.onError(GraphQLError.noData)
+                    return
+                }
+                
+                do {
+                    let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
+                    observer.onNext(jsonResponse)
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
             }
             
-            do {
-                let jsonResponse = try JSONSerialization.jsonObject(with: data, options: [])
-                completion(.success(jsonResponse))
-            } catch {
-                completion(.failure(error))
+            task.resume()
+            
+            return Disposables.create {
+                task.cancel()
             }
         }
-        
-        task.resume()
     }
 }
 
@@ -113,27 +119,24 @@ enum GraphQLError: Error {
     case noData
 }
 
-
 extension GraphQLClient {
-    func unpackQueryResult<T: Decodable>(_ result: Result<Any, Error>, completion: @escaping (Result<T, Error>) -> Void) {
-        switch result {
-        case .success(let jsonResponse):
+    func unpackQueryResult<T: Decodable>(_ result: Observable<Any>) -> Observable<Result<T, Error>> {
+        return result.flatMap { jsonResponse -> Observable<Result<T, Error>> in
             do {
                 let jsonData = try JSONSerialization.data(withJSONObject: jsonResponse, options: [])
                 let graphQLResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: jsonData)
                 
                 if let data = graphQLResponse.data {
-                    completion(.success(data))
+                    return .just(.success(data))
                 } else if graphQLResponse.errors != nil {
                     // TODO: handle errors
+                    return .just(.failure(GraphQLError.serializationError))
                 } else {
-                    completion(.failure(GraphQLError.serializationError))
+                    return .just(.failure(GraphQLError.serializationError))
                 }
             } catch {
-                completion(.failure(error))
+                return .just(.failure(error))
             }
-        case .failure(let error):
-            completion(.failure(error))
         }
     }
 }
