@@ -205,7 +205,6 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private func configureUI() {
         view.backgroundColor = .black
         
-        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         
