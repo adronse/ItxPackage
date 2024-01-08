@@ -388,7 +388,7 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
     }
     
     func correctImageOrientation(_ img: UIImage) -> UIImage? {
-        if img.imageOrientation == .up {
+        if img.imageOrientation == .down {
             return img
         }
         
