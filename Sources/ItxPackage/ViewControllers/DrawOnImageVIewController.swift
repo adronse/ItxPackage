@@ -150,12 +150,10 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
+        setupNavigationBar()
         configureUI()
         addGestures()
         setupColorPicker()
-        setupNavigationBar()
     }
     
     override func viewDidLayoutSubviews() {
@@ -219,7 +217,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.colorIndicator.snp.makeConstraints { make in
             make.width.height.equalTo(50)
             make.centerY.equalTo(colorPicker.snp.centerY)
-            make.right.equalTo(colorPicker.snp.left)
+            make.right.equalTo(colorPicker.snp.left).offset(25)
         }
     }
     
