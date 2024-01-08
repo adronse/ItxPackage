@@ -77,6 +77,68 @@ class AddPictureView: UIView {
     
 }
 
+class ImageStackView: UIView {
+    
+    private let stackView = UIStackView()
+    var onImageTapped: ((Int) -> Void)?
+    
+    var images: [UIImage] = [] {
+        didSet {
+            updateImages()
+        }
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    private func setupView() {
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 8
+        
+        addSubview(stackView)
+        
+        stackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        self.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        self.addGestureRecognizer(tapGesture)
+    }
+    
+    private func updateImages() {
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        
+        for (index, image) in images.enumerated() {
+            let imageView = UIImageView(image: image)
+            imageView.contentMode = .scaleAspectFill
+            imageView.clipsToBounds = true
+            imageView.isUserInteractionEnabled = true
+            imageView.tag = index
+            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapImage)))
+            stackView.addArrangedSubview(imageView)
+        }
+    }
+    
+    @objc private func didTapView() {
+        onImageTapped?(-1)
+    }
+    
+    @objc private func didTapImage(_ sender: UITapGestureRecognizer) {
+        guard let imageView = sender.view as? UIImageView else { return }
+        onImageTapped?(imageView.tag)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+
 
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -84,6 +146,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     private let imageView: UIImageView
     private let addPictureView = AddPictureView()
+    private let imageStackView = ImageStackView()
     
     var delegate: IssueCreationViewControllerDelegate?
     var issueReport: IssueReporting?
@@ -150,9 +213,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         
-        let tapGestureOnImageBox = UITapGestureRecognizer(target: self, action: #selector(handleImageBoxTap))
-        tapGestureOnImageBox.delegate = self
-        imageBox.addGestureRecognizer(tapGestureOnImageBox)
     }
     
     private func configureUI() {
@@ -207,19 +267,16 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.left.right.equalTo(issueDescriptionFieldHeader)
         }
         
-        view.addSubview(imageBox)
-        imageBox.addSubview(imageView)
+        
+        view.addSubview(imageStackView)
         
         
-        imageBox.snp.makeConstraints { make in
-            make.top.equalTo(issueDescriptionField.snp.bottom).offset(50)
-            make.left.equalTo(issueDescriptionField)
-            make.size.equalTo(40)
+        imageStackView.snp.makeConstraints { make in
+            make.top.equalTo(issueDescriptionField.snp.bottom).offset(20)
+            make.left.right.equalTo(issueDescriptionField)
+            make.height.equalTo(100)
         }
         
-        imageView.snp.makeConstraints { make     in
-            make.edges.equalToSuperview()
-        }
         
         view.addSubview(addPictureView)
         
@@ -241,10 +298,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         self.delegate?.didTapCross()
     }
     
-    
-    private lazy var imageBox = UIView()
-        .with(\.layer.cornerRadius, value: 5)
-        .with(\.layer.masksToBounds, value: true)
+
     
     @objc private func didTapSendButton() {
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
