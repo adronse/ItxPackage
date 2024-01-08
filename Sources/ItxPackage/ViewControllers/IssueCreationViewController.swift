@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
-
+import Photos
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
     
@@ -72,11 +72,19 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         let button = UIButton()
         if #available(iOS 13.0, *) {
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold)
-            let pencilImage = UIImage(systemName: "camera", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
+            let pencilImage = UIImage(systemName: "photo.on.rectangle", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
             button.setImage(pencilImage, for: .normal)
             button.addTarget(self, action: #selector(didTapAddPictureButton), for: .touchUpInside)
         }
         return button
+    }()
+    
+    private let addPictureLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Select file from gallery"
+        label.textColor = .white
+        label.font = UIFont.systemFont(ofSize: 20)
+        return label
     }()
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
@@ -158,17 +166,19 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         }
         
         view.addSubview(addPictureButton)
+        view.addSubview(addPictureLabel)
         
         addPictureButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-20)
-            make.centerX.equalToSuperview()
+            make.leading.equalToSuperview().offset(20)
+        }
+        
+        addPictureLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(addPictureButton)
+            make.leading.equalTo(addPictureButton.snp.trailing).offset(10)
         }
     }
-    
-    
-    @objc private func didTapAddPictureButton() {
-        delegate?.didTapAddPicture()
-    }
+
     
     @objc private func handleTap() {
         view.endEditing(true)
@@ -221,5 +231,38 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         navigationController.modalPresentationStyle = .fullScreen
         
         present(navigationController, animated: true, completion: nil)
+    }
+}
+
+extension IssueCreationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    @objc public func didTapAddPictureButton() {
+        // Check if the photo library is available
+        guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
+
+        // Create and configure the image picker
+        let imagePicker = UIImagePickerController()
+        imagePicker.sourceType = .photoLibrary
+        imagePicker.delegate = self
+
+        // Present the image picker
+        present(imagePicker, animated: true)
+    }
+
+    // UIImagePickerControllerDelegate method
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        // Extract the image from the info dictionary
+        if let selectedImage = info[.originalImage] as? UIImage {
+            // Update your imageView with the selected image
+            imageView.image = selectedImage
+        }
+
+        // Dismiss the picker
+        picker.dismiss(animated: true)
+    }
+
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        // Dismiss the picker if the user canceled
+        picker.dismiss(animated: true)
     }
 }
