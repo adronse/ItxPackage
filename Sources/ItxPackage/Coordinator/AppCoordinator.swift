@@ -24,7 +24,8 @@ public class ScreenshotCoordinator: Coordinator {
     }
     
     public func start() {
-        let popupViewController = ThankYouPopupViewController()
+        let popupViewController = PopupViewController(imageView: imageView)
+        popupViewController.delegate = self
         presentingController.present(popupViewController, animated: true, completion: nil)
     }
 }
