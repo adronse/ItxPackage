@@ -10,56 +10,78 @@ import UIKit
 import SnapKit
 import Photos
 
-class AddPictureView: UIView
-{
+import UIKit
+import SnapKit
+
+class AddPictureView: UIView {
     
-    private let addPictureButton: UIButton = {
-        let button = UIButton()
-        if #available(iOS 13.0, *) {
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 35, weight: .bold)
-            let pencilImage = UIImage(systemName: "photo.on.rectangle", withConfiguration: largeConfig)?.withTintColor(.white, renderingMode: .alwaysOriginal)
-            button.setImage(pencilImage, for: .normal)
-        }
-        return button
-    }()
-    
-    private let addPictureLabel: UILabel = {
-        let label = UILabel()
-        label.text = "Select file from gallery"
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 20)
-        return label
-    }()
-    
-    private let addPictureStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        return stackView
-    }()
+    private let stackView = UIStackView()
+    var onAddPictureTapped: (() -> Void)?
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupView()
+        setupView()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupView()
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupView()
     }
     
-    private func setupView()
-    {
-        self.backgroundColor = UIColor.from(hex: "#292A2F")
-        self.addSubview(addPictureStackView)
-        addPictureStackView.addArrangedSubview(addPictureButton)
-        addPictureStackView.addArrangedSubview(addPictureLabel)
-        addPictureStackView.snp.makeConstraints { (make) in
-            make.center.equalToSuperview()
+    
+    private lazy var addPicture: UIImageView = {
+        if #available(iOS 13.0, *) {
+            let imageView = UIImageView(image: UIImage(systemName: "photo.on.rectangle", withConfiguration: UIImage.SymbolConfiguration(weight: .medium)))
+            imageView.isUserInteractionEnabled = true
+            imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addPictureButtonTapped)))
+            return imageView
         }
+        return UIImageView()
+    }()
+    
+    private lazy var label = UILabel()
+        .with(\.text, value: "Add a picture")
+        .with(\.font, value: .systemFont(ofSize: 16, weight: .medium))
+    
+    private func setupView() {
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.distribution = .fillProportionally
+        stackView.spacing = 8
+        
+        
+        stackView.addArrangedSubview(addPicture)
+        stackView.addArrangedSubview(label)
+        addSubview(stackView)
+        
+        // Setup the image view
+        addPicture.contentMode = .scaleAspectFit
+        
+        // Setup the label
+        label.textColor = .white
+        
+        // Setup constraints using SnapKit
+        stackView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Setup the tap gesture
+        self.isUserInteractionEnabled = true
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        self.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc private func addPictureButtonTapped() {
+        onAddPictureTapped?()
+    }
+    
+    @objc private func didTapView() {
+        onAddPictureTapped?()
     }
     
 }
+
 
 
 public class IssueCreationViewController: UIViewController, UIGestureRecognizerDelegate {
@@ -119,7 +141,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private lazy var issueDescriptionField = UITextField()
         .with(\.placeholder, value: "Describe your issue")
         .with(\.isUserInteractionEnabled, value: true)
-
+    
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //
     
@@ -139,6 +161,11 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     }
     
     private func configureUI() {
+        
+        addPictureView.onAddPictureTapped = { [weak self] in
+            self?.didTapAddPictureButton()
+        }
+        
         setupNavigationBar()
         setupForm()
     }
@@ -208,7 +235,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
             make.height.equalTo(50)
         }
     }
-
+    
     
     @objc private func handleTap() {
         view.endEditing(true)
@@ -269,16 +296,16 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
     @objc public func didTapAddPictureButton() {
         // Check if the photo library is available
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
-
+        
         // Create and configure the image picker
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-
+        
         // Present the image picker
         present(imagePicker, animated: true)
     }
-
+    
     // UIImagePickerControllerDelegate method
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         // Extract the image from the info dictionary
@@ -286,11 +313,11 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
             // Update your imageView with the selected image
             imageView.image = selectedImage
         }
-
+        
         // Dismiss the picker
         picker.dismiss(animated: true)
     }
-
+    
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         // Dismiss the picker if the user canceled
         picker.dismiss(animated: true)
