@@ -35,7 +35,6 @@ class ThankYouPopupViewController: UIViewController {
     }
 
     private func setupPopupView() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         view.addSubview(popupView)
 
 
@@ -63,12 +62,12 @@ class ThankYouPopupViewController: UIViewController {
         }
         
         thankYouLabel.snp.makeConstraints { make in
-            make.top.equalTo(checkMarkIcon.snp.bottom).offset(10)
+            make.top.equalTo(checkMarkIcon.snp.bottom).offset(20)
             make.centerX.equalToSuperview()
         }
         
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(thankYouLabel.snp.bottom).offset(10)
+            make.top.equalTo(thankYouLabel.snp.bottom).offset(20)
             make.left.equalToSuperview().offset(10)
             make.right.equalToSuperview().offset(-10)
         }
