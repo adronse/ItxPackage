@@ -79,8 +79,7 @@ class PopupViewController: UIViewController {
             make.width.equalTo(330)
             make.height.equalTo(280)
         }
-        
-        // Customize the appearance of the popup view
+    
         configurePopupView()
     }
     

@@ -115,7 +115,6 @@ class IssueCoordinator: IssueReporting {
                 }
             }
         } else {
-            // Call directly if there is no image to upload
             createMobileIssue(title: title, description: description, preSignedUrlId: nil, completion: completion)
         }
     }

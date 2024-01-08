@@ -36,7 +36,6 @@ public final class InputContainerView<Title: UIView, Input: UIView>: UIControl {
         layer.shadowOpacity = 0.2
         layer.shadowRadius = 3
         
-        // proxy touch to input
         addGestureRecognizer(UITapGestureRecognizer().onChange(do: { [weak self] _ in
             self?.input.becomeFirstResponder()
         }))
