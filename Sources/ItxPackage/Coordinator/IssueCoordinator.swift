@@ -68,18 +68,50 @@ class IssueCoordinator: IssueReporting {
     
     func createMobileIssue(title: String, description: String, preSignedUrlId: String?) -> Observable<Void> {
         return Observable.create { observer in
-            let mutation =
-                """
-                mutation {
-                    createMobileIssue(input: {
-                        title: "\(title)"
-                        description: "\(description)"
-                        preSignedUrlId: "\(preSignedUrlId ?? "")"
-                    }) {
-                        id
+            
+            let preSignedBlobString: String
+            
+            if let preSignedUrlId = preSignedUrlId {
+                preSignedBlobString = """
+                            preSignedBlob: {
+                                preSignedUrlId: "\(preSignedUrlId)",
+                                type: SCREENSHOT
+                            }
+                            """
+            } else {
+                preSignedBlobString = ""
+            }
+            
+            let deviceInfo = DeviceInfo.getDeviceInfo()
+            
+            let viewControllers = NavigationTracker.shared.getHistory()
+            
+            let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
+            
+            let mutation = """
+            mutation {
+                createMobileIssue(input: {
+                    apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
+                    title: "\(title)",
+                    description: "\(description)"
+                    priority: NONE,
+                    appConsumerVersion: "\(deviceInfo.AppConsumerVersion)",
+                    deviceModel: "\(deviceInfo.DeviceModel)",
+                    deviceType: "\(deviceInfo.DeviceType)",
+                    screenSize: "\(deviceInfo.ScreenSize)",
+                    deviceName: "\(deviceInfo.DeviceName)"
+                    systemVersion: "\(deviceInfo.SystemVersion)",
+                    locale: "\(deviceInfo.Locale)",
+                    viewControllersHistory: \(viewControllerHistoryArray)
+                    \(preSignedBlobString)
+                }) {
+                    id
+                    preview {
+                        url
                     }
                 }
-                """
+            }
+            """
             
             self.graphQLClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreateMobileIssueResponse>) in
@@ -233,30 +265,7 @@ class IssueCoordinator: IssueReporting {
 //
 //            let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
 //
-//            let mutation = """
-//            mutation {
-//                createMobileIssue(input: {
-//                    apiKey: "5fb12f36-555d-484b-8f5d-d1e5b0eb4ec8",
-//                    title: "\(title)",
-//                    description: "\(description)"
-//                    priority: NONE,
-//                    appConsumerVersion: "\(deviceInfo.AppConsumerVersion)",
-//                    deviceModel: "\(deviceInfo.DeviceModel)",
-//                    deviceType: "\(deviceInfo.DeviceType)",
-//                    screenSize: "\(deviceInfo.ScreenSize)",
-//                    deviceName: "\(deviceInfo.DeviceName)"
-//                    systemVersion: "\(deviceInfo.SystemVersion)",
-//                    locale: "\(deviceInfo.Locale)",
-//                    viewControllersHistory: \(viewControllerHistoryArray)
-//                    \(preSignedBlobString)
-//                }) {
-//                    id
-//                    preview {
-//                        url
-//                    }
-//                }
-//            }
-//            """
+
 //
 //
 //            graphQLClient.performRequest(query: mutation, method: .POST)
