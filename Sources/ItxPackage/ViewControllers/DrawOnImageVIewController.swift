@@ -20,6 +20,7 @@ class ColorPickerView: UIView {
     }
     
     private func setupView() {
+        self.clipsToBounds = false
         self.addSubview(colorIndicator)
         colorIndicator.layer.cornerRadius = colorIndicator.frame.width / 2
         colorIndicator.layer.borderColor = UIColor.white.cgColor
