@@ -143,7 +143,31 @@ class ImageStackView: UIView {
             make.width.height.equalTo(30)
         }
         
+        // Create the cross button
+        let crossButton = UIButton(type: .system)
+        if #available(iOS 13.0, *) {
+            crossButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
+        }
+        crossButton.tintColor = .white
+        crossButton.addTarget(self, action: #selector(removeImage(_:)), for: .touchUpInside)
+        crossButton.tag = tag
+        
+        imageView.addSubview(crossButton)
+        
+        // Constraints for crossButton
+        crossButton.snp.makeConstraints { make in
+            make.top.right.equalToSuperview().inset(5)
+            make.width.height.equalTo(20)
+        }
+        
         return imageView
+    }
+    
+    @objc private func removeImage(_ sender: UIButton) {
+        let tag = sender.tag
+        guard images.indices.contains(tag) else { return }
+        images.remove(at: tag)
+        updateImages()
     }
     
     @objc private func didTapView() {
@@ -352,7 +376,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private func presentDrawOnImageViewController(with image: UIImage, index: Int) {
         let drawOnImageViewController = DrawOnImageViewController(image: image)
         drawOnImageViewController.modalPresentationStyle = .fullScreen
-
+        
         drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageStackView.images[index] = modifiedImage
             self?.imageStackView.updateImages()
