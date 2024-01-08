@@ -248,11 +248,11 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     @objc private func toggleColorPicker() {
         if colorPicker.isHidden {
             colorPicker.isHidden = false
-            UIView.animate(withDuration: 0.3) {
+            UIView.animate(withDuration: 0.1) {
                 self.colorPicker.alpha = 1
             }
         } else {
-            UIView.animate(withDuration: 0.3, animations: {
+            UIView.animate(withDuration: 0.1, animations: {
                 self.colorPicker.alpha = 0
             }) { _ in
                 self.colorPicker.isHidden = true
