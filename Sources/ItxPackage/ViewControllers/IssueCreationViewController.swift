@@ -327,7 +327,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         self.delegate?.didTapCross()
     }
     
-
+    
     
     @objc private func didTapSendButton() {
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
@@ -352,7 +352,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private func presentDrawOnImageViewController(with image: UIImage, index: Int) {
         let drawOnImageViewController = DrawOnImageViewController(image: image)
         drawOnImageViewController.modalPresentationStyle = .fullScreen
-        
+
         drawOnImageViewController.didFinishDrawing = { [weak self] modifiedImage in
             self?.imageStackView.images[index] = modifiedImage
             self?.imageStackView.updateImages()
@@ -362,7 +362,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         navigationController.modalPresentationStyle = .fullScreen
         present(navigationController, animated: true, completion: nil)
     }
-
+    
 }
 
 extension IssueCreationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -376,17 +376,28 @@ extension IssueCreationViewController: UIImagePickerControllerDelegate, UINaviga
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
         
-
+        
         present(imagePicker, animated: true)
     }
     
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let selectedImage = info[.originalImage] as? UIImage {
-            imageStackView.addImage(selectedImage)
+        if let selectedImage = info[.originalImage] as? UIImage, let correctedImage = correctImageOrientation(selectedImage) {
+            imageStackView.addImage(correctedImage)
+        }
+        picker.dismiss(animated: true)
+    }
+    
+    func correctImageOrientation(_ img: UIImage) -> UIImage? {
+        if img.imageOrientation == .up {
+            return img
         }
         
-        // Dismiss the picker
-        picker.dismiss(animated: true)
+        UIGraphicsBeginImageContextWithOptions(img.size, false, img.scale)
+        img.draw(in: CGRect(origin: .zero, size: img.size))
+        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return normalizedImage
     }
     
     public func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
