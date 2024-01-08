@@ -131,6 +131,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     private var shapeLayers: [CAShapeLayer] = []
     private var selectedColor: UIColor = .black
     private var colorPicker: ColorPickerView!
+    private var originalImage: UIImage?
+
     
     var didFinishDrawing: ((UIImage) -> Void)?
     
@@ -147,11 +149,12 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     }()
     
     init(image: UIImage) {
+        self.originalImage = image
         self.imageView = UIImageView(image: image)
         self.drawingView = UIView()
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -260,26 +263,27 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         }
     }
     
-    @objc private func saveDrawing()
-    {
-        guard imageView.image != nil else {
+    @objc private func saveDrawing() {
+        guard let originalImage = originalImage else {
             dismiss(animated: true, completion: nil)
             return
         }
-        
+
         DispatchQueue.main.async {
             self.colorPicker.isHidden = true
-            
-            let renderer = UIGraphicsImageRenderer(size: self.view.bounds.size)
-            let imageWithDrawing = renderer.image { _ in
-                self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+
+            let renderer = UIGraphicsImageRenderer(size: originalImage.size)
+            let imageWithDrawing = renderer.image { context in
+                originalImage.draw(at: .zero)
+                self.drawingView.layer.render(in: context.cgContext)
             }
-            
+
+            self.imageView.image = imageWithDrawing
             self.didFinishDrawing?(imageWithDrawing)
             self.dismiss(animated: true, completion: nil)
         }
-        
     }
+
     
     @objc private func handlePan(_ gesture: UIPanGestureRecognizer) {
         let point = gesture.location(in: drawingView)
@@ -314,9 +318,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     @objc private func clearDrawing() {
         shapeLayers.forEach { $0.removeFromSuperlayer() }
         shapeLayers.removeAll()
+        imageView.image = originalImage
     }
-    
-    
 }
 
 
