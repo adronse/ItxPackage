@@ -302,7 +302,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         imageStackView.snp.makeConstraints { make in
             make.top.equalTo(issueDescriptionField.snp.bottom).offset(20)
-            make.left.right.equalTo(issueDescriptionField)
+            make.left.equalToSuperview().offset(20)
             make.height.equalTo(100)
         }
         
