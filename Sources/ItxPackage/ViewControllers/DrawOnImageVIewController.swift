@@ -178,9 +178,10 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     {
         view.addSubview(pencilButton)
         pencilButton.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(50)
+            make.right.equalToSuperview().offset(-30)
+            make.centerY.equalToSuperview().multipliedBy(0.66)
+            make.width.equalTo(20)
+            make.height.equalTo(200)
         }
     }
     
@@ -225,8 +226,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.delegate = self
         
         colorPicker.snp.makeConstraints { make in
-            make.right.equalToSuperview().offset(-30)
-            make.centerY.equalToSuperview().multipliedBy(0.66)
+            make.right.equalTo(pencilButton)
+            make.top.equalTo(pencilButton.snp.bottom).offset(20)
             make.width.equalTo(20)
             make.height.equalTo(200)
         }
