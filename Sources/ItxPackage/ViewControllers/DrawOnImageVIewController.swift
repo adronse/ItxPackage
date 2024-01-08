@@ -175,10 +175,9 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         super.viewDidLayoutSubviews()
         
         calculateImageScaleAndOffset()
-        
+        drawingView.layoutIfNeeded()
         colorPicker.layer.cornerRadius = 10
         colorPicker.layoutIfNeeded()
-        
     }
     
     
@@ -312,6 +311,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
             startNewPath(at: transformedPoint)
         case .changed:
             continuePath(to: transformedPoint)
+            shapeLayers.last?.path = currentBezierPath.cgPath
         default:
             break
         }
@@ -323,6 +323,9 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
     }
     
     private func startNewPath(at point: CGPoint) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        
         let shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = selectedColor.cgColor
         shapeLayer.lineWidth = 5
@@ -332,6 +335,8 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         shapeLayer.path = currentBezierPath.cgPath
         drawingView.layer.addSublayer(shapeLayer)
         shapeLayers.append(shapeLayer)
+        
+        CATransaction.commit()
     }
     
     private func continuePath(to point: CGPoint) {
