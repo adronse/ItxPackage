@@ -65,6 +65,8 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
 }
 
 extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
+
+    
     func didTapAddPicture() {
         
     }
