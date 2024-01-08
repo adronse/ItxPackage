@@ -21,10 +21,12 @@ class ThankYouPopupViewController: UIViewController {
     
     private lazy var thankYouLabel = UILabel()
         .with(\.text, value: "Thank you")
+        .with(\.font, value: .systemFont(ofSize: 16, weight: .bold))
     
     private lazy var descriptionLabel = UILabel()
         .with(\.text, value: "Your issue has been sent to Iteration X")
         .with(\.textAlignment, value: .center)
+        .with(\.font, value: .systemFont(ofSize: 12, weight: .regular))
         .with(\.numberOfLines, value: 0)
 
     override func viewDidLoad() {
