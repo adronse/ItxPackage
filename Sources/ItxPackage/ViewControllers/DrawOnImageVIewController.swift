@@ -216,7 +216,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.colorIndicator.snp.makeConstraints { make in
             make.width.height.equalTo(50)
             make.centerY.equalTo(colorPicker.snp.centerY)
-            make.right.equalTo(colorPicker.snp.left).offset(25)
+            make.trailing.equalTo(colorPicker.snp.left).offset(25)
         }
     }
 
