@@ -143,7 +143,7 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         } else {
             // Fallback on earlier versions
         } // Use a pencil icon
-        button.addTarget(DrawOnImageViewController.self, action: #selector(toggleColorPicker), for: .touchUpInside)
+        button.addTarget(self, action: #selector(toggleColorPicker), for: .touchUpInside)
         return button
     }()
     
