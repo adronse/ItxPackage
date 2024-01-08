@@ -148,6 +148,7 @@ class ImageStackView: UIView {
         if #available(iOS 13.0, *) {
             crossButton.setImage(UIImage(systemName: "xmark.circle.fill", withConfiguration: UIImage.SymbolConfiguration(weight: .medium))?.withTintColor(.systemPink, renderingMode: .alwaysOriginal), for: .normal)
         }
+        crossButton.tintColor = .white
         crossButton.addTarget(self, action: #selector(removeImage(_:)), for: .touchUpInside)
         crossButton.tag = tag
         
@@ -156,7 +157,7 @@ class ImageStackView: UIView {
         crossButton.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.top)
             make.right.equalTo(imageView.snp.right)
-            make.width.height.equalTo(20)
+            make.width.height.equalTo(25)
         }
         
         
