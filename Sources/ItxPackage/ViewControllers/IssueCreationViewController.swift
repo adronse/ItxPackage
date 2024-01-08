@@ -141,7 +141,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         .with(\.text, value: "Description")
     
     private lazy var issueDescriptionField = UITextField()
-        .with(\.placeholder, value: "Please be as detailed as possible about the issue you are facing")
+        .with(\.placeholder, value: "Describe your issue")
         .with(\.isUserInteractionEnabled, value: true)
     
     //------------------------------------------------------------------------------------------------------------ UI ------------------------------------------------------------------------------------------------ //

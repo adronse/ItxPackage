@@ -129,7 +129,7 @@ class DrawOnImageViewController: UIViewController {
     private let drawingView: UIView
     private var currentBezierPath = UIBezierPath()
     private var shapeLayers: [CAShapeLayer] = []
-    private var selectedColor: UIColor = .black // Default drawing color
+    private var selectedColor: UIColor = .black
     private let colorPicker = ColorPickerView()
     
     var didFinishDrawing: ((UIImage) -> Void)?

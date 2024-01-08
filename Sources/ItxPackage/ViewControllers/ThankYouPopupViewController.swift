@@ -31,7 +31,7 @@ class ThankYouPopupViewController: UIViewController {
     }
 
     private func setupPopupView() {
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.5) // Semi-transparent background
+        view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
         view.addSubview(popupView)
 
 
@@ -66,7 +66,7 @@ class ThankYouPopupViewController: UIViewController {
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(thankYouLabel.snp.bottom).offset(10)
             make.centerX.equalToSuperview()
-            make.bottom.equalTo(popupView.snp.bottom).offset(-20) // Padding at the bottom
+            make.bottom.equalTo(popupView.snp.bottom).offset(-20)
         }
 
         thankYouLabel.font = UIFont.boldSystemFont(ofSize: 18)
