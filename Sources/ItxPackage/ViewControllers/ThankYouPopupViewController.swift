@@ -24,6 +24,8 @@ class ThankYouPopupViewController: UIViewController {
     
     private lazy var descriptionLabel = UILabel()
         .with(\.text, value: "Your issue has been sent to Iteration X")
+        .with(\.textAlignment, value: .center)
+        .with(\.numberOfLines, value: 0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
