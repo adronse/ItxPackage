@@ -89,9 +89,8 @@ class ColorPickerView: UIView {
         delegate?.colorDidChange(to: color)
         colorIndicator.backgroundColor = color
         
-        // Update the center of the indicator relative to the superview
-        if let superview = self.superview {
-            let indicatorCenterX = self.frame.maxX + (colorIndicator.frame.width / 2)
+        if let _ = self.superview {
+            let indicatorCenterX = self.frame.minX - (colorIndicator.frame.width / 2)
             let indicatorCenterY = self.frame.minY + yPos
             colorIndicator.center = CGPoint(x: indicatorCenterX, y: indicatorCenterY)
         }
@@ -216,10 +215,10 @@ class DrawOnImageViewController: UIViewController, ColorPickerViewDelegate {
         colorPicker.colorIndicator.snp.makeConstraints { make in
             make.width.height.equalTo(50)
             make.centerY.equalTo(colorPicker.snp.centerY)
-            make.right.equalTo(colorPicker.snp.left).offset(-200)
+            make.right.equalTo(colorPicker.snp.left)
         }
     }
-
+    
     
     func colorDidChange(to color: UIColor) {
         selectedColor = color
