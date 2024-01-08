@@ -16,7 +16,6 @@ class PopupViewController: UIViewController {
     
     private let reportButtonData = [
         ("Report a bug", "Something in the app is broken or doesn't work as expected", "ladybug"),
-        ("Suggest an improvement", "New ideas or desired enhancements for this app", "megaphone")
     ]
     
     init(imageView: UIImageView) {

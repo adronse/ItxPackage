@@ -24,8 +24,7 @@ public class ScreenshotCoordinator: Coordinator {
     }
     
     public func start() {
-        let issueCoordinator = IssueCoordinator(graphQLClient: GraphQLClientFactory.createClient())
-        let popupViewController = IssueCreationViewController(image: imageView, issueReport: issueCoordinator)
+        let popupViewController = PopupViewController(imageView: imageView)
         popupViewController.delegate = self
         presentingController.present(popupViewController, animated: true, completion: nil)
     }
