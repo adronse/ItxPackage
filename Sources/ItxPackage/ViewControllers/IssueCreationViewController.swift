@@ -154,8 +154,8 @@ class ImageStackView: UIView {
         imageView.addSubview(crossButton)
         
         crossButton.snp.makeConstraints { make in
-            make.top.equalTo(imageView.snp.top).offset(5)
-            make.right.equalTo(imageView.snp.right).inset(5)
+            make.top.equalTo(imageView.snp.top)
+            make.right.equalTo(imageView.snp.right)
             make.width.height.equalTo(20)
         }
         
