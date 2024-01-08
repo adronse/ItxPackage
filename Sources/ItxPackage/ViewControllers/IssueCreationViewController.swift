@@ -20,7 +20,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     init(image: UIImageView, issueReport: IssueCoordinator) {
         self.imageView = image
-        self.baseImage = imageView.image
         self.issueReport = issueReport
         super.init(nibName: nil, bundle: nil)
     }
