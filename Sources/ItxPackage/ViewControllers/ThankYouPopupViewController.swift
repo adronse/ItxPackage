@@ -48,8 +48,8 @@ class ThankYouPopupViewController: UIViewController {
 
         popupView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.equalToSuperview().multipliedBy(0.8) // 80% of screen width
-            make.height.equalTo(popupView.snp.width) // half the width for height
+            make.width.equalToSuperview().multipliedBy(0.8)
+            make.height.equalTo(popupView.snp.width)
         }
 
         checkMarkIcon.snp.makeConstraints { make in
@@ -60,12 +60,10 @@ class ThankYouPopupViewController: UIViewController {
 
         thankYouLabel.snp.makeConstraints { make in
             make.top.equalTo(checkMarkIcon.snp.bottom).offset(20)
-            make.centerX.equalToSuperview()
         }
 
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(thankYouLabel.snp.bottom).offset(10)
-            make.centerX.equalToSuperview()
             make.bottom.equalTo(popupView.snp.bottom).offset(-20)
         }
 
