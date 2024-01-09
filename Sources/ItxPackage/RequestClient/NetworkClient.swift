@@ -27,7 +27,7 @@ class NetworkClient {
         self.scheduler = SerialDispatchQueueScheduler(qos: .default)
     }
     
-    func getPreSignedURL() -> Observable<GraphQLResponse<PreSignedURLResponse>> {
+    func getPreSignedURL() -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>> {
         let query = """
             mutation {
                 createPreSignedUrl(

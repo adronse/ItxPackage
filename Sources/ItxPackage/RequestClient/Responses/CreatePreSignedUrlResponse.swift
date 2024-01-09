@@ -8,6 +8,10 @@
 import Foundation
 
 
+struct CreatePreSignedUrlResponse: Decodable {
+    let createPreSignedUrl: PreSignedURLResponse
+}
+
 struct PreSignedURLResponse: Decodable {
     let url: String
     let id: String
