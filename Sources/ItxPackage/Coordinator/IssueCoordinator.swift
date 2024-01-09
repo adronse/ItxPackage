@@ -17,23 +17,31 @@ class IssueCoordinator: IssueReporting {
     
     func reportIssue(title: String, description: String, image: UIImage?) -> Observable<Void> {
         if let image = image, let _ = convertImageToJPEGData(image: image) {
-              let contentType = "image/jpeg"
-              
-              return createPreSignedUrl(image: image, contentType: contentType)
-                  .flatMap { [weak self] preSignedUrl -> Observable<String?> in
-                      guard let self = self else { return Observable.just(nil) }
-                      return self.networkClient.uploadImageToPreSignedUrl(data: preSignedUrl, image: image)
-                          .map { _ in preSignedUrl.id }
-                          .catchAndReturn(nil)
-                  }
-                  .flatMap { [weak self] preSignedUrlId -> Observable<Void> in
-                      guard let self = self else { return Observable.empty() }
-                      return self.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrlId)
-                  }
-          } else {
-              return createMobileIssue(title: title, description: description, preSignedUrlId: nil)
-          }
-      }
+            let contentType = "image/jpeg"
+            
+            
+            print("Creating pre signed url")
+            
+            return createPreSignedUrl(image: image, contentType: contentType)
+                .flatMap { [weak self] preSignedUrl -> Observable<String?> in
+                    guard let self = self else { return Observable.just(nil) }
+                    
+                    print("Uploading image to pre signed url")
+                    
+                    return self.networkClient.uploadImageToPreSignedUrl(data: preSignedUrl, image: image)
+                        .map { _ in preSignedUrl.id }
+                        .catchAndReturn(nil)
+                }
+                .flatMap { [weak self] preSignedUrlId -> Observable<Void> in
+                    guard let self = self else { return Observable.empty() }
+                    
+                    print("Creating mobile issue")
+                    return self.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrlId)
+                }
+        } else {
+            return createMobileIssue(title: title, description: description, preSignedUrlId: nil)
+        }
+    }
     
     func createPreSignedUrl(image: UIImage, contentType: String) -> Observable<PreSignedUrl> {
         return Observable.create { observer in
@@ -114,6 +122,8 @@ class IssueCoordinator: IssueReporting {
                 }
             }
             """
+            
+            print("Creating mobile issue")
             
             self.networkClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreateMobileIssueResponse>) in
