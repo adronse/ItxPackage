@@ -110,7 +110,6 @@ class IssueCoordinator: IssueReporting {
                 deviceName: "\(deviceInfo.DeviceName)"
                 systemVersion: "\(deviceInfo.SystemVersion)",
                 locale: "\(deviceInfo.Locale)",
-                viewControllersHistory: \(viewControllers)
                 \(preSignedBlobString)
             }) {
                 id
