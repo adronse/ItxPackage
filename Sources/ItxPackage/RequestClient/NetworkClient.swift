@@ -2,6 +2,7 @@ import Foundation
 import RxSwift
 import RxAlamofire
 import Alamofire
+import UIKit
 
 
 struct GraphQLResponse<T: Decodable>: Decodable {
@@ -13,28 +14,104 @@ struct GraphQLErrorDetail: Decodable {
     let message: String
 }
 
+struct PreSignedURLResponse: Decodable {
+    let url: String
+    let id: String
+    let headers: [HTTPHeader]
+    let expiresAt: String
+}
+
+struct HTTPHeader: Decodable {
+    let key: String
+    let value: String
+}
+
 class NetworkClient {
     private let disposeBag = DisposeBag()
     private let url: URL
     private let apiKey: String
     private let scheduler: SerialDispatchQueueScheduler
-
+    
     init(url: URL, apiKey: String) {
         self.url = url
         self.apiKey = apiKey
         self.scheduler = SerialDispatchQueueScheduler(qos: .default)
     }
-
+    
+    func getPreSignedURL() -> Observable<GraphQLResponse<PreSignedURLResponse>> {
+        let query = """
+            mutation {
+                createPreSignedUrl(
+                    contentType: "image/jpeg",
+                    filename: "image.jpg",
+                    scope: ISSUE_ATTACHMENT
+                ) {
+                    url
+                    id
+                    headers {
+                        key
+                        value
+                    }
+                    expiresAt
+                }
+            }
+            """
+        
+        return makeGraphQLRequest(query: query)
+    }
+    
+    
+    func uploadImage(to preSignedURL: String, image: UIImage, headers: [HTTPHeader]) -> Observable<Void> {
+        return Observable.create { observer in
+            guard let imageData = image.jpegData(compressionQuality: 0.9) else {
+                observer.onError(URLError(.badURL))
+                return Disposables.create()
+            }
+            
+            guard let url = URL(string: preSignedURL) else {
+                observer.onError(URLError(.badURL))
+                return Disposables.create()
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"
+            headers.forEach { header in
+                request.setValue(header.value, forHTTPHeaderField: header.key)
+            }
+            
+            let task = URLSession.shared.uploadTask(with: request, from: imageData) { _, response, error in
+                if let error = error {
+                    observer.onError(error)
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                    observer.onError(URLError(.badServerResponse))
+                    return
+                }
+                
+                observer.onNext(())
+                observer.onCompleted()
+            }
+            task.resume()
+            
+            return Disposables.create {
+                task.cancel()
+            }
+        }
+    }
+    
+    
     func makeGraphQLRequest<T: Decodable>(query: String) -> Observable<GraphQLResponse<T>> {
         let headers: HTTPHeaders = [
             "Content-Type": "application/json",
             "X-Project-API-Key": "194a6378-45a4-4bb1-b11b-fa17d9defa7c"
         ]
-
+        
         let requestBody: [String: Any] = [
             "query": query
         ]
-
+        
         return RxAlamofire
             .requestData(.post, self.url, parameters: requestBody, encoding: JSONEncoding.default, headers: headers)
             .observe(on: scheduler)
@@ -53,5 +130,4 @@ class NetworkClient {
                 return Observable.error(error)
             }
     }
-
 }
