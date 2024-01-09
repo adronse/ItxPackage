@@ -374,7 +374,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
                         self.present(loader, animated: true)
                     },
                     onError: { error in
-                        print("Error: \(error.localizedDescription)")
+                        print("There was an error")
                     }, onCompleted: {
                         loader.dismiss(animated: true)
                         self.delegate?.didCreateIssue()
