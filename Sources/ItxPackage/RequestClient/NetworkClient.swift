@@ -87,22 +87,35 @@ class NetworkClient : INetworkClient {
         let requestBody = ["query": query]
 
         return Observable.create { [weak self] observer in
-            guard let self = self,
-                  let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
+            guard let self = self else {
+                observer.onError(GraphQLError.noData)
+                return Disposables.create()
+            }
+
+            guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
                 observer.onError(GraphQLError.serializationError)
                 return Disposables.create()
             }
 
             let request = self.createRequest(method: method, httpBody: httpBody)
 
-            print("Final request: \(request)")
-
             RxAlamofire.requestData(request)
                 .observe(on: self.scheduler)
                 .subscribe(onNext: { (response, data) in
-                    self.handleResponse(data: data, observer: observer)
+                    do {
+                        let graphQLResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
+                        if let data = graphQLResponse.data {
+                            observer.onNext(data)
+                            observer.onCompleted()
+                        } else if let errors = graphQLResponse.errors {
+                            observer.onError(GraphQLError.custom(errors.map { $0.message }.joined(separator: ", ")))
+                        } else {
+                            observer.onError(GraphQLError.noData)
+                        }
+                    } catch {
+                        observer.onError(error)
+                    }
                 }, onError: { error in
-                    print("Error: \(error)")
                     observer.onError(error)
                 })
                 .disposed(by: self.disposeBag)
@@ -110,6 +123,7 @@ class NetworkClient : INetworkClient {
             return Disposables.create()
         }
     }
+
 
 
     public func createRequest(method: HTTPMethod, httpBody: Data) -> URLRequest {
