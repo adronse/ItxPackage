@@ -53,8 +53,6 @@ class IssueCoordinator: IssueReporting {
     func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
         if let image = image {
             
-            print("Will now create the pre signed url")
-            
             return createPreSignedUrl(image: image)
                 .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
                     guard let self = self, let response = graphQLResponse.data else {
@@ -66,9 +64,6 @@ class IssueCoordinator: IssueReporting {
                             guard let self = self else {
                                 throw CustomError.selfIsNil
                             }
-                            
-                            print("The image has been successfully uploaded now creating the issue")
-                            
                             return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
                         }
                 }
@@ -99,9 +94,6 @@ class IssueCoordinator: IssueReporting {
         
         let viewControllers = NavigationTracker.shared.getHistory()
     
-        
-        
-        print("Will now create the issue")
         
         let query = """
         mutation {
@@ -135,11 +127,6 @@ class IssueCoordinator: IssueReporting {
                 guard let response = graphQLResponse.data else {
                     throw NSError(domain: "NetworkError", code: 500, userInfo: nil)
                 }
-                
-                print("Successfully created the issue here is the response: \(response)")
-                
-                print("Created issue with issue id : \(response.createMobileIssue.id)")
-                
                 return Observable.just(response)
             }
 

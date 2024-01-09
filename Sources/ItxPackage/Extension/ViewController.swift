@@ -23,7 +23,6 @@ extension UIViewController {
 
 extension UIViewController {
     @objc func _tracked_viewWillAppear(_ animated: Bool) {
-        print("Tracked this screen:----- \(type(of: self))")
         _tracked_viewWillAppear(animated)
     }
     

@@ -322,7 +322,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         view.addSubview(imageStackView)
         
-        
         imageStackView.snp.makeConstraints { make in
             make.top.equalTo(issueDescriptionField.snp.bottom).offset(20)
             make.left.equalToSuperview().offset(20)
@@ -353,19 +352,15 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     
     
     @objc private func didTapSendButton() {
-        guard let title = issueTitleField.text, let description = issueDescriptionField.text else { return }
-        
-        guard let image = imageStackView.images.first else { return }
+        guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageStackView.images.first else { return }
     
-        
-        
         issueReport?.reportIssue(title: title, description: description, image: image)
                 .subscribe(
                     onNext: { issue in
-                        self.delegate?.isCreatingIssue()
+                        // find a way to notify user issue is in creation
                     },
                     onError: { error in
-                        print("There was an error")
+                        // find a way to notify user issue creation failed
                     }, onCompleted: {
                         self.delegate?.didCreateIssue()
                     }

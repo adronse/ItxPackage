@@ -23,12 +23,10 @@ public class ScreenshotObserver {
         }
         
         let history = NavigationTracker.shared.getHistory()
-        print("User navigation history before screenshot: \(history)")
         
         if let screenshot = captureScreen(view: topViewController.view) {
             let info = getDeviceInfo()
             
-            print(info)
             delegate?.didDetectScreenshot(image: screenshot, from: topViewController)
         }
     }
