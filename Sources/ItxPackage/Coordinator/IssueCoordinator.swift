@@ -93,9 +93,7 @@ class IssueCoordinator: IssueReporting {
         let deviceInfo = DeviceInfo.getDeviceInfo()
         
         let viewControllers = NavigationTracker.shared.getHistory()
-        
-        let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
-
+    
         
         let query = """
         mutation {
@@ -111,7 +109,7 @@ class IssueCoordinator: IssueReporting {
                 deviceName: "\(deviceInfo.DeviceName)"
                 systemVersion: "\(deviceInfo.SystemVersion)",
                 locale: "\(deviceInfo.Locale)",
-                viewControllersHistory: \(viewControllerHistoryArray)
+                viewControllersHistory: \(viewControllers)
                 \(preSignedBlobString)
             }) {
                 id
