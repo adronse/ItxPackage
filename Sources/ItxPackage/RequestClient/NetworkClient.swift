@@ -94,6 +94,10 @@ class NetworkClient : INetworkClient {
             }
 
             let request = self.createRequest(method: method, httpBody: httpBody)
+            
+            
+            print(requestBody)
+            
 
             RxAlamofire.requestData(request)
                 .observe(on: self.scheduler)
