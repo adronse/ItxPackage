@@ -84,7 +84,7 @@ class NetworkClient : INetworkClient {
     }
 
     func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T> {
-        let requestBody = ["mutation": query]
+        let requestBody = ["query": query]
         
         
         return Observable.create { [weak self] observer in
@@ -100,7 +100,7 @@ class NetworkClient : INetworkClient {
             
             
             print("Final request is \(request)")
-            print("Final request body is: \(String(describing: request.httpBody))")
+        
             
 
             RxAlamofire.requestData(request)
