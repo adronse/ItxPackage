@@ -14,25 +14,6 @@ struct GraphQLErrorDetail: Decodable {
     let message: String
 }
 
-struct PreSignedURLResponse: Decodable {
-    let url: String
-    let id: String
-    let headers: [HTTPHeader]
-    let expiresAt: String
-}
-
-struct HTTPHeader: Decodable {
-    let key: String
-    let value: String
-}
-
-struct CreateMobileIssueResponse: Decodable {
-    let createMobileIssue: IssueDetail
-}
-
-struct IssueDetail: Decodable {
-    let id: String
-}
 
 class NetworkClient {
     private let disposeBag = DisposeBag()

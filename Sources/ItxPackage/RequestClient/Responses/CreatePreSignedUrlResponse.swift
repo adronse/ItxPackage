@@ -8,18 +8,14 @@
 import Foundation
 
 
-struct CreatePreSignedUrlResponse: Decodable {
-    let createPreSignedUrl: PreSignedUrl
-}
-
-struct PreSignedUrl: Decodable {
+struct PreSignedURLResponse: Decodable {
     let url: String
     let id: String
     let headers: [HTTPHeader]
     let expiresAt: String
 }
 
-struct Header: Decodable {
+struct HTTPHeader: Decodable {
     let key: String
     let value: String
 }

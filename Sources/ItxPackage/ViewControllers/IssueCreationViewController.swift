@@ -357,12 +357,26 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         
         guard let image = imageStackView.images.first else { return }
         
+        let loader = UIAlertController(title: nil, message: "Please wait while we create your issue...", preferredStyle: .alert)
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        if #available(iOS 13.0, *) {
+            loadingIndicator.style = UIActivityIndicatorView.Style.large
+        } else {
+        }
+        loadingIndicator.startAnimating()
+        loader.view.addSubview(loadingIndicator)
+        
+        
         issueReport?.reportIssue(title: title, description: description, image: image)
                 .subscribe(
+                    onNext: { issue in
+                        self.present(loader, animated: true)
+                    },
                     onError: { error in
-                        // Handle error
-                        print("Error reporting issue: \(error)")
+                        print("Error: \(error.localizedDescription)")
                     }, onCompleted: {
+                        loader.dismiss(animated: true)
                         self.delegate?.didCreateIssue()
                         print("Issue reported successfully")
                     }
@@ -370,8 +384,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
                 .disposed(by: disposeBag)
     }
     
-    
-    // UITextFieldDelegate method to dismiss keyboard on return key
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -396,10 +408,8 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
 extension IssueCreationViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @objc public func didTapAddPictureButton() {
-        // Check if the photo library is available
         guard UIImagePickerController.isSourceTypeAvailable(.photoLibrary) else { return }
         
-        // Create and configure the image picker
         let imagePicker = UIImagePickerController()
         imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self

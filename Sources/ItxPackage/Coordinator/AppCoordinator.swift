@@ -65,20 +65,9 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
 }
 
 extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
-
-    
-    func didTapAddPicture() {
-        
-    }
     
     func didCreateIssue() {
-        
-        
-        IterationX.shared.setFlowActive(false)
-        
-        DispatchQueue.main.async {
-            self.presentingController.dismiss(animated: true)
-        }
+    
         DispatchQueue.main.async {
             self.presentingController.dismiss(animated: true) {
                 let thankYouVC = ThankYouPopupViewController()

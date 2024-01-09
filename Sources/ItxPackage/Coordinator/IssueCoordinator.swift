@@ -12,7 +12,6 @@ enum CustomError: Error {
     case invalidImage
 }
 
-struct UploadImageResponse: Decodable {}
 
 class IssueCoordinator: IssueReporting {
     
@@ -23,7 +22,7 @@ class IssueCoordinator: IssueReporting {
         self.networkClient = networkClient
     }
     
-    private func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>>
+    private func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<PreSignedURLResponse>>
     {
         
         let query = """
@@ -55,7 +54,7 @@ class IssueCoordinator: IssueReporting {
         if let image = image {
             return createPreSignedUrl(image: image)
                 .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
-                    guard let self = self, let response = graphQLResponse.data?.createPreSignedUrl else {
+                    guard let self = self, let response = graphQLResponse.data else {
                         throw CustomError.networkError
                     }
 
