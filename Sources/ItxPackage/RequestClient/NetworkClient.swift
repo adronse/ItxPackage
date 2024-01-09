@@ -2,24 +2,8 @@ import Foundation
 import RxSwift
 import RxAlamofire
 import Alamofire
-import UIKit
 
-struct GraphQLResponse<T: Decodable>: Decodable {
-    let data: T?
-    let errors: [GraphQLErrorDetail]?
-}
-
-struct GraphQLErrorDetail: Decodable {
-    let message: String
-}
-
-protocol INetworkClient {
-    func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T>
-    func uploadImageToPreSignedUrl(data: PreSignedUrl, image: UIImage) -> Observable<Bool>
-}
-
-class NetworkClient : INetworkClient {
-    
+class NetworkClient {
     private let disposeBag = DisposeBag()
     private let url: URL
     private let apiKey: String
@@ -30,145 +14,28 @@ class NetworkClient : INetworkClient {
         self.apiKey = apiKey
         self.scheduler = SerialDispatchQueueScheduler(qos: .default)
     }
-    
-    func uploadImageToPreSignedUrl(data: PreSignedUrl, image: UIImage) -> Observable<Bool>
-    {
-        
-        print("Performing request to create pre signed url")
-        
-        return Observable.create { observer in
-            guard let imageData = image.jpegData(compressionQuality: 0.9) else {
-                observer.onError(URLError(.badURL))
-                print("Unable to create image data")
-                return Disposables.create()
-            }
-            
-            guard let url = URL(string: data.url) else {
-                observer.onError(URLError(.badURL))
-                print("Unable to create url")
-                return Disposables.create()
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"
-            data.headers.forEach { header in
-                request.setValue(header.value, forHTTPHeaderField: header.key)
-            }
-            
-            print("Image Data Size: \(imageData.count)")
-            print("Pre-Signed URL: \(data.url)")
 
-            
-            
-            let task = URLSession.shared.uploadTask(with: request, from: imageData) { _, response, error in
-                if let error = error {
-                    observer.onError(error)
-                    return
+    func makeGraphQLRequest(query: String) -> Observable<Any> {
+        let headers: HTTPHeaders = [
+            "Content-Type": "application/json",
+            "Authorization": "Bearer \(self.apiKey)"
+        ]
+
+        let requestBody: [String: Any] = [
+            "query": query
+        ]
+
+        return RxAlamofire
+            .requestData(.post, self.url, parameters: requestBody, encoding: JSONEncoding.default, headers: headers)
+            .observe(on: scheduler)
+            .flatMap { response, data -> Observable<Any> in
+                guard response.statusCode == 200 else {
+                    throw NSError(domain: "NetworkError", code: response.statusCode, userInfo: nil)
                 }
-                
-                guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
-                    print("Unexpected response status code")
-                    observer.onError(URLError(.badServerResponse))
-                    return
-                }
-                
-                observer.onNext((true))
-                observer.onCompleted()
+                return Observable.just(try JSONSerialization.jsonObject(with: data, options: []))
             }
-            task.resume()
-            
-            return Disposables.create {
-                task.cancel()
+            .catch { error in
+                return Observable.error(error)
             }
-        }
     }
-
-    func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T> {
-        let requestBody = ["query": query]
-
-        return Observable.create { [weak self] observer in
-            guard let self = self else {
-                observer.onError(GraphQLError.noData)
-                return Disposables.create()
-            }
-
-            guard let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
-                observer.onError(GraphQLError.serializationError)
-                return Disposables.create()
-            }
-
-            let request = self.createRequest(method: method, httpBody: httpBody)
-
-            RxAlamofire.requestData(request)
-                .observe(on: self.scheduler)
-                .subscribe(onNext: { (response, data) in
-                    do {
-                        let graphQLResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
-                        if let data = graphQLResponse.data {
-                            observer.onNext(data)
-                            observer.onCompleted()
-                        } else if let errors = graphQLResponse.errors {
-                            observer.onError(GraphQLError.custom(errors.map { $0.message }.joined(separator: ", ")))
-                        } else {
-                            observer.onError(GraphQLError.noData)
-                        }
-                    } catch {
-                        observer.onError(error)
-                    }
-                }, onError: { error in
-                    observer.onError(error)
-                })
-                .disposed(by: self.disposeBag)
-
-            return Disposables.create()
-        }
-    }
-
-
-
-    public func createRequest(method: HTTPMethod, httpBody: Data) -> URLRequest {
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        request.httpBody = httpBody
-        request.setValue(apiKey, forHTTPHeaderField: "X-Project-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        
-        print("Request URL: \(request.url?.absoluteString ?? "Invalid URL")")
-        print("Request Headers: \(request.allHTTPHeaderFields ?? [:])")
-        print("Request Body: \(String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "")")
-
-        
-        return request
-    }
-
-    private func handleResponse<T: Decodable>(data: Data, observer: AnyObserver<T>) {
-        do {
-            let graphQLResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
-            if let data = graphQLResponse.data {
-                observer.onNext(data)
-                print("Response: \(data)")
-                observer.onCompleted()
-            } else if let errors = graphQLResponse.errors {
-                print(errors)
-                observer.onError(GraphQLError.custom("GraphQL Errors: \(errors)"))
-            } else {
-                observer.onError(GraphQLError.noData)
-            }
-        } catch {
-            observer.onError(error)
-        }
-    }
-}
-
-enum GraphQLError: Error {
-    case serializationError
-    case noData
-    case custom(String)
-}
-
-enum HTTPMethod: String {
-    case POST
-    case GET
-    case PUT
 }
