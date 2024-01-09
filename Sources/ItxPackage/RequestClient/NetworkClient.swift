@@ -3,6 +3,16 @@ import RxSwift
 import RxAlamofire
 import Alamofire
 
+
+struct GraphQLResponse<T: Decodable>: Decodable {
+    let data: T?
+    let errors: [GraphQLErrorDetail]?
+}
+
+struct GraphQLErrorDetail: Decodable {
+    let message: String
+}
+
 class NetworkClient {
     private let disposeBag = DisposeBag()
     private let url: URL
@@ -15,10 +25,10 @@ class NetworkClient {
         self.scheduler = SerialDispatchQueueScheduler(qos: .default)
     }
 
-    func makeGraphQLRequest(query: String) -> Observable<Any> {
+    func makeGraphQLRequest<T: Decodable>(query: String) -> Observable<GraphQLResponse<T>> {
         let headers: HTTPHeaders = [
             "Content-Type": "application/json",
-            "Authorization": "Bearer \(self.apiKey)"
+            "Authorization": "\(self.apiKey)"
         ]
 
         let requestBody: [String: Any] = [
@@ -28,14 +38,20 @@ class NetworkClient {
         return RxAlamofire
             .requestData(.post, self.url, parameters: requestBody, encoding: JSONEncoding.default, headers: headers)
             .observe(on: scheduler)
-            .flatMap { response, data -> Observable<Any> in
+            .flatMap { response, data -> Observable<GraphQLResponse<T>> in
                 guard response.statusCode == 200 else {
                     throw NSError(domain: "NetworkError", code: response.statusCode, userInfo: nil)
                 }
-                return Observable.just(try JSONSerialization.jsonObject(with: data, options: []))
+                do {
+                    let decodedResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
+                    return Observable.just(decodedResponse)
+                } catch let error {
+                    throw error
+                }
             }
             .catch { error in
                 return Observable.error(error)
             }
     }
+
 }
