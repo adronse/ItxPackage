@@ -33,6 +33,9 @@ class NetworkClient : INetworkClient {
     
     func uploadImageToPreSignedUrl(data: PreSignedUrl, image: UIImage) -> Observable<Bool>
     {
+        
+        print("Performing request to create pre signed url")
+        
         return Observable.create { observer in
             guard let imageData = image.jpegData(compressionQuality: 0.9) else {
                 observer.onError(URLError(.badURL))

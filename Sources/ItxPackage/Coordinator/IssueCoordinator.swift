@@ -66,6 +66,8 @@ class IssueCoordinator: IssueReporting {
                             }
                             """
             
+            print("Performing request to create pre signed url")
+            
             self.networkClient.performRequest(query: mutation, method: .POST)
                 .subscribe(onNext: { (response: GraphQLResponse<CreatePreSignedUrlResponse>) in
                     guard let preSignedUrl = response.data?.createPreSignedUrl else {
