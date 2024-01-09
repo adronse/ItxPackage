@@ -30,44 +30,38 @@ class IssueCoordinator: IssueReporting {
             
             if let image = image {
                 self.networkClient.getPreSignedURL()
-                    .flatMap { response -> Observable<Void> in
-                        preSignedUrlId = response.data!.id
-                        return self.networkClient.uploadImage(to: response.data!.url, image: image, headers: response.data!.headers)
-                    }
-                    .flatMap { _ -> Observable<CreateMobileIssueResponse> in
-                        return self.createIssue(title: title, description: description, preSignedId: preSignedUrlId)
-                    }
-                    .subscribe(
-                        onNext: { response in
-                            observer.onNext(response)
-                        },
-                        onError: { error in
-                            observer.onError(error)
-                        },
-                        onCompleted: {
-                            observer.onCompleted()
-                        }
-                    )
-                    .disposed(by: self.disposeBag)
-            } else {
+                    .subscribe(onNext: { response in
+                        self.networkClient.uploadImage(to: response.data?.url ?? "", image: image, headers: response.data?.headers ?? [])
+                            .subscribe(onNext: {
+                                self.createIssue(title: title, description: description, preSignedId: preSignedUrlId)
+                                    .subscribe(onNext: { response in
+                                        observer.onNext(response)
+                                        observer.onCompleted()
+                                    }, onError: { error in
+                                        observer.onError(error)
+                                    })
+                                    .disposed(by: self.disposeBag)
+                            }, onError: { error in
+                                observer.onError(error)
+                            })
+                            .disposed(by: self.disposeBag)
+                    }, onError: { error in
+                        observer.onError(error)
+                    })
+            }
+            else {
                 self.createIssue(title: title, description: description, preSignedId: nil)
-                    .subscribe(
-                        onNext: { response in
-                            observer.onNext(response)
-                        },
-                        onError: { error in
-                            observer.onError(error)
-                        },
-                        onCompleted: {
-                            observer.onCompleted()
-                        }
-                    )
+                    .subscribe(onNext: { response in
+                        observer.onNext(response)
+                        observer.onCompleted()
+                    }, onError: { error in
+                        observer.onError(error)
+                    })
                     .disposed(by: self.disposeBag)
             }
-            
             return Disposables.create()
-            
         }
+        
     }
     
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {
