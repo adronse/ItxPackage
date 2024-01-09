@@ -113,10 +113,12 @@ class NetworkClient {
                     print("Decoded response: \(decodedResponse)")
                     return Observable.just(decodedResponse)
                 } catch let error {
+                    print("Error decoding the response: \(error)")
                     throw error
                 }
             }
             .catch { error in
+                print("Error making the request: \(error)")
                 return Observable.error(error)
             }
     }
