@@ -52,6 +52,9 @@ class IssueCoordinator: IssueReporting {
     
     func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
         if let image = image {
+            
+            print("Will now create the pre signed url")
+            
             return createPreSignedUrl(image: image)
                 .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
                     guard let self = self, let response = graphQLResponse.data else {

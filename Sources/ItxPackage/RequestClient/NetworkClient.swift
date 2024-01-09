@@ -110,6 +110,7 @@ class NetworkClient {
                 }
                 do {
                     let decodedResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
+                    print("Decoded response: \(decodedResponse)")
                     return Observable.just(decodedResponse)
                 } catch let error {
                     throw error
