@@ -100,6 +100,7 @@ class NetworkClient : INetworkClient {
             
             
             print("Final request is \(request)")
+            print("Final request body is: \(String(describing: request.httpBody))")
             
 
             RxAlamofire.requestData(request)
