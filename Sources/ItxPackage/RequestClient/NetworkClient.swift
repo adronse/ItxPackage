@@ -26,6 +26,19 @@ struct HTTPHeader: Decodable {
     let value: String
 }
 
+struct CreateMobileIssueData: Decodable {
+    let createMobileIssue: CreateMobileIssueResponse
+}
+
+struct CreateMobileIssueResponse: Decodable {
+    let id: String
+}
+
+struct CreateMobileIssuePreviewResponse: Decodable
+{
+    let url: String
+}
+
 class NetworkClient {
     private let disposeBag = DisposeBag()
     private let url: URL

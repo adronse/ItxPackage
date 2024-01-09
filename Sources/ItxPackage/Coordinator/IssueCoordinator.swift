@@ -9,14 +9,12 @@ protocol IssueReporting {
 enum CustomError: Error {
     case selfIsNil
     case networkError
+    case invalidImage
 }
 
-struct UploadImageResponse : Decodable {
-    
-}
+struct UploadImageResponse: Decodable {}
 
 class IssueCoordinator: IssueReporting {
-
     
     private let networkClient: NetworkClient
     private let disposeBag = DisposeBag()
@@ -49,32 +47,33 @@ class IssueCoordinator: IssueReporting {
         return networkClient.makeGraphQLRequest(query: query)
     }
     
-    
-    private func uploadToPreSignedUrl(url: String, headers: [HTTPHeader], image: UIImage?) -> Observable<UploadImageResponse> {
-        return networkClient.uploadImage(to: url, image: image ?? UIImage(), headers: headers)
+    private func uploadToPreSignedUrl(url: String, headers: [HTTPHeader], image: UIImage) -> Observable<UploadImageResponse> {
+        return networkClient.uploadImage(to: url, image: image, headers: headers)
     }
     
     func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
-        guard let image = image else {
+        if let image = image {
+            return createPreSignedUrl(image: image)
+                .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
+                    guard let self = self, let response = graphQLResponse.data?.createPreSignedUrl else {
+                        throw CustomError.networkError
+                    }
+
+                    return self.uploadToPreSignedUrl(url: response.url, headers: response.headers, image: image)
+                        .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
+                            guard let self = self else {
+                                throw CustomError.selfIsNil
+                            }
+                            return self.createIssue(title: title, description: description, preSignedId: response.id)
+                        }
+                }
+        } else {
             return createIssue(title: title, description: description, preSignedId: nil)
         }
-
-        return createPreSignedUrl(image: image)
-            .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
-                guard let self = self, let response = graphQLResponse.data else {
-                    throw CustomError.networkError
-                }
-
-                return self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
-                    .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
-                        guard let self = self else {
-                            throw CustomError.selfIsNil
-                        }
-                        return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
-                    }
-            }
     }
 
+    
+    
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {
         
         let preSignedBlobString: String
@@ -126,9 +125,7 @@ class IssueCoordinator: IssueReporting {
                 }
                 return Observable.just(response)
             }
-        
-        
-    }
-    
-}
 
+    }
+
+}
