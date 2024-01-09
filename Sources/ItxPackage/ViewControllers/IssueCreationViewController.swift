@@ -9,9 +9,7 @@ import Foundation
 import UIKit
 import SnapKit
 import Photos
-
-import UIKit
-import SnapKit
+import RxSwift
 
 class AddPictureView: UIView {
     
@@ -189,6 +187,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     private let imageView: UIImageView
     private let addPictureView = AddPictureView()
     private let imageStackView = ImageStackView()
+    private let disposeBag = DisposeBag()
     
     var delegate: IssueCreationViewControllerDelegate?
     var issueReport: IssueReporting?
@@ -357,6 +356,16 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
         
         issueReport?.reportIssue(title: title, description: description, image: image)
+                .subscribe(
+                    onError: { error in
+                        // Handle error
+                        print("Error reporting issue: \(error)")
+                    }, onCompleted: {
+                        self.delegate?.didCreateIssue()
+                        print("Issue reported successfully")
+                    }
+                )
+                .disposed(by: disposeBag)
     }
     
     
