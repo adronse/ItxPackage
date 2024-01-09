@@ -356,27 +356,17 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
         guard let title = issueTitleField.text, let description = issueDescriptionField.text else { return }
         
         guard let image = imageStackView.images.first else { return }
-        
-        let loader = UIAlertController(title: nil, message: "Please wait while we create your issue...", preferredStyle: .alert)
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        if #available(iOS 13.0, *) {
-            loadingIndicator.style = UIActivityIndicatorView.Style.large
-        } else {
-        }
-        loadingIndicator.startAnimating()
-        loader.view.addSubview(loadingIndicator)
+    
         
         
         issueReport?.reportIssue(title: title, description: description, image: image)
                 .subscribe(
                     onNext: { issue in
-                        self.present(loader, animated: true)
+                        self.delegate?.isCreatingIssue()
                     },
                     onError: { error in
                         print("There was an error")
                     }, onCompleted: {
-                        loader.dismiss(animated: true)
                         self.delegate?.didCreateIssue()
                     }
                 )

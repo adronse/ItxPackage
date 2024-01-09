@@ -66,8 +66,17 @@ extension ScreenshotCoordinator: PopupViewControllerDelegate {
 
 extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
     
-    func didCreateIssue() {
     
+    func isCreatingIssue() {
+        DispatchQueue.main.async {
+            let loadingVC = LoadingViewController()
+            loadingVC.modalPresentationStyle = .overFullScreen
+            self.presentingController.present(loadingVC, animated: true)
+        }
+    }
+    
+    
+    func didCreateIssue() {
         DispatchQueue.main.async {
             self.presentingController.dismiss(animated: true) {
                 let thankYouVC = ThankYouPopupViewController()

@@ -11,4 +11,5 @@ import Foundation
 protocol IssueCreationViewControllerDelegate: AnyObject {
     func didTapCross()
     func didCreateIssue()
+    func isCreatingIssue()
 }
