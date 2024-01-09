@@ -61,7 +61,7 @@ class NetworkClient {
     }
     
     
-    func uploadImage(to preSignedURL: String, image: UIImage, headers: [HTTPHeader]) -> Observable<Void> {
+    func uploadImage(to preSignedURL: String, image: UIImage, headers: [HTTPHeader]) -> Observable<UploadImageResponse> {
         return Observable.create { observer in
             guard let imageData = image.jpegData(compressionQuality: 0.9) else {
                 observer.onError(URLError(.badURL))
@@ -90,7 +90,7 @@ class NetworkClient {
                     return
                 }
                 
-                observer.onNext(())
+                observer.onNext(UploadImageResponse())
                 observer.onCompleted()
             }
             task.resume()

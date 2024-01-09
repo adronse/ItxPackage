@@ -10,6 +10,10 @@ enum CustomError: Error {
     case selfIsNil
 }
 
+struct UploadImageResponse : Decodable {
+    
+}
+
 class IssueCoordinator: IssueReporting {
     private let networkClient: NetworkClient
     private let disposeBag = DisposeBag()
@@ -42,40 +46,29 @@ class IssueCoordinator: IssueReporting {
         return networkClient.makeGraphQLRequest(query: query)
     }
     
+    
+    func uploadToPreSignedUrl(url: String, headers: [HTTPHeader], image: UIImage) -> Observable<UploadImageResponse> {
+        return networkClient.uploadImage(to: url, image: image, headers: headers)
+    }
+    
     func reportIssue(title: String, description: String, image: UIImage) -> Observable<CreateMobileIssueResponse> {
         
         let preSignedUrlObservable: Observable<GraphQLResponse<CreatePreSignedUrlResponse>> = createPreSignedUrl(image: image)
         
-        return preSignedUrlObservable
-            .flatMap { preSignedUrlResponse -> Observable<CreateMobileIssueResponse> in
-                guard let preSignedUrl = preSignedUrlResponse.data else {
-                    return Observable.error(CustomError.selfIsNil)
-                }
-                
-                let preSignedId = preSignedUrl.createPreSignedUrl.id
-                
-                let preSignedUrlString = preSignedUrl.createPreSignedUrl.url
-                
-                let headers = preSignedUrl.createPreSignedUrl.headers
-                
-                let imageData = image.jpegData(compressionQuality: 0.9)!
-                
-                self.networkClient.uploadImage(to: preSignedUrlString, image: image, headers: headers)
-                    .subscribe(onNext: { _ in
-                        self.createIssue(title: title, description: description, preSignedId: preSignedId)
-                            .subscribe(onNext: { _ in
-                                print("Issue created")
-                            }, onError: { error in
-                                print(error)
-                            })
-                            .disposed(by: self.disposeBag)
-                    }, onError: { error in
-                        print(error)
-                    })
-                    .disposed(by: self.disposeBag)
-                
-                return Observable.empty()
+        return preSignedUrlObservable.flatMap { graphQLResponse -> Observable<CreateMobileIssueResponse> in
+            guard let response = graphQLResponse.data else {
+                throw NSError(domain: "NetworkError", code: 500, userInfo: nil)
             }
+            
+            let uploadImageObservable: Observable<UploadImageResponse> = self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
+            
+            return uploadImageObservable.flatMap { uploadImageResponse -> Observable<CreateMobileIssueResponse> in
+                return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
+            }
+            // upload to url
+
+            
+        }
     }
     
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {
@@ -129,6 +122,8 @@ class IssueCoordinator: IssueReporting {
                 }
                 return Observable.just(response)
             }
+        
+        
     }
     
 }
