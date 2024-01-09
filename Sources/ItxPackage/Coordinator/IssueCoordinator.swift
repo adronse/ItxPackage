@@ -18,6 +18,30 @@ class IssueCoordinator: IssueReporting {
         self.networkClient = networkClient
     }
     
+    func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>>
+    {
+        
+        let query = """
+            mutation {
+                createPreSignedUrl(
+                    contentType: "image/jpeg",
+                    filename: "image.jpg",
+                    scope: ISSUE_ATTACHMENT
+                ) {
+                    url
+                    id
+                    headers {
+                        key
+                        value
+                    }
+                    expiresAt
+                }
+            }
+            """
+        
+        return networkClient.makeGraphQLRequest(query: query)
+    }
+    
     func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
         return Observable.create { [weak self] observer in
             guard let self = self else {
@@ -26,19 +50,11 @@ class IssueCoordinator: IssueReporting {
             }
             
             
+           
+            var preSignedData = self.createPreSignedUrl(image: image ?? UIImage())
             
-            self.networkClient.getPreSignedURL()
-                .subscribe(onNext: { response in
-                    print("PreSignedUrlId: \(response.data?.url)")
-                    print("PreSignedUrlId: \(response.data?.id)")
-                }, onError: { error in
-                    observer.onError(error)
-                }, onCompleted: {
-                    print("Completed")
-                }, onDisposed: {
-                    print("Disposed")
-                })
-                .disposed(by: self.disposeBag)
+            
+            print("preSignedData: \(preSignedData)")
          
             return Disposables.create()
         }
