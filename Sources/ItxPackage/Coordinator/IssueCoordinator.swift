@@ -63,7 +63,10 @@ class IssueCoordinator: IssueReporting {
             let uploadImageObservable: Observable<UploadImageResponse> = self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
             
             return uploadImageObservable.flatMap { uploadImageResponse -> Observable<CreateMobileIssueResponse> in
-                return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
+                return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id).flatMap { createMobileIssueResponse -> Observable<CreateMobileIssueResponse> in
+                    print("createMobileIssueResponse: \(createMobileIssueResponse)")
+                    return Observable.just(createMobileIssueResponse)
+                }
             }
             // upload to url
 
