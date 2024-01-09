@@ -72,6 +72,10 @@ extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
     }
     
     func didCreateIssue() {
+        
+        
+        IterationX.shared.setFlowActive(false)
+        
         DispatchQueue.main.async {
             self.presentingController.dismiss(animated: true)
         }
@@ -84,7 +88,6 @@ extension ScreenshotCoordinator: IssueCreationViewControllerDelegate {
                     thankYouVC.dismiss(animated: true)
                 }
             }
-            IterationX.shared.setFlowActive(false)
         }
     }
     
