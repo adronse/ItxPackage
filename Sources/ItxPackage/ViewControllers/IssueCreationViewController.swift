@@ -356,7 +356,7 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
     @objc private func didTapSendButton() {
         guard let title = issueTitleField.text, let description = issueDescriptionField.text, let image = imageView.image else { return }
         
-        
+        issueReport?.reportIssue(title: title, description: description, image: image)
     }
     
     
