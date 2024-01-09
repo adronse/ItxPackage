@@ -55,12 +55,14 @@ class IssueCoordinator: IssueReporting {
             return createPreSignedUrl(image: image)
                 .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
                     guard let self = self, let response = graphQLResponse.data else {
+                        print("Network error")
                         throw CustomError.networkError
                     }
 
                     return self.uploadToPreSignedUrl(url: response.url, headers: response.headers, image: image)
                         .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
                             guard let self = self else {
+                                print("self is nil")
                                 throw CustomError.selfIsNil
                             }
                             return self.createIssue(title: title, description: description, preSignedId: response.id)

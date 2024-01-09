@@ -378,7 +378,6 @@ public class IssueCreationViewController: UIViewController, UIGestureRecognizerD
                     }, onCompleted: {
                         loader.dismiss(animated: true)
                         self.delegate?.didCreateIssue()
-                        print("Issue reported successfully")
                     }
                 )
                 .disposed(by: disposeBag)
