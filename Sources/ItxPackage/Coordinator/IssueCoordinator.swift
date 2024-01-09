@@ -55,16 +55,22 @@ class IssueCoordinator: IssueReporting {
             return createPreSignedUrl(image: image)
                 .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
                     guard let self = self, let response = graphQLResponse.data else {
-                        print("Network error")
                         throw CustomError.networkError
                     }
+                    
+                    print("Successfully created pre signed url here is the response: \(response)")
+                    
+                    
+                    print("Will now upload to the pre signed url: \(response.url)")
 
                     return self.uploadToPreSignedUrl(url: response.url, headers: response.headers, image: image)
                         .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
                             guard let self = self else {
-                                print("self is nil")
                                 throw CustomError.selfIsNil
                             }
+                            
+                            print("The image has been successfully uploaded now creating the issue")
+                            
                             return self.createIssue(title: title, description: description, preSignedId: response.id)
                         }
                 }
@@ -96,6 +102,9 @@ class IssueCoordinator: IssueReporting {
         let viewControllers = NavigationTracker.shared.getHistory()
     
         
+        
+        print("Will now create the issue")
+        
         let query = """
         mutation {
             createMobileIssue(input: {
@@ -110,6 +119,7 @@ class IssueCoordinator: IssueReporting {
                 deviceName: "\(deviceInfo.DeviceName)"
                 systemVersion: "\(deviceInfo.SystemVersion)",
                 locale: "\(deviceInfo.Locale)",
+                viewControllersHistory: \(viewControllers)
                 \(preSignedBlobString)
             }) {
                 id
@@ -127,6 +137,11 @@ class IssueCoordinator: IssueReporting {
                 guard let response = graphQLResponse.data else {
                     throw NSError(domain: "NetworkError", code: 500, userInfo: nil)
                 }
+                
+                print("Successfully created the issue here is the response: \(response)")
+                
+                print("Created issue with issue id : \(response.createMobileIssue.id)")
+                
                 return Observable.just(response)
             }
 
