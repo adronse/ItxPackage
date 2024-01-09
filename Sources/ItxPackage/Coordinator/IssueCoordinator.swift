@@ -26,42 +26,23 @@ class IssueCoordinator: IssueReporting {
             }
             
             
-            var preSignedUrlId = ""
             
-            if let image = image {
-                self.networkClient.getPreSignedURL()
-                    .subscribe(onNext: { response in
-                        self.networkClient.uploadImage(to: response.data?.url ?? "", image: image, headers: response.data?.headers ?? [])
-                            .subscribe(onNext: {
-                                self.createIssue(title: title, description: description, preSignedId: preSignedUrlId)
-                                    .subscribe(onNext: { response in
-                                        observer.onNext(response)
-                                        observer.onCompleted()
-                                    }, onError: { error in
-                                        observer.onError(error)
-                                    })
-                                    .disposed(by: self.disposeBag)
-                            }, onError: { error in
-                                observer.onError(error)
-                            })
-                            .disposed(by: self.disposeBag)
-                    }, onError: { error in
-                        observer.onError(error)
-                    })
-            }
-            else {
-                self.createIssue(title: title, description: description, preSignedId: nil)
-                    .subscribe(onNext: { response in
-                        observer.onNext(response)
-                        observer.onCompleted()
-                    }, onError: { error in
-                        observer.onError(error)
-                    })
-                    .disposed(by: self.disposeBag)
-            }
+            self.networkClient.getPreSignedURL()
+                .subscribe(onNext: { response in
+                    print("PreSignedUrlId: \(response.data?.url)")
+                    print("PreSignedUrlId: \(response.data?.id)")
+                }, onError: { error in
+                    observer.onError(error)
+                }, onCompleted: {
+                    print("Completed")
+                }, onDisposed: {
+                    print("Disposed")
+                })
+                .disposed(by: self.disposeBag)
+         
             return Disposables.create()
         }
-        
+            
     }
     
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {
