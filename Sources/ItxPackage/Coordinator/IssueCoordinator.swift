@@ -3,11 +3,12 @@ import UIKit
 import RxSwift
 
 protocol IssueReporting {
-    func reportIssue(title: String, description: String, image: UIImage) -> Observable<CreateMobileIssueResponse>
+    func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse>
 }
 
 enum CustomError: Error {
     case selfIsNil
+    case networkError
 }
 
 struct UploadImageResponse : Decodable {
@@ -15,6 +16,8 @@ struct UploadImageResponse : Decodable {
 }
 
 class IssueCoordinator: IssueReporting {
+
+    
     private let networkClient: NetworkClient
     private let disposeBag = DisposeBag()
     
@@ -22,7 +25,7 @@ class IssueCoordinator: IssueReporting {
         self.networkClient = networkClient
     }
     
-    func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>>
+    private func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>>
     {
         
         let query = """
@@ -47,33 +50,31 @@ class IssueCoordinator: IssueReporting {
     }
     
     
-    func uploadToPreSignedUrl(url: String, headers: [HTTPHeader], image: UIImage) -> Observable<UploadImageResponse> {
-        return networkClient.uploadImage(to: url, image: image, headers: headers)
+    private func uploadToPreSignedUrl(url: String, headers: [HTTPHeader], image: UIImage?) -> Observable<UploadImageResponse> {
+        return networkClient.uploadImage(to: url, image: image ?? UIImage(), headers: headers)
     }
     
-    func reportIssue(title: String, description: String, image: UIImage) -> Observable<CreateMobileIssueResponse> {
-        
-        let preSignedUrlObservable: Observable<GraphQLResponse<CreatePreSignedUrlResponse>> = createPreSignedUrl(image: image)
-        
-        return preSignedUrlObservable.flatMap { graphQLResponse -> Observable<CreateMobileIssueResponse> in
-            guard let response = graphQLResponse.data else {
-                throw NSError(domain: "NetworkError", code: 500, userInfo: nil)
-            }
-            
-            let uploadImageObservable: Observable<UploadImageResponse> = self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
-            
-            return uploadImageObservable.flatMap { uploadImageResponse -> Observable<CreateMobileIssueResponse> in
-                return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id).flatMap { createMobileIssueResponse -> Observable<CreateMobileIssueResponse> in
-                    print("createMobileIssueResponse: \(createMobileIssueResponse)")
-                    return Observable.just(createMobileIssueResponse)
-                }
-            }
-            // upload to url
-
-            
+    func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
+        guard let image = image else {
+            return createIssue(title: title, description: description, preSignedId: nil)
         }
+
+        return createPreSignedUrl(image: image)
+            .flatMapLatest { [weak self] graphQLResponse -> Observable<CreateMobileIssueResponse> in
+                guard let self = self, let response = graphQLResponse.data else {
+                    throw CustomError.networkError
+                }
+
+                return self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
+                    .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
+                        guard let self = self else {
+                            throw CustomError.selfIsNil
+                        }
+                        return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
+                    }
+            }
     }
-    
+
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {
         
         let preSignedBlobString: String
