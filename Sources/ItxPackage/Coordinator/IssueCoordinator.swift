@@ -90,6 +90,12 @@ class IssueCoordinator: IssueReporting {
             preSignedBlobString = ""
         }
         
+        let deviceInfo = DeviceInfo.getDeviceInfo()
+        
+        let viewControllers = NavigationTracker.shared.getHistory()
+        
+        let viewControllerHistoryArray = "[\(viewControllers.map { "\"\($0)\"" }.joined(separator: ","))]"
+
         
         let query = """
         mutation {
@@ -98,13 +104,14 @@ class IssueCoordinator: IssueReporting {
                 title: "\(title)",
                 description: "\(description)",
                 priority: NONE,
-                appConsumerVersion: "test",
-                deviceModel: "test",
-                deviceType: "test",
-                screenSize: "test",
-                deviceName: "test",
-                systemVersion: "test",
-                locale: "test",
+                appConsumerVersion: "\(deviceInfo.AppConsumerVersion)",
+                deviceModel: "\(deviceInfo.DeviceModel)",
+                deviceType: "\(deviceInfo.DeviceType)",
+                screenSize: "\(deviceInfo.ScreenSize)",
+                deviceName: "\(deviceInfo.DeviceName)"
+                systemVersion: "\(deviceInfo.SystemVersion)",
+                locale: "\(deviceInfo.Locale)",
+                viewControllersHistory: \(viewControllerHistoryArray)
                 \(preSignedBlobString)
             }) {
                 id
@@ -120,7 +127,6 @@ class IssueCoordinator: IssueReporting {
         return requestObservable
             .flatMap { graphQLResponse -> Observable<CreateMobileIssueResponse> in
                 guard let response = graphQLResponse.data else {
-                    // Handle error scenario, perhaps throw a custom error
                     throw NSError(domain: "NetworkError", code: 500, userInfo: nil)
                 }
                 return Observable.just(response)
