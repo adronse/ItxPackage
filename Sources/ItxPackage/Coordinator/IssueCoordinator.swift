@@ -50,11 +50,14 @@ class IssueCoordinator: IssueReporting {
     }
     
     func createPreSignedUrl(image: UIImage, contentType: String) -> Observable<PreSignedUrl> {
+        
+        print("content type: \(contentType)")
+        
         return Observable.create { observer in
             let mutation =
                             """
                             mutation {
-                                  createPreSignedUrl(contentType: "\(contentType)", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
+                                  createPreSignedUrl(contentType: "image/jpeg", filename: "image.jpg", scope: ISSUE_ATTACHMENT) {
                                     url
                                     id
                                     headers {
