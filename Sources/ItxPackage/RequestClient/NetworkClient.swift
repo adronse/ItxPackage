@@ -55,6 +55,11 @@ class NetworkClient : INetworkClient {
                 request.setValue(header.value, forHTTPHeaderField: header.key)
             }
             
+            print("Image Data Size: \(imageData.count)")
+            print("Pre-Signed URL: \(data.url)")
+
+            
+            
             let task = URLSession.shared.uploadTask(with: request, from: imageData) { _, response, error in
                 if let error = error {
                     observer.onError(error)
@@ -110,6 +115,13 @@ class NetworkClient : INetworkClient {
         request.httpBody = httpBody
         request.setValue(apiKey, forHTTPHeaderField: "X-Project-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        
+        print("Request URL: \(request.url?.absoluteString ?? "Invalid URL")")
+        print("Request Headers: \(request.allHTTPHeaderFields ?? [:])")
+        print("Request Body: \(String(data: request.httpBody ?? Data(), encoding: .utf8) ?? "")")
+
+        
         return request
     }
 
@@ -118,6 +130,7 @@ class NetworkClient : INetworkClient {
             let graphQLResponse = try JSONDecoder().decode(GraphQLResponse<T>.self, from: data)
             if let data = graphQLResponse.data {
                 observer.onNext(data)
+                print("Response: \(data)")
                 observer.onCompleted()
             } else if let errors = graphQLResponse.errors {
                 print(errors)
