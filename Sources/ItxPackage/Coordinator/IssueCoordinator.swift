@@ -24,7 +24,10 @@ class IssueCoordinator: IssueReporting {
             
             return createPreSignedUrl(image: image, contentType: contentType)
                 .flatMap { [weak self] preSignedUrl -> Observable<String?> in
-                    guard let self = self else { return Observable.just(nil) }
+                    guard let self = self else {
+                        print("self is nil")
+                        return Observable.just(nil)
+                    }
                     
                     print("Uploading image to pre signed url")
                     
@@ -33,7 +36,10 @@ class IssueCoordinator: IssueReporting {
                         .catchAndReturn(nil)
                 }
                 .flatMap { [weak self] preSignedUrlId -> Observable<Void> in
-                    guard let self = self else { return Observable.empty() }
+                    guard let self = self else {
+                        print("self is nil")
+                        return Observable.empty()
+                    }
                     
                     print("Creating mobile issue")
                     return self.createMobileIssue(title: title, description: description, preSignedUrlId: preSignedUrlId)
@@ -68,6 +74,7 @@ class IssueCoordinator: IssueReporting {
                     observer.onNext(preSignedUrl)
                     observer.onCompleted()
                 }, onError: { error in
+                    print("Error creating pre signed url: \(error)")
                     observer.onError(error)
                 })
                 .disposed(by: self.disposeBag)

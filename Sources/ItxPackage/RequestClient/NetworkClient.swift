@@ -36,11 +36,13 @@ class NetworkClient : INetworkClient {
         return Observable.create { observer in
             guard let imageData = image.jpegData(compressionQuality: 0.9) else {
                 observer.onError(URLError(.badURL))
+                print("Unable to create image data")
                 return Disposables.create()
             }
             
             guard let url = URL(string: data.url) else {
                 observer.onError(URLError(.badURL))
+                print("Unable to create url")
                 return Disposables.create()
             }
             
@@ -57,6 +59,7 @@ class NetworkClient : INetworkClient {
                 }
                 
                 guard let httpResponse = response as? HTTPURLResponse, 200...299 ~= httpResponse.statusCode else {
+                    print("Unexpected response status code")
                     observer.onError(URLError(.badServerResponse))
                     return
                 }
