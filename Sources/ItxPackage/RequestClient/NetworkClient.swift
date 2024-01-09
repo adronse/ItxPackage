@@ -84,7 +84,7 @@ class NetworkClient : INetworkClient {
     }
 
     func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T> {
-        let requestBody = ["mutation": query]
+        let requestBody = query
         
         return Observable.create { [weak self] observer in
             guard let self = self,
