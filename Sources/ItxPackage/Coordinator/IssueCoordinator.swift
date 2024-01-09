@@ -53,8 +53,15 @@ class IssueCoordinator: IssueReporting {
            
             var preSignedData = self.createPreSignedUrl(image: image ?? UIImage())
             
-            
-            print("preSignedData: \(preSignedData)")
+            preSignedData.subscribe(onNext: { (response) in
+                print("response: \(response)")
+            }, onError: { (error) in
+                print("error: \(error)")
+            }, onCompleted: {
+                print("completed")
+            }) {
+                print("disposed")
+            }.disposed(by: self.disposeBag)
          
             return Disposables.create()
         }
