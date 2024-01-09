@@ -22,7 +22,7 @@ class IssueCoordinator: IssueReporting {
         self.networkClient = networkClient
     }
     
-    private func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<PreSignedURLResponse>>
+    private func createPreSignedUrl(image: UIImage) -> Observable<GraphQLResponse<CreatePreSignedUrlResponse>>
     {
         
         let query = """
@@ -60,13 +60,8 @@ class IssueCoordinator: IssueReporting {
                     guard let self = self, let response = graphQLResponse.data else {
                         throw CustomError.networkError
                     }
-                    
-                    print("Successfully created pre signed url here is the response: \(response)")
-                    
-                    
-                    print("Will now upload to the pre signed url: \(response.url)")
 
-                    return self.uploadToPreSignedUrl(url: response.url, headers: response.headers, image: image)
+                    return self.uploadToPreSignedUrl(url: response.createPreSignedUrl.url, headers: response.createPreSignedUrl.headers, image: image)
                         .flatMapLatest { [weak self] uploadImageResponse -> Observable<CreateMobileIssueResponse> in
                             guard let self = self else {
                                 throw CustomError.selfIsNil
@@ -74,7 +69,7 @@ class IssueCoordinator: IssueReporting {
                             
                             print("The image has been successfully uploaded now creating the issue")
                             
-                            return self.createIssue(title: title, description: description, preSignedId: response.id)
+                            return self.createIssue(title: title, description: description, preSignedId: response.createPreSignedUrl.id)
                         }
                 }
         } else {
