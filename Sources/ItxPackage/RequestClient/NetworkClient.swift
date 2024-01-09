@@ -85,8 +85,7 @@ class NetworkClient : INetworkClient {
 
     func performRequest<T: Decodable>(query: String, method: HTTPMethod) -> Observable<T> {
         let requestBody = ["query": query]
-        
-        
+
         return Observable.create { [weak self] observer in
             guard let self = self,
                   let httpBody = try? JSONSerialization.data(withJSONObject: requestBody, options: []) else {
@@ -94,14 +93,9 @@ class NetworkClient : INetworkClient {
                 return Disposables.create()
             }
 
-            
-            
             let request = self.createRequest(method: method, httpBody: httpBody)
-            
-            
-            print("Final request is \(request)")
-        
-            
+
+            print("Final request: \(request)")
 
             RxAlamofire.requestData(request)
                 .observe(on: self.scheduler)
@@ -116,6 +110,7 @@ class NetworkClient : INetworkClient {
             return Disposables.create()
         }
     }
+
 
     public func createRequest(method: HTTPMethod, httpBody: Data) -> URLRequest {
         var request = URLRequest(url: url)
