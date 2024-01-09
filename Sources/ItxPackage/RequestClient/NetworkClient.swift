@@ -26,17 +26,12 @@ struct HTTPHeader: Decodable {
     let value: String
 }
 
-struct CreateMobileIssueData: Decodable {
-    let createMobileIssue: CreateMobileIssueResponse
-}
-
 struct CreateMobileIssueResponse: Decodable {
-    let id: String
+    let createMobileIssue: IssueDetail
 }
 
-struct CreateMobileIssuePreviewResponse: Decodable
-{
-    let url: String
+struct IssueDetail: Decodable {
+    let id: String
 }
 
 class NetworkClient {
