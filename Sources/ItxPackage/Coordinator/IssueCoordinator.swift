@@ -3,7 +3,7 @@ import UIKit
 import RxSwift
 
 protocol IssueReporting {
-    func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse>
+    func reportIssue(title: String, description: String, image: UIImage) -> Observable<CreateMobileIssueResponse>
 }
 
 enum CustomError: Error {
@@ -42,30 +42,40 @@ class IssueCoordinator: IssueReporting {
         return networkClient.makeGraphQLRequest(query: query)
     }
     
-    func reportIssue(title: String, description: String, image: UIImage?) -> Observable<CreateMobileIssueResponse> {
-        return Observable.create { [weak self] observer in
-            guard let self = self else {
-                observer.onError(CustomError.selfIsNil)
-                return Disposables.create()
+    func reportIssue(title: String, description: String, image: UIImage) -> Observable<CreateMobileIssueResponse> {
+        
+        let preSignedUrlObservable: Observable<GraphQLResponse<CreatePreSignedUrlResponse>> = createPreSignedUrl(image: image)
+        
+        return preSignedUrlObservable
+            .flatMap { preSignedUrlResponse -> Observable<CreateMobileIssueResponse> in
+                guard let preSignedUrl = preSignedUrlResponse.data else {
+                    return Observable.error(CustomError.selfIsNil)
+                }
+                
+                let preSignedId = preSignedUrl.createPreSignedUrl.id
+                
+                let preSignedUrlString = preSignedUrl.createPreSignedUrl.url
+                
+                let headers = preSignedUrl.createPreSignedUrl.headers
+                
+                let imageData = image.jpegData(compressionQuality: 0.9)!
+                
+                self.networkClient.uploadImage(to: preSignedUrlString, image: image, headers: headers)
+                    .subscribe(onNext: { _ in
+                        self.createIssue(title: title, description: description, preSignedId: preSignedId)
+                            .subscribe(onNext: { _ in
+                                print("Issue created")
+                            }, onError: { error in
+                                print(error)
+                            })
+                            .disposed(by: self.disposeBag)
+                    }, onError: { error in
+                        print(error)
+                    })
+                    .disposed(by: self.disposeBag)
+                
+                return Observable.empty()
             }
-            
-            
-           
-            var preSignedData = self.createPreSignedUrl(image: image ?? UIImage())
-            
-            preSignedData.subscribe(onNext: { (response) in
-                print("response: \(response)")
-            }, onError: { (error) in
-                print("error: \(error)")
-            }, onCompleted: {
-                print("completed")
-            }) {
-                print("disposed")
-            }.disposed(by: self.disposeBag)
-         
-            return Disposables.create()
-        }
-            
     }
     
     private func createIssue(title: String, description: String, preSignedId: String?) -> Observable<CreateMobileIssueResponse> {

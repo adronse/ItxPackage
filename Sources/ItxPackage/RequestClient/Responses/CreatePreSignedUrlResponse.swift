@@ -15,7 +15,7 @@ struct CreatePreSignedUrlResponse: Decodable {
 struct PreSignedUrl: Decodable {
     let url: String
     let id: String
-    let headers: [Header]
+    let headers: [HTTPHeader]
     let expiresAt: String
 }
 
