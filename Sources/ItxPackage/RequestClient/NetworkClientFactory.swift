@@ -10,7 +10,7 @@ import Foundation
 
 class GraphQLClientFactory {
     static func createClient() -> NetworkClient {
-        let url = URL(string: "https://d436-2a05-6e02-10d1-a710-9883-6646-34d1-1b66.ngrok-free.app/graphql")!
+        let url = URL(string: "https://8fd5-2a05-6e02-10d1-a710-470-6ca0-2212-8ce5.ngrok-free.app/graphql")!
         let apiKey = IterationX.shared.getApiKey()
         return NetworkClient(url: url, apiKey: apiKey)
     }
