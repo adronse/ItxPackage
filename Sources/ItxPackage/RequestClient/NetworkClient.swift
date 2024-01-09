@@ -28,7 +28,7 @@ class NetworkClient {
     func makeGraphQLRequest<T: Decodable>(query: String) -> Observable<GraphQLResponse<T>> {
         let headers: HTTPHeaders = [
             "Content-Type": "application/json",
-            "X-Project-Api-Key": "\(self.apiKey)"
+            "X-Project-API-Key": "\(self.apiKey)"
         ]
 
         let requestBody: [String: Any] = [
